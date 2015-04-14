@@ -8,6 +8,8 @@
 #include <QScreen>
 #include <QPoint>
 
+#include "toolbar.h"
+
 class ScreenshotArea : public QWidget
 {
 	Q_OBJECT
@@ -28,6 +30,7 @@ public slots:
 
 private:
 	QLabel *m_pDrawingBoard;
+	ToolBar *m_pToolBar;
 	QGridLayout *m_pLayout;
 
 	QPixmap m_originalCapture;

@@ -9,6 +9,10 @@ ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
 {
 	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::Popup | Qt::NoDropShadowWindowHint);
 
+	m_pToolBar = new ToolBar(ToolBar::Horizontal, this);
+//	m_pToolBar->setWindowFlags(m_pToolBar->windowFlags() | Qt::WindowStaysOnTopHint | Qt::BypassWindowManagerHint);
+	m_pToolBar->move(100, 100);
+	m_pToolBar->show();
 	m_darkOverlayColor = QColor(0, 0, 0, 128);
 	m_rubberBandColor = Qt::cyan;
 	m_rubberBandWidth = 2;
@@ -66,6 +70,8 @@ void ScreenshotArea::mouseMoveEvent(QMouseEvent *e)
 	if(m_leftButtonPressed)
 	{
 		m_currentPressPoint = e->pos();
+
+//		m_pToolBar->move(m_currentPressPoint += QPoint(30, 30));
 	}
 }
 
@@ -77,6 +83,7 @@ void ScreenshotArea::mousePressEvent(QMouseEvent *e)
 		m_selectionStarted = true;
 		m_initialPressPoint = e->pos();
 		m_currentPressPoint = e->pos();
+//		m_pToolBar->hide();
 	}
 }
 
@@ -85,6 +92,7 @@ void ScreenshotArea::mouseReleaseEvent(QMouseEvent *e)
 	if(e->button() == Qt::LeftButton)
 	{
 		m_leftButtonPressed = false;
+//		m_pToolBar->show();
 	}
 }
 

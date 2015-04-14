@@ -6,11 +6,11 @@ int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
 
-//	ScreenshotArea s;
-//	s.shoot();
+	ScreenshotArea s;
+	s.shoot();
 
-	ToolBar t;
-	t.show();
+//	ToolBar t;
+//	t.show();
 
 	return a.exec();
 }

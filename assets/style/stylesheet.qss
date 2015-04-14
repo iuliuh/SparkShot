@@ -1,0 +1,46 @@
+ToolBar {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 rgb(220, 220, 220),
+                                      stop: 0.3 rgb(240, 240, 240),
+                                      stop: 0.7 rgb(240, 240, 240),
+                                      stop: 1 rgb(220, 220, 220));
+    border: 1px solid darkgray;
+    border-radius: 3px;
+}
+
+ToolBar QPushButton {
+    background: transparent;
+    outline: 0px;
+    border: 0px;
+    margin: 0px;
+    padding: 3px;
+}
+
+ToolBar QPushButton::hover {
+    background: rgba(0, 0, 0, 20);
+    outline: 0px;
+    border-radius: 2px;
+    padding: 3px;
+}
+
+ToolBar QPushButton::checked {
+    background: rgba(0, 0, 0, 35);
+    outline: 0px;
+    border-radius: 2px;
+    padding: 3px;
+}
+
+ToolBar QLabel {
+    background: transparent;
+    outline: 0px;
+    border: 0px;
+    margin: 0px;
+    padding: 6px;
+}
+
+ToolBar QPushButton::pressed {
+    background: rgba(0, 0, 0, 30);
+    outline: 0px;
+    border-radius: 2px;
+    padding: 3px;
+}
