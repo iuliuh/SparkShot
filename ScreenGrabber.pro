@@ -13,9 +13,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    screen.cpp
+    screenshotarea.cpp \
+    toolbar.cpp
 
 HEADERS  += \
-    screen.h
+    screenshotarea.h \
+    toolbar.h
 
 FORMS +=
+
+RESOURCES += \
+    resources.qrc

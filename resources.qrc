@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/x.png</file>
+        <file>images/text.png</file>
+        <file>images/resize-both.png</file>
+        <file>images/pencil.png</file>
+        <file>images/cog.png</file>
+        <file>images/cloud-upload.png</file>
+        <file>images/circle-x.png</file>
+        <file>images/circle-check.png</file>
+        <file>images/chevron-top.png</file>
+        <file>images/brush.png</file>
+    </qresource>
+</RCC>

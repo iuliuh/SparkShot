@@ -1,4 +1,4 @@
-#include "screen.h"
+#include "screenshotarea.h"
 #include <QDesktopWidget>
 #include <QDebug>
 #include <QApplication>

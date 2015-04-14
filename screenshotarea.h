@@ -11,10 +11,12 @@
 class ScreenshotArea : public QWidget
 {
 	Q_OBJECT
+
 public:
 	explicit ScreenshotArea(QWidget *parent = 0);
 	~ScreenshotArea();
 
+protected:
 	void keyPressEvent(QKeyEvent *pEvent);
 	void mouseMoveEvent(QMouseEvent *pEvent);
 	void mousePressEvent(QMouseEvent *pEvent);
