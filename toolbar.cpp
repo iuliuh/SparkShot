@@ -194,32 +194,32 @@ void ToolBar::onColorButtonClicked()
 
 void ToolBar::onTextToolButtonPressed()
 {
-	emit toolButtonChanged(ToolBar::Text);
+	emit currentToolChanged(ToolBar::Text);
 }
 
 void ToolBar::onBrushToolButtonPressed()
 {
-	emit toolButtonChanged(ToolBar::Brush);
+	emit currentToolChanged(ToolBar::Brush);
 }
 
 void ToolBar::onPencilToolButtonPressed()
 {
-	emit toolButtonChanged(ToolBar::Pencil);
+	emit currentToolChanged(ToolBar::Pencil);
 }
 
 void ToolBar::onSquareToolButtonPressed()
 {
-	emit toolButtonChanged(ToolBar::Square);
+	emit currentToolChanged(ToolBar::Square);
 }
 
 void ToolBar::onLineToolButtonPressed()
 {
-	emit toolButtonChanged(ToolBar::Line);
+	emit currentToolChanged(ToolBar::Line);
 }
 
 void ToolBar::onArrowToolButtonPressed()
 {
-	emit toolButtonChanged(ToolBar::Arrow);
+	emit currentToolChanged(ToolBar::Arrow);
 }
 
 void ToolBar::setTheme()

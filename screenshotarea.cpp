@@ -28,8 +28,8 @@ ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
 			this, &ScreenshotArea::onUploadButtonPressed);
 	connect(m_pToolBar, &ToolBar::saveButtonPressed,
 			this, &ScreenshotArea::onSaveButtonPressed);
-	connect(m_pToolBar, &ToolBar::toolButtonChanged,
-			this, &ScreenshotArea::onToolButtonChanged);
+	connect(m_pToolBar, &ToolBar::currentToolChanged,
+			this, &ScreenshotArea::onCurrentToolChanged);
 
 	setGeometry(QGuiApplication::primaryScreen()->geometry());
 }
@@ -84,7 +84,7 @@ void ScreenshotArea::onSaveButtonPressed()
 	qDebug() << Q_FUNC_INFO;
 }
 
-void ScreenshotArea::onToolButtonChanged(const ToolBar::Tool& tool)
+void ScreenshotArea::onCurrentToolChanged(const ToolBar::Tool& tool)
 {
 	qDebug() << tool;
 }
@@ -95,7 +95,7 @@ void ScreenshotArea::mouseMoveEvent(QMouseEvent *e)
 	{
 		m_currentPressPoint = e->pos();
 
-		m_pToolBar->move(m_currentPressPoint += QPoint(10, 10));
+		m_pToolBar->move(m_currentPressPoint + QPoint(10, 10));
 
 		repaint();
 	}
@@ -107,9 +107,12 @@ void ScreenshotArea::mousePressEvent(QMouseEvent *e)
 	{
 		m_leftButtonPressed = true;
 		m_selectionStarted = true;
+
 		m_initialPressPoint = e->pos();
 		m_currentPressPoint = e->pos();
+
 		m_pToolBar->hide();
+
 		repaint();
 	}
 }
@@ -141,8 +144,8 @@ void ScreenshotArea::paintEvent(QPaintEvent *pEvent)
 	// Draw original section
 	if(m_selectionStarted)
 	{
-		QRect pixmapRect(m_initialPressPoint.x() + m_rubberBandWidth,
-						 m_initialPressPoint.y() + m_rubberBandWidth,
+		QRect pixmapRect(m_initialPressPoint.x(),
+						 m_initialPressPoint.y(),
 						 m_currentPressPoint.x() - m_initialPressPoint.x(),
 						 m_currentPressPoint.y() - m_initialPressPoint.y());
 
@@ -150,10 +153,11 @@ void ScreenshotArea::paintEvent(QPaintEvent *pEvent)
 	}
 
 	// Draw rubber band
-	QRect rubberBandRect(m_initialPressPoint.x() + m_rubberBandWidth,
-						 m_initialPressPoint.y() + m_rubberBandWidth,
+	QRect rubberBandRect(m_initialPressPoint.x(),
+						 m_initialPressPoint.y(),
 						 m_currentPressPoint.x() - m_initialPressPoint.x(),
 						 m_currentPressPoint.y() - m_initialPressPoint.y());
+
 	QPen pen(m_rubberBandColor);
 	pen.setWidth(m_rubberBandWidth);
 

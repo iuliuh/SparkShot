@@ -34,7 +34,7 @@ signals:
 	void settingsButtonPressed();
 	void uploadButtonPressed();
 	void saveButtonPressed();
-	void toolButtonChanged(const Tool& tool);
+	void currentToolChanged(const Tool& tool);
 
 protected:
 	void mousePressEvent(QMouseEvent *pEvent);

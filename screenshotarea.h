@@ -32,7 +32,7 @@ private slots:
 	void onSettingsButtonPressed();
 	void onUploadButtonPressed();
 	void onSaveButtonPressed();
-	void onToolButtonChanged(const ToolBar::Tool& tool);
+	void onCurrentToolChanged(const ToolBar::Tool& tool);
 
 private:
 	ToolBar *m_pToolBar;
