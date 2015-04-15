@@ -18,6 +18,7 @@ public:
 	};
 
 	enum Tool {
+		NoTool,
 		Arrow,
 		Line,
 		Square,
@@ -28,6 +29,9 @@ public:
 
 	explicit ToolBar(Type type = Vertical, QWidget *parent = 0);
 	~ToolBar();
+
+	Tool currentTool() const;
+	QColor currentColor() const;
 
 signals:
 	void discardButtonPressed();
@@ -58,6 +62,8 @@ private:
 private:
 	Type m_type;
 	QLayout *m_pLayout;
+
+	Tool m_currentTool;
 
 	QButtonGroup *m_pButtonGroup;
 	QPushButton *m_pSettingsButton;

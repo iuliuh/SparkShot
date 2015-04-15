@@ -11,13 +11,16 @@
 #include <QColorDialog>
 #include <QButtonGroup>
 
-ToolBar::ToolBar(Type type, QWidget *parent) : QWidget(parent), m_type(type)
+ToolBar::ToolBar(Type type, QWidget *parent) :
+	QWidget(parent),
+	m_type(type)
 {
 	setWindowFlags(Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
 	setAttribute(Qt::WA_TranslucentBackground);
 
 	m_leftButtonPressed = false;
 	m_drawColor = Qt::black;
+	m_currentTool = NoTool;
 
 	m_pColorButton = new QPushButton();
 	m_pArrowButton = new QPushButton(QIcon(":/images/arrowIcon"), "");
@@ -134,6 +137,16 @@ ToolBar::~ToolBar()
 {
 }
 
+ToolBar::Tool ToolBar::currentTool() const
+{
+	return m_currentTool;
+}
+
+QColor ToolBar::currentColor() const
+{
+	return m_drawColor;
+}
+
 void ToolBar::mousePressEvent(QMouseEvent* pEvent)
 {
 	if(pEvent->button() == Qt::LeftButton)
@@ -194,32 +207,44 @@ void ToolBar::onColorButtonClicked()
 
 void ToolBar::onTextToolButtonPressed()
 {
-	emit currentToolChanged(ToolBar::Text);
+	m_currentTool = Text;
+
+	emit currentToolChanged(Text);
 }
 
 void ToolBar::onBrushToolButtonPressed()
 {
-	emit currentToolChanged(ToolBar::Brush);
+	m_currentTool = Brush;
+
+	emit currentToolChanged(Brush);
 }
 
 void ToolBar::onPencilToolButtonPressed()
 {
-	emit currentToolChanged(ToolBar::Pencil);
+	m_currentTool = Pencil;
+
+	emit currentToolChanged(Pencil);
 }
 
 void ToolBar::onSquareToolButtonPressed()
 {
-	emit currentToolChanged(ToolBar::Square);
+	m_currentTool = Square;
+
+	emit currentToolChanged(Square);
 }
 
 void ToolBar::onLineToolButtonPressed()
 {
-	emit currentToolChanged(ToolBar::Line);
+	m_currentTool = Line;
+
+	emit currentToolChanged(Line);
 }
 
 void ToolBar::onArrowToolButtonPressed()
 {
-	emit currentToolChanged(ToolBar::Arrow);
+	m_currentTool = Arrow;
+
+	emit currentToolChanged(Arrow);
 }
 
 void ToolBar::setTheme()

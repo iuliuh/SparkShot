@@ -4,6 +4,7 @@
 #include <QApplication>
 #include <QKeyEvent>
 #include <QPainter>
+#include <QtMath>
 
 ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
 {
@@ -15,7 +16,10 @@ ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
 	m_darkOverlayColor = QColor(0, 0, 0, 155);
 	m_rubberBandColor = Qt::cyan;
 	m_rubberBandWidth = 2;
+	m_penWidth = 2;
 	m_rubberBandPointRadius = 3;
+	m_arrowBaseWidth = 7;
+	m_arrowHeight = 11.0 * qSqrt(3.0);
 
 	m_leftButtonPressed = false;
 	m_selectionStarted = false;
@@ -32,6 +36,9 @@ ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
 			this, &ScreenshotArea::onCurrentToolChanged);
 
 	setGeometry(QGuiApplication::primaryScreen()->geometry());
+
+	//Uncomment when doing the resize mouse area
+	//setMouseTracking(true);
 }
 
 ScreenshotArea::~ScreenshotArea()
@@ -63,6 +70,7 @@ void ScreenshotArea::shoot()
 	if (pScreen)
 	{
 		m_originalCapture = pScreen->grabWindow(0);
+		m_paintBoard = m_originalCapture;
 	}
 
 	show();
@@ -89,15 +97,186 @@ void ScreenshotArea::onCurrentToolChanged(const ToolBar::Tool& tool)
 	qDebug() << tool;
 }
 
+void ScreenshotArea::drawRubberBand(QPainter* painter)
+{
+	QRect rubberBandRect(m_initialPressPoint.x(),
+						 m_initialPressPoint.y(),
+						 m_currentPressPoint.x() - m_initialPressPoint.x(),
+						 m_currentPressPoint.y() - m_initialPressPoint.y());
+
+	QPen pen(m_rubberBandColor);
+	pen.setWidth(m_rubberBandWidth);
+
+	painter->setPen(pen);
+	painter->setBrush(Qt::NoBrush);
+	painter->drawRect(rubberBandRect.normalized());
+
+	painter->setBrush(m_rubberBandColor);
+
+	QPoint topMiddle(rubberBandRect.topLeft().x() + rubberBandRect.width() / 2, rubberBandRect.y());
+	QPoint rightMiddle(rubberBandRect.topLeft().x() + rubberBandRect.width(), rubberBandRect.y() + rubberBandRect.height() / 2);
+	QPoint bottomMiddle(rubberBandRect.topLeft().x() + rubberBandRect.width() / 2, rubberBandRect.y() + rubberBandRect.height());
+	QPoint leftMiddle(rubberBandRect.topLeft().x(), rubberBandRect.y() + rubberBandRect.height() / 2);
+
+	painter->drawEllipse(rubberBandRect.topLeft(), m_rubberBandPointRadius, m_rubberBandPointRadius);
+	painter->drawEllipse(rubberBandRect.topRight(), m_rubberBandPointRadius, m_rubberBandPointRadius);
+	painter->drawEllipse(rubberBandRect.bottomLeft(), m_rubberBandPointRadius, m_rubberBandPointRadius);
+	painter->drawEllipse(rubberBandRect.bottomRight(), m_rubberBandPointRadius, m_rubberBandPointRadius);
+	painter->drawEllipse(topMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
+	painter->drawEllipse(rightMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
+	painter->drawEllipse(bottomMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
+	painter->drawEllipse(leftMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
+}
+
+void ScreenshotArea::drawCroppedArea(QPainter* painter)
+{
+	if(m_selectionStarted)
+	{
+		QRect pixmapRect(m_initialPressPoint.x(),
+						 m_initialPressPoint.y(),
+						 m_currentPressPoint.x() - m_initialPressPoint.x(),
+						 m_currentPressPoint.y() - m_initialPressPoint.y());
+
+		painter->drawPixmap(pixmapRect.normalized(), m_originalCapture, pixmapRect.normalized());
+	}
+}
+
+void ScreenshotArea::drawDarkOverlay(QPainter* painter)
+{
+	QPixmap drawnCapture = m_originalCapture;
+
+	painter->drawPixmap(0, 0, drawnCapture.width(), drawnCapture.height(), drawnCapture);
+
+	QBrush darkOverlayBrush(m_darkOverlayColor);
+
+	painter->setBrush(darkOverlayBrush);
+	painter->drawRect(drawnCapture.rect());
+}
+
+void ScreenshotArea::drawArrow(QPainter* painter)
+{
+	if(!m_leftButtonPressed)
+	{
+		return;
+	}
+
+	float halfWidth = m_arrowBaseWidth / 2;;
+
+	// Backup pen and brush
+	QPen backupPen = painter->pen();
+	QBrush backupBrush = painter->brush();
+
+	// Draw the line
+	painter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
+
+	QPen pen;
+	pen.setBrush(QBrush(m_pToolBar->currentColor()));
+	pen.setWidth(m_penWidth);
+
+	QPoint currentShortenedLinePressPoint = m_currentPressPoint;
+
+	if (m_initialPressPoint == currentShortenedLinePressPoint)
+	{
+		return; // not a line
+	}
+
+	double dx = currentShortenedLinePressPoint.x() - m_initialPressPoint.x();
+	double dy = currentShortenedLinePressPoint.y() - m_initialPressPoint.y();
+	double shorteningFactor = -m_arrowHeight;
+	if (dx == 0)
+	{
+		// Vertical line
+		if (currentShortenedLinePressPoint.y() < m_initialPressPoint.y())
+		{
+			currentShortenedLinePressPoint.setY(currentShortenedLinePressPoint.y() - shorteningFactor);
+		}
+		else
+		{
+			currentShortenedLinePressPoint.setY(currentShortenedLinePressPoint.y() + shorteningFactor);
+		}
+	}
+	else if (dy == 0)
+	{
+		// Horizontal line
+		if (currentShortenedLinePressPoint.x() < m_initialPressPoint.x())
+		{
+			currentShortenedLinePressPoint.setX(currentShortenedLinePressPoint.x() - shorteningFactor);
+		}
+		else
+		{
+			currentShortenedLinePressPoint.setX(currentShortenedLinePressPoint.x() + shorteningFactor);
+		}
+	}
+	else
+	{
+		// Non-horizontal and non-vertical line
+		double length = qSqrt(dx * dx + dy * dy);
+		double scale = (length + shorteningFactor) / length;
+		dx *= scale;
+		dy *= scale;
+		currentShortenedLinePressPoint.setX(m_initialPressPoint.x() + dx);
+		currentShortenedLinePressPoint.setY(m_initialPressPoint.y() + dy);
+	}
+
+	painter->setPen(pen);
+	painter->drawLine(m_initialPressPoint, currentShortenedLinePressPoint);
+
+	// Draw the arrow
+	QVector2D initPosVec(m_initialPressPoint);
+	QVector2D currPosVec(m_currentPressPoint);
+
+	QVector2D auxVec(currPosVec - initPosVec);
+	double length = qSqrt(qPow(auxVec.x(), 2.0) + qPow(auxVec.y(), 2.0));
+
+	QVector2D currPostToInitPosVec = (currPosVec - initPosVec) / length;
+	QVector2D perpendVec(-currPostToInitPosVec.y(), currPostToInitPosVec.x());
+	QVector2D arrowEdgeVec1 = currPosVec - m_arrowHeight*currPostToInitPosVec + halfWidth*perpendVec;
+	QVector2D arrowEdgeVec2 = currPosVec - m_arrowHeight*currPostToInitPosVec - halfWidth*perpendVec;
+
+	QPoint p1(arrowEdgeVec1.x(), arrowEdgeVec1.y());
+	QPoint p2(arrowEdgeVec2.x(), arrowEdgeVec2.y());
+
+	QPolygon p;
+	p.append(m_currentPressPoint);
+	p.append(p1);
+	p.append(p2);
+
+	QPainterPath path;
+	path.addPolygon(p);
+	painter->fillPath(path, QBrush(Qt::black));
+
+	// Set the pen and brush back to normal
+	painter->setPen(backupPen);
+	painter->setBrush(backupBrush);
+}
+
+void ScreenshotArea::drawLine(QPainter* painter)
+{
+	if(!m_leftButtonPressed)
+	{
+		return;
+	}
+
+	painter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
+
+	QPen pen;
+	pen.setBrush(QBrush(m_pToolBar->currentColor()));
+	pen.setWidth(m_penWidth);
+
+	painter->setPen(pen);
+	painter->drawLine(m_initialPressPoint, m_currentPressPoint);
+}
+
 void ScreenshotArea::mouseMoveEvent(QMouseEvent *e)
 {
 	if(m_leftButtonPressed)
 	{
 		m_currentPressPoint = e->pos();
 
-		m_pToolBar->move(m_currentPressPoint + QPoint(10, 10));
-
-		repaint();
+		if(m_pToolBar->currentTool() == ToolBar::NoTool)
+		{
+			m_pToolBar->move(m_currentPressPoint + QPoint(10, 10));
+		}
 	}
 }
 
@@ -111,9 +290,12 @@ void ScreenshotArea::mousePressEvent(QMouseEvent *e)
 		m_initialPressPoint = e->pos();
 		m_currentPressPoint = e->pos();
 
-		m_pToolBar->hide();
+		m_helperBoard = m_paintBoard;
 
-		repaint();
+		if(m_pToolBar->currentTool() == ToolBar::NoTool)
+		{
+			m_pToolBar->hide();
+		}
 	}
 }
 
@@ -122,64 +304,42 @@ void ScreenshotArea::mouseReleaseEvent(QMouseEvent *e)
 	if(e->button() == Qt::LeftButton)
 	{
 		m_leftButtonPressed = false;
-		m_pToolBar->show();
-		repaint();
+
+		if(m_pToolBar->currentTool() == ToolBar::NoTool)
+		{
+			m_pToolBar->show();
+		}
 	}
 }
 
 void ScreenshotArea::paintEvent(QPaintEvent *pEvent)
 {
-	QPainter painter(this);
+	Q_UNUSED(pEvent)
 
-	// Draw dark overlay
-	QPixmap drawnCapture = m_originalCapture;
+	QPainter paintBoardPainter(&m_paintBoard);
+	paintBoardPainter.setRenderHint(QPainter::Antialiasing);
 
-	painter.drawPixmap(0, 0, drawnCapture.width(), drawnCapture.height(), drawnCapture);
-
-	QBrush darkOverlayBrush(m_darkOverlayColor);
-
-	painter.setBrush(darkOverlayBrush);
-	painter.drawRect(pEvent->rect());
-
-	// Draw original section
-	if(m_selectionStarted)
+	if(m_pToolBar->currentTool() == ToolBar::NoTool)
 	{
-		QRect pixmapRect(m_initialPressPoint.x(),
-						 m_initialPressPoint.y(),
-						 m_currentPressPoint.x() - m_initialPressPoint.x(),
-						 m_currentPressPoint.y() - m_initialPressPoint.y());
-
-		painter.drawPixmap(pixmapRect.normalized(), m_originalCapture, pixmapRect.normalized());
+		drawDarkOverlay(&paintBoardPainter);
+		drawCroppedArea(&paintBoardPainter);
+		drawRubberBand(&paintBoardPainter);
 	}
 
-	// Draw rubber band
-	QRect rubberBandRect(m_initialPressPoint.x(),
-						 m_initialPressPoint.y(),
-						 m_currentPressPoint.x() - m_initialPressPoint.x(),
-						 m_currentPressPoint.y() - m_initialPressPoint.y());
+	switch(m_pToolBar->currentTool())
+	{
+	case ToolBar::Arrow:
+		drawArrow(&paintBoardPainter);
+		break;
+	case ToolBar::Line:
+		drawLine(&paintBoardPainter);
+		break;
+	default:
+		break;
+	}
 
-	QPen pen(m_rubberBandColor);
-	pen.setWidth(m_rubberBandWidth);
-
-	painter.setPen(pen);
-	painter.setBrush(Qt::NoBrush);
-	painter.drawRect(rubberBandRect.normalized());
-
-	painter.setBrush(m_rubberBandColor);
-
-	QPoint topMiddle(rubberBandRect.topLeft().x() + rubberBandRect.width() / 2, rubberBandRect.y());
-	QPoint rightMiddle(rubberBandRect.topLeft().x() + rubberBandRect.width(), rubberBandRect.y() + rubberBandRect.height() / 2);
-	QPoint bottomMiddle(rubberBandRect.topLeft().x() + rubberBandRect.width() / 2, rubberBandRect.y() + rubberBandRect.height());
-	QPoint leftMiddle(rubberBandRect.topLeft().x(), rubberBandRect.y() + rubberBandRect.height() / 2);
-
-	painter.drawEllipse(rubberBandRect.topLeft(), m_rubberBandPointRadius, m_rubberBandPointRadius);
-	painter.drawEllipse(rubberBandRect.topRight(), m_rubberBandPointRadius, m_rubberBandPointRadius);
-	painter.drawEllipse(rubberBandRect.bottomLeft(), m_rubberBandPointRadius, m_rubberBandPointRadius);
-	painter.drawEllipse(rubberBandRect.bottomRight(), m_rubberBandPointRadius, m_rubberBandPointRadius);
-	painter.drawEllipse(topMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
-	painter.drawEllipse(rightMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
-	painter.drawEllipse(bottomMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
-	painter.drawEllipse(leftMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
+	QPainter formPainter(this);
+	formPainter.drawPixmap(m_paintBoard.rect(), m_paintBoard, m_paintBoard.rect());
 
 	update();
 }
