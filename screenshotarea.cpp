@@ -7,27 +7,31 @@
 
 ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
 {
-	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::Popup | Qt::NoDropShadowWindowHint);
+	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
 
 	m_pToolBar = new ToolBar(ToolBar::Horizontal, this);
-//	m_pToolBar->setWindowFlags(m_pToolBar->windowFlags() | Qt::WindowStaysOnTopHint | Qt::BypassWindowManagerHint);
 	m_pToolBar->move(100, 100);
 	m_pToolBar->show();
-	m_darkOverlayColor = QColor(0, 0, 0, 128);
+	m_darkOverlayColor = QColor(0, 0, 0, 155);
 	m_rubberBandColor = Qt::cyan;
 	m_rubberBandWidth = 2;
 	m_rubberBandPointRadius = 3;
 
-	m_pDrawingBoard = new QLabel;
 	m_leftButtonPressed = false;
 	m_selectionStarted = false;
 
-	m_pLayout = new QGridLayout;
-	m_pLayout->addWidget(m_pDrawingBoard);
-	m_pLayout->setSpacing(0);
-	m_pLayout->setMargin(0);
+	connect(m_pToolBar, &ToolBar::discardButtonPressed,
+			this, &QWidget::close);
+	connect(m_pToolBar, &ToolBar::settingsButtonPressed,
+			this, &ScreenshotArea::onSettingsButtonPressed);
+	connect(m_pToolBar, &ToolBar::uploadButtonPressed,
+			this, &ScreenshotArea::onUploadButtonPressed);
+	connect(m_pToolBar, &ToolBar::saveButtonPressed,
+			this, &ScreenshotArea::onSaveButtonPressed);
+	connect(m_pToolBar, &ToolBar::toolButtonChanged,
+			this, &ScreenshotArea::onToolButtonChanged);
 
-	setLayout(m_pLayout);
+	setGeometry(QGuiApplication::primaryScreen()->geometry());
 }
 
 ScreenshotArea::~ScreenshotArea()
@@ -55,14 +59,34 @@ void ScreenshotArea::shoot()
 {
 	m_originalCapture = QPixmap();
 
-	QScreen *screen = QGuiApplication::primaryScreen();
-	if (screen)
+	QScreen *pScreen = QGuiApplication::primaryScreen();
+	if (pScreen)
 	{
-		m_originalCapture = screen->grabWindow(0);
+		m_originalCapture = pScreen->grabWindow(0);
 	}
 
 	show();
 	activateWindow();
+}
+
+void ScreenshotArea::onSettingsButtonPressed()
+{
+	qDebug() << Q_FUNC_INFO;
+}
+
+void ScreenshotArea::onUploadButtonPressed()
+{
+	qDebug() << Q_FUNC_INFO;
+}
+
+void ScreenshotArea::onSaveButtonPressed()
+{
+	qDebug() << Q_FUNC_INFO;
+}
+
+void ScreenshotArea::onToolButtonChanged(const ToolBar::Tool& tool)
+{
+	qDebug() << tool;
 }
 
 void ScreenshotArea::mouseMoveEvent(QMouseEvent *e)
@@ -71,7 +95,9 @@ void ScreenshotArea::mouseMoveEvent(QMouseEvent *e)
 	{
 		m_currentPressPoint = e->pos();
 
-//		m_pToolBar->move(m_currentPressPoint += QPoint(30, 30));
+		m_pToolBar->move(m_currentPressPoint += QPoint(10, 10));
+
+		repaint();
 	}
 }
 
@@ -83,7 +109,8 @@ void ScreenshotArea::mousePressEvent(QMouseEvent *e)
 		m_selectionStarted = true;
 		m_initialPressPoint = e->pos();
 		m_currentPressPoint = e->pos();
-//		m_pToolBar->hide();
+		m_pToolBar->hide();
+		repaint();
 	}
 }
 
@@ -92,17 +119,20 @@ void ScreenshotArea::mouseReleaseEvent(QMouseEvent *e)
 	if(e->button() == Qt::LeftButton)
 	{
 		m_leftButtonPressed = false;
-//		m_pToolBar->show();
+		m_pToolBar->show();
+		repaint();
 	}
 }
 
 void ScreenshotArea::paintEvent(QPaintEvent *pEvent)
 {
-	QPixmap drawnCapture = m_originalCapture;
-
-	QPainter painter(&drawnCapture);
+	QPainter painter(this);
 
 	// Draw dark overlay
+	QPixmap drawnCapture = m_originalCapture;
+
+	painter.drawPixmap(0, 0, drawnCapture.width(), drawnCapture.height(), drawnCapture);
+
 	QBrush darkOverlayBrush(m_darkOverlayColor);
 
 	painter.setBrush(darkOverlayBrush);
@@ -111,19 +141,19 @@ void ScreenshotArea::paintEvent(QPaintEvent *pEvent)
 	// Draw original section
 	if(m_selectionStarted)
 	{
-		QRect pixmapRect(m_initialPressPoint.x() + m_rubberBandWidth - 1,
-		                 m_initialPressPoint.y() + m_rubberBandWidth - 1,
-		                 m_currentPressPoint.x() - m_initialPressPoint.x() - m_rubberBandWidth,
-		                 m_currentPressPoint.y() - m_initialPressPoint.y() - m_rubberBandWidth);
+		QRect pixmapRect(m_initialPressPoint.x() + m_rubberBandWidth,
+						 m_initialPressPoint.y() + m_rubberBandWidth,
+						 m_currentPressPoint.x() - m_initialPressPoint.x(),
+						 m_currentPressPoint.y() - m_initialPressPoint.y());
 
 		painter.drawPixmap(pixmapRect.normalized(), m_originalCapture, pixmapRect.normalized());
 	}
 
 	// Draw rubber band
-	QRect rubberBandRect(m_initialPressPoint.x() + m_rubberBandWidth - 1,
-	                     m_initialPressPoint.y() + m_rubberBandWidth - 1,
-	                     m_currentPressPoint.x() - m_initialPressPoint.x() - m_rubberBandWidth,
-	                     m_currentPressPoint.y() - m_initialPressPoint.y() - m_rubberBandWidth);
+	QRect rubberBandRect(m_initialPressPoint.x() + m_rubberBandWidth,
+						 m_initialPressPoint.y() + m_rubberBandWidth,
+						 m_currentPressPoint.x() - m_initialPressPoint.x(),
+						 m_currentPressPoint.y() - m_initialPressPoint.y());
 	QPen pen(m_rubberBandColor);
 	pen.setWidth(m_rubberBandWidth);
 
@@ -147,12 +177,5 @@ void ScreenshotArea::paintEvent(QPaintEvent *pEvent)
 	painter.drawEllipse(bottomMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
 	painter.drawEllipse(leftMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
 
-	m_pDrawingBoard->setPixmap(drawnCapture);
+	update();
 }
-
-
-
-
-
-
-

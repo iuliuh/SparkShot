@@ -28,10 +28,14 @@ protected:
 public slots:
 	void shoot();
 
+private slots:
+	void onSettingsButtonPressed();
+	void onUploadButtonPressed();
+	void onSaveButtonPressed();
+	void onToolButtonChanged(const ToolBar::Tool& tool);
+
 private:
-	QLabel *m_pDrawingBoard;
 	ToolBar *m_pToolBar;
-	QGridLayout *m_pLayout;
 
 	QPixmap m_originalCapture;
 

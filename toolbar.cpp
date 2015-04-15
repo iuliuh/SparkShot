@@ -96,17 +96,17 @@ ToolBar::ToolBar(Type type, QWidget *parent) : QWidget(parent), m_type(type)
 	connect(m_pSaveButton, &QPushButton::clicked,
 			this, &ToolBar::saveButtonPressed);
 	connect(m_pTextButton, &QPushButton::clicked,
-			this, &ToolBar::textToolButtonPressed);
+			this, &ToolBar::onTextToolButtonPressed);
 	connect(m_pBrushButton, &QPushButton::clicked,
-			this, &ToolBar::brushToolButtonPressed);
+			this, &ToolBar::onBrushToolButtonPressed);
 	connect(m_pPencilButton, &QPushButton::clicked,
-			this, &ToolBar::pencilToolButtonPressed);
+			this, &ToolBar::onPencilToolButtonPressed);
 	connect(m_pSquareButton, &QPushButton::clicked,
-			this, &ToolBar::squareToolButtonPressed);
+			this, &ToolBar::onSquareToolButtonPressed);
 	connect(m_pLineButton, &QPushButton::clicked,
-			this, &ToolBar::lineToolButtonPressed);
+			this, &ToolBar::onLineToolButtonPressed);
 	connect(m_pArrowButton, &QPushButton::clicked,
-			this, &ToolBar::arrowToolButtonPressed);
+			this, &ToolBar::onArrowToolButtonPressed);
 
 	m_pLayout->setSpacing(1);
 	m_pLayout->addWidget(m_pHandler);
@@ -163,6 +163,7 @@ void ToolBar::mouseMoveEvent(QMouseEvent* pEvent)
 			 pEvent->pos().y() - m_mousePosOnBar.y() + geometry().y());
 	}
 
+
 	pEvent->accept();
 }
 
@@ -170,9 +171,10 @@ void ToolBar::paintEvent(QPaintEvent *pEvent)
 {
 	Q_UNUSED(pEvent)
 
+	QPainter p(this);
+
 	QStyleOption opt;
 	opt.init(this);
-	QPainter p(this);
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
@@ -188,6 +190,36 @@ void ToolBar::onColorButtonClicked()
 								  .arg(m_drawColor.green())
 								  .arg(m_drawColor.blue())
 								  .arg(m_drawColor.alpha()));
+}
+
+void ToolBar::onTextToolButtonPressed()
+{
+	emit toolButtonChanged(ToolBar::Text);
+}
+
+void ToolBar::onBrushToolButtonPressed()
+{
+	emit toolButtonChanged(ToolBar::Brush);
+}
+
+void ToolBar::onPencilToolButtonPressed()
+{
+	emit toolButtonChanged(ToolBar::Pencil);
+}
+
+void ToolBar::onSquareToolButtonPressed()
+{
+	emit toolButtonChanged(ToolBar::Square);
+}
+
+void ToolBar::onLineToolButtonPressed()
+{
+	emit toolButtonChanged(ToolBar::Line);
+}
+
+void ToolBar::onArrowToolButtonPressed()
+{
+	emit toolButtonChanged(ToolBar::Arrow);
 }
 
 void ToolBar::setTheme()

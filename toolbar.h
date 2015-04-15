@@ -17,6 +17,15 @@ public:
 		Vertical
 	};
 
+	enum Tool {
+		Arrow,
+		Line,
+		Square,
+		Pencil,
+		Brush,
+		Text
+	};
+
 	explicit ToolBar(Type type = Vertical, QWidget *parent = 0);
 	~ToolBar();
 
@@ -25,12 +34,7 @@ signals:
 	void settingsButtonPressed();
 	void uploadButtonPressed();
 	void saveButtonPressed();
-	void textToolButtonPressed();
-	void brushToolButtonPressed();
-	void pencilToolButtonPressed();
-	void squareToolButtonPressed();
-	void lineToolButtonPressed();
-	void arrowToolButtonPressed();
+	void toolButtonChanged(const Tool& tool);
 
 protected:
 	void mousePressEvent(QMouseEvent *pEvent);
@@ -40,6 +44,12 @@ protected:
 
 private slots:
 	void onColorButtonClicked();
+	void onTextToolButtonPressed();
+	void onBrushToolButtonPressed();
+	void onPencilToolButtonPressed();
+	void onSquareToolButtonPressed();
+	void onLineToolButtonPressed();
+	void onArrowToolButtonPressed();
 
 private:
 	// Todo: Move this away from here
