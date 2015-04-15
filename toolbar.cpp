@@ -27,7 +27,7 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 	m_pLineButton = new QPushButton(QIcon(":/images/lineIcon"), "");
 	m_pSquareButton = new QPushButton(QIcon(":/images/squareIcon"), "");
 	m_pSettingsButton = new QPushButton(QIcon(":/images/settingsIcon"), "");
-	m_pPencilButton = new QPushButton(QIcon(":/images/pencilIcon"), "");
+	m_pEllipseButton = new QPushButton(QIcon(":/images/ellipseIcon"), "");
 	m_pTextButton = new QPushButton(QIcon(":/images/textIcon"), "");
 	m_pBrushButton = new QPushButton(QIcon(":/images/brushIcon"), "");
 	m_pUploadButton = new QPushButton(QIcon(":/images/uploadIcon"), "");
@@ -65,7 +65,7 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 	m_pLineButton->setFlat(true);
 	m_pSquareButton->setFlat(true);
 	m_pSettingsButton->setFlat(true);
-	m_pPencilButton->setFlat(true);
+	m_pEllipseButton->setFlat(true);
 	m_pTextButton->setFlat(true);
 	m_pBrushButton->setFlat(true);
 	m_pUploadButton->setFlat(true);
@@ -75,14 +75,14 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 	m_pArrowButton->setCheckable(true);
 	m_pLineButton->setCheckable(true);
 	m_pSquareButton->setCheckable(true);
-	m_pPencilButton->setCheckable(true);
+	m_pEllipseButton->setCheckable(true);
 	m_pTextButton->setCheckable(true);
 	m_pBrushButton->setCheckable(true);
 
 	m_pButtonGroup->addButton(m_pArrowButton);
 	m_pButtonGroup->addButton(m_pLineButton);
 	m_pButtonGroup->addButton(m_pSquareButton);
-	m_pButtonGroup->addButton(m_pPencilButton);
+	m_pButtonGroup->addButton(m_pEllipseButton);
 	m_pButtonGroup->addButton(m_pTextButton);
 	m_pButtonGroup->addButton(m_pBrushButton);
 	m_pButtonGroup->setExclusive(true);
@@ -102,8 +102,8 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 			this, &ToolBar::onTextToolButtonPressed);
 	connect(m_pBrushButton, &QPushButton::clicked,
 			this, &ToolBar::onBrushToolButtonPressed);
-	connect(m_pPencilButton, &QPushButton::clicked,
-			this, &ToolBar::onPencilToolButtonPressed);
+	connect(m_pEllipseButton, &QPushButton::clicked,
+			this, &ToolBar::onEllipseToolButtonPressed);
 	connect(m_pSquareButton, &QPushButton::clicked,
 			this, &ToolBar::onSquareToolButtonPressed);
 	connect(m_pLineButton, &QPushButton::clicked,
@@ -118,7 +118,7 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 	m_pLayout->addWidget(m_pArrowButton);
 	m_pLayout->addWidget(m_pLineButton);
 	m_pLayout->addWidget(m_pSquareButton);
-	m_pLayout->addWidget(m_pPencilButton);
+	m_pLayout->addWidget(m_pEllipseButton);
 	m_pLayout->addWidget(m_pBrushButton);
 	m_pLayout->addWidget(m_pTextButton);
 	m_pLayout->addWidget(m_pSeparator1);
@@ -194,57 +194,45 @@ void ToolBar::paintEvent(QPaintEvent *pEvent)
 void ToolBar::onColorButtonClicked()
 {
 	m_drawColor = QColorDialog::getColor(m_drawColor,
-										 0, /* Not quite safe but resolves the style issues */
-										 "Pick your color",
-										 QColorDialog::ShowAlphaChannel);
+	                                     0, /* Not quite safe but resolves the style issues */
+	                                     "Pick your color",
+	                                     QColorDialog::ShowAlphaChannel);
 
 	m_pColorButton->setStyleSheet(QString("background-color: rgba(%1, %2, %3, %4)")
-								  .arg(m_drawColor.red())
-								  .arg(m_drawColor.green())
-								  .arg(m_drawColor.blue())
-								  .arg(m_drawColor.alpha()));
+	                              .arg(m_drawColor.red())
+	                              .arg(m_drawColor.green())
+	                              .arg(m_drawColor.blue())
+	                              .arg(m_drawColor.alpha()));
 }
 
 void ToolBar::onTextToolButtonPressed()
 {
 	m_currentTool = Text;
-
-	emit currentToolChanged(Text);
 }
 
 void ToolBar::onBrushToolButtonPressed()
 {
 	m_currentTool = Brush;
-
-	emit currentToolChanged(Brush);
 }
 
-void ToolBar::onPencilToolButtonPressed()
+void ToolBar::onEllipseToolButtonPressed()
 {
-	m_currentTool = Pencil;
-
-	emit currentToolChanged(Pencil);
+	m_currentTool = Ellipse;
 }
 
 void ToolBar::onSquareToolButtonPressed()
 {
 	m_currentTool = Square;
-
-	emit currentToolChanged(Square);
 }
 
 void ToolBar::onLineToolButtonPressed()
 {
 	m_currentTool = Line;
-
-	emit currentToolChanged(Line);
 }
 
 void ToolBar::onArrowToolButtonPressed()
 {
 	m_currentTool = Arrow;
-
-	emit currentToolChanged(Arrow);
 }
 
 void ToolBar::setTheme()
@@ -260,4 +248,3 @@ void ToolBar::setTheme()
 
 	stylesheetFile.close();
 }
-

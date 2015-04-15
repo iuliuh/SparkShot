@@ -32,7 +32,6 @@ private slots:
 	void onSettingsButtonPressed();
 	void onUploadButtonPressed();
 	void onSaveButtonPressed();
-	void onCurrentToolChanged(const ToolBar::Tool& tool);
 
 private:
 	void drawRubberBand(QPainter* painter);
@@ -40,6 +39,10 @@ private:
 	void drawDarkOverlay(QPainter* painter);
 	void drawArrow(QPainter* painter);
 	void drawLine(QPainter* painter);
+	void drawSquare(QPainter* painter);
+	void drawBrush(QPainter* painter);
+	void drawEllipse(QPainter* painter);
+	void drawText(QPainter* painter);
 
 private:
 	ToolBar *m_pToolBar;
@@ -52,6 +55,7 @@ private:
 	bool m_selectionStarted;
 	QPoint m_initialPressPoint;
 	QPoint m_currentPressPoint;
+	QRect m_screenShotArea;
 
 private:
 	QColor m_darkOverlayColor;

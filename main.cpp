@@ -1,6 +1,34 @@
 #include <QApplication>
+
 #include "screenshotarea.h"
 #include "toolbar.h"
+
+/*
+ * TODO:
+ *
+ *  1.0:
+ *   - Color picker
+ *   - Text drawing
+ *   - Cropped area move/resize
+ *   - Imgur upload
+ *   - Preferences dialog
+ *   - Clean up
+ *
+ *  2.0:
+ *   - Undo
+ *   - Photoshop-like tool buttons
+ *   - No border around saved images
+ *   - Multi-monitor support
+ *   - Social networks share button
+ *   - Clean up
+ *
+ *  3.0:
+ *   - Theming support
+ *   - Drawing plugins
+ *   - Stabilization & bug fixing
+ *   - Website
+ *   - Clean up
+ */
 
 int main(int argc, char *argv[])
 {
@@ -8,9 +36,6 @@ int main(int argc, char *argv[])
 
 	ScreenshotArea s;
 	s.shoot();
-
-//	ToolBar t;
-//	t.show();
 
 	return a.exec();
 }

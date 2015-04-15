@@ -22,7 +22,7 @@ public:
 		Arrow,
 		Line,
 		Square,
-		Pencil,
+		Ellipse,
 		Brush,
 		Text
 	};
@@ -38,7 +38,6 @@ signals:
 	void settingsButtonPressed();
 	void uploadButtonPressed();
 	void saveButtonPressed();
-	void currentToolChanged(const Tool& tool);
 
 protected:
 	void mousePressEvent(QMouseEvent *pEvent);
@@ -50,8 +49,8 @@ private slots:
 	void onColorButtonClicked();
 	void onTextToolButtonPressed();
 	void onBrushToolButtonPressed();
-	void onPencilToolButtonPressed();
 	void onSquareToolButtonPressed();
+	void onEllipseToolButtonPressed();
 	void onLineToolButtonPressed();
 	void onArrowToolButtonPressed();
 
@@ -71,7 +70,7 @@ private:
 	QPushButton *m_pArrowButton;
 	QPushButton *m_pLineButton;
 	QPushButton *m_pSquareButton;
-	QPushButton *m_pPencilButton;
+	QPushButton *m_pEllipseButton;
 	QPushButton *m_pSaveButton;
 	QPushButton *m_pBrushButton;
 	QPushButton *m_pTextButton;

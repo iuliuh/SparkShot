@@ -5,6 +5,7 @@
 #include <QKeyEvent>
 #include <QPainter>
 #include <QtMath>
+#include <QFileDialog>
 
 ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
 {
@@ -32,8 +33,6 @@ ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
 			this, &ScreenshotArea::onUploadButtonPressed);
 	connect(m_pToolBar, &ToolBar::saveButtonPressed,
 			this, &ScreenshotArea::onSaveButtonPressed);
-	connect(m_pToolBar, &ToolBar::currentToolChanged,
-			this, &ScreenshotArea::onCurrentToolChanged);
 
 	setGeometry(QGuiApplication::primaryScreen()->geometry());
 
@@ -89,20 +88,28 @@ void ScreenshotArea::onUploadButtonPressed()
 
 void ScreenshotArea::onSaveButtonPressed()
 {
-	qDebug() << Q_FUNC_INFO;
-}
+	hide();
 
-void ScreenshotArea::onCurrentToolChanged(const ToolBar::Tool& tool)
-{
-	qDebug() << tool;
+	QPixmap newPixmap = m_paintBoard.copy(m_screenShotArea);
+
+	QString fileName = QFileDialog::getSaveFileName(this,
+	                                                tr("Save File"),
+	                                                QDir::homePath(),
+	                                                tr("Images (*.png *.bmp *.jpg *jpeg *gif)"));
+
+	newPixmap.save(fileName);
+
+	close();
 }
 
 void ScreenshotArea::drawRubberBand(QPainter* painter)
 {
 	QRect rubberBandRect(m_initialPressPoint.x(),
-						 m_initialPressPoint.y(),
-						 m_currentPressPoint.x() - m_initialPressPoint.x(),
-						 m_currentPressPoint.y() - m_initialPressPoint.y());
+	                     m_initialPressPoint.y(),
+	                     m_currentPressPoint.x() - m_initialPressPoint.x(),
+	                     m_currentPressPoint.y() - m_initialPressPoint.y());
+
+	m_screenShotArea = rubberBandRect;
 
 	QPen pen(m_rubberBandColor);
 	pen.setWidth(m_rubberBandWidth);
@@ -133,9 +140,9 @@ void ScreenshotArea::drawCroppedArea(QPainter* painter)
 	if(m_selectionStarted)
 	{
 		QRect pixmapRect(m_initialPressPoint.x(),
-						 m_initialPressPoint.y(),
-						 m_currentPressPoint.x() - m_initialPressPoint.x(),
-						 m_currentPressPoint.y() - m_initialPressPoint.y());
+		                 m_initialPressPoint.y(),
+		                 m_currentPressPoint.x() - m_initialPressPoint.x(),
+		                 m_currentPressPoint.y() - m_initialPressPoint.y());
 
 		painter->drawPixmap(pixmapRect.normalized(), m_originalCapture, pixmapRect.normalized());
 	}
@@ -177,7 +184,8 @@ void ScreenshotArea::drawArrow(QPainter* painter)
 
 	if (m_initialPressPoint == currentShortenedLinePressPoint)
 	{
-		return; // not a line
+		// Not a line
+		return;
 	}
 
 	double dx = currentShortenedLinePressPoint.x() - m_initialPressPoint.x();
@@ -267,13 +275,87 @@ void ScreenshotArea::drawLine(QPainter* painter)
 	painter->drawLine(m_initialPressPoint, m_currentPressPoint);
 }
 
+void ScreenshotArea::drawSquare(QPainter* painter)
+{
+	if(!m_leftButtonPressed)
+	{
+		return;
+	}
+
+	painter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
+
+	QPen pen;
+	pen.setBrush(QBrush(m_pToolBar->currentColor()));
+	pen.setWidth(m_penWidth);
+
+	painter->setPen(pen);
+	painter->drawRect(m_initialPressPoint.x(),
+	                  m_initialPressPoint.y(),
+	                  m_currentPressPoint.x() - m_initialPressPoint.x(),
+	                  m_currentPressPoint.y() - m_initialPressPoint.y());
+
+}
+
+void ScreenshotArea::drawBrush(QPainter* painter)
+{
+	if(!m_leftButtonPressed)
+	{
+		return;
+	}
+
+	QPen backupPen = painter->pen();
+	QBrush backupBrush = painter->brush();
+
+	painter->setPen(Qt::NoPen);
+
+	QBrush brush(m_pToolBar->currentColor());
+
+	painter->setBrush(brush);
+
+	painter->drawEllipse(m_currentPressPoint.x(),
+	                     m_currentPressPoint.y(),
+	                     m_penWidth,
+	                     m_penWidth);
+
+	painter->setPen(backupPen);
+	painter->setBrush(backupBrush);
+}
+
+void ScreenshotArea::drawEllipse(QPainter* painter)
+{
+	if(!m_leftButtonPressed)
+	{
+		return;
+	}
+
+	painter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
+
+	QPen pen;
+	pen.setBrush(QBrush(m_pToolBar->currentColor()));
+	pen.setWidth(m_penWidth);
+
+	painter->setPen(pen);
+
+	QRect ellipseRectangle(m_initialPressPoint.x(),
+	                       m_initialPressPoint.y(),
+	                       m_currentPressPoint.x() - m_initialPressPoint.x(),
+	                       m_currentPressPoint.y() - m_initialPressPoint.y());
+
+	painter->drawEllipse(ellipseRectangle);
+}
+
+void ScreenshotArea::drawText(QPainter* painter)
+{
+	// TODO: Draw text here
+}
+
 void ScreenshotArea::mouseMoveEvent(QMouseEvent *e)
 {
-	if(m_leftButtonPressed)
+	if (m_leftButtonPressed)
 	{
 		m_currentPressPoint = e->pos();
 
-		if(m_pToolBar->currentTool() == ToolBar::NoTool)
+		if (m_pToolBar->currentTool() == ToolBar::NoTool)
 		{
 			m_pToolBar->move(m_currentPressPoint + QPoint(10, 10));
 		}
@@ -301,11 +383,11 @@ void ScreenshotArea::mousePressEvent(QMouseEvent *e)
 
 void ScreenshotArea::mouseReleaseEvent(QMouseEvent *e)
 {
-	if(e->button() == Qt::LeftButton)
+	if (e->button() == Qt::LeftButton)
 	{
 		m_leftButtonPressed = false;
 
-		if(m_pToolBar->currentTool() == ToolBar::NoTool)
+		if (m_pToolBar->currentTool() == ToolBar::NoTool)
 		{
 			m_pToolBar->show();
 		}
@@ -319,20 +401,32 @@ void ScreenshotArea::paintEvent(QPaintEvent *pEvent)
 	QPainter paintBoardPainter(&m_paintBoard);
 	paintBoardPainter.setRenderHint(QPainter::Antialiasing);
 
-	if(m_pToolBar->currentTool() == ToolBar::NoTool)
+	if (m_pToolBar->currentTool() == ToolBar::NoTool)
 	{
 		drawDarkOverlay(&paintBoardPainter);
 		drawCroppedArea(&paintBoardPainter);
 		drawRubberBand(&paintBoardPainter);
 	}
 
-	switch(m_pToolBar->currentTool())
+	switch (m_pToolBar->currentTool())
 	{
 	case ToolBar::Arrow:
 		drawArrow(&paintBoardPainter);
 		break;
 	case ToolBar::Line:
 		drawLine(&paintBoardPainter);
+		break;
+	case ToolBar::Square:
+		drawSquare(&paintBoardPainter);
+		break;
+	case ToolBar::Brush:
+		drawBrush(&paintBoardPainter);
+		break;
+	case ToolBar::Ellipse:
+		drawEllipse(&paintBoardPainter);
+		break;
+	case ToolBar::Text:
+		drawText(&paintBoardPainter);
 		break;
 	default:
 		break;

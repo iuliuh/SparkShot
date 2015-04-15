@@ -3,20 +3,18 @@
         <file alias="closeIcon">assets/images/x.png</file>
         <file alias="textIcon">assets/images/text.png</file>
         <file alias="lineIcon">assets/images/line.png</file>
-        <file alias="pencilIcon">assets/images/pencil.png</file>
         <file alias="settingsIcon">assets/images/cog.png</file>
         <file alias="uploadIcon">assets/images/cloud-upload.png</file>
         <file alias="rejectIcon">assets/images/x.png</file>
         <file alias="arrowIcon">assets/images/arrow.png</file>
         <file alias="brushIcon">assets/images/brush.png</file>
         <file alias="horizontalSeparatorIcon">assets/images/horizontalSeparator.png</file>
-        <file alias="horizontalHandlerIcon">assets/images/horizontalHandler.png</file>
         <file alias="handleIcon">assets/images/handle.png</file>
         <file alias="saveIcon">assets/images/save.png</file>
         <file alias="squareIcon">assets/images/square.png</file>
         <file alias="undoIcon">assets/images/undo.png</file>
         <file alias="verticalSeparatorIcon">assets/images/verticalSeparator.png</file>
-        <file alias="verticalHandlerIcon">assets/images/verticalHandler.png</file>
+        <file alias="ellipseIcon">assets/images/ellipse.png</file>
     </qresource>
     <qresource prefix="/theme">
         <file alias="lightTheme">assets/style/stylesheet.qss</file>
