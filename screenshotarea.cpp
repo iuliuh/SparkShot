@@ -31,7 +31,7 @@ ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
 	m_rubberBandWidth = 2;
 	m_penWidth = 2;
 	m_rubberBandPointRadius = 3;
-	m_arrowBaseWidth = 7;
+	m_arrowBaseWidth = 8;
 	m_arrowHeight = 11.0 * qSqrt(3.0);
 
 	m_leftButtonPressed = false;
@@ -131,6 +131,9 @@ void ScreenshotArea::onUploadButtonPressed()
 //	        this, &ScreenshotArea::onError);
 	connect(m_pNetworkReply, &QNetworkReply::sslErrors,
 	        this, &ScreenshotArea::onSslErrors);
+
+	m_pUploadDialog->show();
+	hide();
 }
 
 void ScreenshotArea::onSaveButtonPressed()
@@ -168,8 +171,7 @@ void ScreenshotArea::replyFinished()
 		QJsonObject jsonData = jsonObject.take("data").toObject();
 
 		m_pUploadDialog->setLink(jsonData.take("link").toString());
-		m_pUploadDialog->show();
-		hide();
+//		m_pUploadDialog->show();
 	}
 
 	disconnect(m_pNetworkReply, &QNetworkReply::finished,

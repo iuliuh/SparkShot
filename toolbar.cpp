@@ -13,7 +13,8 @@
 
 ToolBar::ToolBar(Type type, QWidget *parent) :
 	QWidget(parent),
-	m_type(type)
+	m_type(type),
+	m_colorPickerDialog(this)
 {
 	setWindowFlags(Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
 	setAttribute(Qt::WA_TranslucentBackground);
@@ -174,6 +175,8 @@ void ToolBar::mouseMoveEvent(QMouseEvent* pEvent)
 	{
 		move(pEvent->pos().x() - m_mousePosOnBar.x() + geometry().x(),
 			 pEvent->pos().y() - m_mousePosOnBar.y() + geometry().y());
+
+		autoPositionColorPicker();
 	}
 
 
@@ -191,18 +194,23 @@ void ToolBar::paintEvent(QPaintEvent *pEvent)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
+void ToolBar::autoPositionColorPicker()
+{
+	const QPoint globalPos = m_pColorButton->mapFromGlobal(QPoint(0, 0));
+	const int posX = -globalPos.x();
+	const int posY = -globalPos.y();
+
+	m_colorPickerDialog.setGeometry(posX - m_pColorButton->width() - 5,
+	                                posY + m_pColorButton->height() + 5,
+	                                m_colorPickerDialog.width(),
+	                                m_colorPickerDialog.height());
+}
+
 void ToolBar::onColorButtonClicked()
 {
-	m_drawColor = QColorDialog::getColor(m_drawColor,
-	                                     this, /* Not quite safe but resolves the style issues */
-	                                     "Pick your color",
-	                                     QColorDialog::ShowAlphaChannel);
+	autoPositionColorPicker();
 
-	m_pColorButton->setStyleSheet(QString("background-color: rgba(%1, %2, %3, %4)")
-	                              .arg(m_drawColor.red())
-	                              .arg(m_drawColor.green())
-	                              .arg(m_drawColor.blue())
-	                              .arg(m_drawColor.alpha()));
+	m_colorPickerDialog.show();
 }
 
 void ToolBar::onTextToolButtonPressed()

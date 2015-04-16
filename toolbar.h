@@ -7,6 +7,8 @@
 #include <QPushButton>
 #include <QLabel>
 
+#include "colorpickerdialog.h"
+
 class ToolBar : public QWidget
 {
 	Q_OBJECT
@@ -55,6 +57,7 @@ private slots:
 	void onArrowToolButtonPressed();
 
 private:
+	void autoPositionColorPicker();
 	// Todo: Move this away from here
 	void setTheme();
 
@@ -63,6 +66,7 @@ private:
 	QLayout *m_pLayout;
 
 	Tool m_currentTool;
+	ColorPickerDialog m_colorPickerDialog;
 
 	QButtonGroup *m_pButtonGroup;
 	QPushButton *m_pSettingsButton;

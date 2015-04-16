@@ -15,16 +15,21 @@ TEMPLATE = app
 SOURCES += main.cpp \
     screenshotarea.cpp \
     toolbar.cpp \
-    uploaddialog.cpp
+    uploaddialog.cpp \
+    colorpicker.cpp \
+    colorpickerdialog.cpp
 
 HEADERS  += \
     screenshotarea.h \
     toolbar.h \
     defines.h \
-    uploaddialog.h
+    uploaddialog.h \
+    colorpicker.h \
+    colorpickerdialog.h
 
 FORMS += \
-    uploaddialog.ui
+    uploaddialog.ui \
+    colorpickerdialog.ui
 
 RESOURCES += \
     resources.qrc
