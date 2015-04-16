@@ -6,6 +6,15 @@
 #include <QPainter>
 #include <QtMath>
 #include <QFileDialog>
+#include <QNetworkRequest>
+#include <QByteArray>
+#include <QHttpPart>
+#include <QHttpMultiPart>
+#include <QBuffer>
+#include <QJsonDocument>
+#include <QJsonObject>
+
+#include "defines.h"
 
 ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
 {
@@ -39,6 +48,7 @@ ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
 
 	setGeometry(QGuiApplication::primaryScreen()->geometry());
 
+	m_pUploadDialog = new UploadDialog;
 	//Uncomment when doing the resize mouse area
 	//setMouseTracking(true);
 }
@@ -86,7 +96,41 @@ void ScreenshotArea::onSettingsButtonPressed()
 
 void ScreenshotArea::onUploadButtonPressed()
 {
-	qDebug() << Q_FUNC_INFO;
+	QNetworkRequest networkRequest;
+
+	QUrl requestUrl("https://api.imgur.com/3/image.json");
+	if(requestUrl.isValid())
+	{
+		networkRequest.setUrl(requestUrl);
+	}
+
+	networkRequest.setRawHeader("Authorization", "Client-ID " CLIENT_ID);
+
+	QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+
+	QHttpPart imagePart;
+	imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image"));
+	imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"image\""));
+
+	QPixmap newPixmap = m_paintBoard.copy(m_screenShotArea);
+
+	// Preparation of our QPixmap
+	QByteArray pixmapByteArray;
+	QBuffer buffer(&pixmapByteArray);
+	buffer.open(QIODevice::WriteOnly);
+	newPixmap.save(&buffer, "PNG");
+
+	imagePart.setBody(pixmapByteArray);
+
+	multiPart->append(imagePart);
+	m_pNetworkReply = m_networkAccessManager.post(networkRequest, multiPart);
+
+	connect(m_pNetworkReply, &QNetworkReply::finished,
+	        this, &ScreenshotArea::replyFinished);
+//	connect(m_pNetworkReply, &QNetworkReply::error,
+//	        this, &ScreenshotArea::onError);
+	connect(m_pNetworkReply, &QNetworkReply::sslErrors,
+	        this, &ScreenshotArea::onSslErrors);
 }
 
 void ScreenshotArea::onSaveButtonPressed()
@@ -106,6 +150,58 @@ void ScreenshotArea::onSaveButtonPressed()
 
 		close();
 	}
+}
+
+void ScreenshotArea::replyFinished()
+{
+	qDebug() << "replyFinished";
+	if(m_pNetworkReply->error())
+	{
+		qDebug() << "ERROR!";
+		qDebug() << m_pNetworkReply->errorString();
+	}
+	else
+	{
+		// TODO: Make it nice, man!!!
+		QJsonDocument jsonDocument = QJsonDocument::fromJson(m_pNetworkReply->readAll());
+		QJsonObject jsonObject = jsonDocument.object();
+		QJsonObject jsonData = jsonObject.take("data").toObject();
+
+		m_pUploadDialog->setLink(jsonData.take("link").toString());
+		m_pUploadDialog->show();
+		hide();
+	}
+
+	disconnect(m_pNetworkReply, &QNetworkReply::finished,
+	           this, &ScreenshotArea::replyFinished);
+//	disconnect(m_pNetworkReply, &QNetworkReply::error,
+//	           this, &ScreenshotArea::onError);
+	disconnect(m_pNetworkReply, &QNetworkReply::sslErrors,
+	           this, &ScreenshotArea::onSslErrors);
+
+	m_pNetworkReply->deleteLater();
+
+	close();
+}
+
+void ScreenshotArea::onError(QNetworkReply::NetworkError)
+{
+	disconnect(m_pNetworkReply, &QNetworkReply::finished,
+	           this, &ScreenshotArea::replyFinished);
+//	disconnect(m_pNetworkReply, &QNetworkReply::error,
+//	           this, &ScreenshotArea::onError);
+	disconnect(m_pNetworkReply, &QNetworkReply::sslErrors,
+	           this, &ScreenshotArea::onSslErrors);
+}
+
+void ScreenshotArea::onSslErrors(QList<QSslError>)
+{
+	disconnect(m_pNetworkReply, &QNetworkReply::finished,
+	           this, &ScreenshotArea::replyFinished);
+//	disconnect(m_pNetworkReply, &QNetworkReply::error,
+//	           this, &ScreenshotArea::onError);
+	disconnect(m_pNetworkReply, &QNetworkReply::sslErrors,
+	           this, &ScreenshotArea::onSslErrors);
 }
 
 void ScreenshotArea::drawRubberBand(QPainter* painter)

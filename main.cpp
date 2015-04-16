@@ -15,7 +15,12 @@
  *   - Toolbar auto out of screen
  *     autopositioning
  *   - Translations
- *   - Clean up
+ *   - Clean up: - includes
+ *               - const correctness
+ *               - comments
+ *               - pointers/nonpointers
+ *               - error checking on network,
+ *                 data saving and json
  *
  *  2.0:
  *   - Undo

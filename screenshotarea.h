@@ -7,8 +7,11 @@
 #include <QGuiApplication>
 #include <QScreen>
 #include <QPoint>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
 #include "toolbar.h"
+#include "uploaddialog.h"
 
 class ScreenshotArea : public QWidget
 {
@@ -33,6 +36,10 @@ private slots:
 	void onUploadButtonPressed();
 	void onSaveButtonPressed();
 
+	void replyFinished();
+	void onError(QNetworkReply::NetworkError);
+	void onSslErrors(QList<QSslError>);
+
 private:
 	void drawRubberBand(QPainter* painter);
 	void drawCroppedArea(QPainter* painter);
@@ -56,6 +63,12 @@ private:
 	QPoint m_initialPressPoint;
 	QPoint m_currentPressPoint;
 	QRect m_screenShotArea;
+
+	// Imgur API
+	QString m_clientId;
+	QNetworkAccessManager m_networkAccessManager;
+	QNetworkReply *m_pNetworkReply;
+	UploadDialog *m_pUploadDialog;
 
 private:
 	QColor m_darkOverlayColor;

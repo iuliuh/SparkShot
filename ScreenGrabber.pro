@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -14,13 +14,17 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     screenshotarea.cpp \
-    toolbar.cpp
+    toolbar.cpp \
+    uploaddialog.cpp
 
 HEADERS  += \
     screenshotarea.h \
-    toolbar.h
+    toolbar.h \
+    defines.h \
+    uploaddialog.h
 
-FORMS +=
+FORMS += \
+    uploaddialog.ui
 
 RESOURCES += \
     resources.qrc
