@@ -12,6 +12,9 @@
  *   - Cropped area move/resize
  *   - Imgur upload
  *   - Preferences dialog
+ *   - Toolbar auto out of screen
+ *     autopositioning
+ *   - Translations
  *   - Clean up
  *
  *  2.0:

@@ -9,7 +9,10 @@
 
 ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
 {
-	setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
+	setWindowFlags(Qt::WindowStaysOnTopHint |
+	               Qt::BypassWindowManagerHint |
+	               Qt::FramelessWindowHint |
+	               Qt::NoDropShadowWindowHint);
 
 	m_pToolBar = new ToolBar(ToolBar::Horizontal, this);
 	m_pToolBar->move(100, 100);
@@ -88,18 +91,21 @@ void ScreenshotArea::onUploadButtonPressed()
 
 void ScreenshotArea::onSaveButtonPressed()
 {
-	hide();
-
 	QPixmap newPixmap = m_paintBoard.copy(m_screenShotArea);
 
+	QString defaultFilter = tr("*.png");
 	QString fileName = QFileDialog::getSaveFileName(this,
 	                                                tr("Save File"),
 	                                                QDir::homePath(),
-	                                                tr("Images (*.png *.bmp *.jpg *jpeg *gif)"));
+	                                                tr("Images (*.png *.bmp *.jpg *jpeg)"),
+	                                                &defaultFilter);
 
-	newPixmap.save(fileName);
+	if(!fileName.isEmpty())
+	{
+		newPixmap.save(fileName);
 
-	close();
+		close();
+	}
 }
 
 void ScreenshotArea::drawRubberBand(QPainter* painter)
@@ -251,7 +257,7 @@ void ScreenshotArea::drawArrow(QPainter* painter)
 
 	QPainterPath path;
 	path.addPolygon(p);
-	painter->fillPath(path, QBrush(Qt::black));
+	painter->fillPath(path, QBrush(m_pToolBar->currentColor()));
 
 	// Set the pen and brush back to normal
 	painter->setPen(backupPen);
@@ -346,6 +352,7 @@ void ScreenshotArea::drawEllipse(QPainter* painter)
 
 void ScreenshotArea::drawText(QPainter* painter)
 {
+	Q_UNUSED(painter)
 	// TODO: Draw text here
 }
 
@@ -357,7 +364,23 @@ void ScreenshotArea::mouseMoveEvent(QMouseEvent *e)
 
 		if (m_pToolBar->currentTool() == ToolBar::NoTool)
 		{
-			m_pToolBar->move(m_currentPressPoint + QPoint(10, 10));
+			const QPoint toolBarPositionPoint =  m_screenShotArea.normalized().bottomRight();
+			const int toolBarDistance = 10;
+			const int toolBarDistanceThreshold = 15;
+			int x = toolBarPositionPoint.x();
+			int y = toolBarPositionPoint.y();
+
+			if(x + m_pToolBar->width() + toolBarDistanceThreshold > m_originalCapture.width())
+			{
+				x = m_originalCapture.width() - m_pToolBar->width() - toolBarDistanceThreshold;
+			}
+
+			if(y + m_pToolBar->height() + toolBarDistanceThreshold > m_originalCapture.height())
+			{
+				y = m_originalCapture.height() - m_pToolBar->height() - toolBarDistanceThreshold;
+			}
+
+			m_pToolBar->move(QPoint(x, y) + QPoint(toolBarDistance, toolBarDistance));
 		}
 	}
 }

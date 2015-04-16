@@ -194,7 +194,7 @@ void ToolBar::paintEvent(QPaintEvent *pEvent)
 void ToolBar::onColorButtonClicked()
 {
 	m_drawColor = QColorDialog::getColor(m_drawColor,
-	                                     0, /* Not quite safe but resolves the style issues */
+	                                     this, /* Not quite safe but resolves the style issues */
 	                                     "Pick your color",
 	                                     QColorDialog::ShowAlphaChannel);
 

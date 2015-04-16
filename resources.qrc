@@ -15,6 +15,7 @@
         <file alias="undoIcon">assets/images/undo.png</file>
         <file alias="verticalSeparatorIcon">assets/images/verticalSeparator.png</file>
         <file alias="ellipseIcon">assets/images/ellipse.png</file>
+        <file>assets/images/crop.png</file>
     </qresource>
     <qresource prefix="/theme">
         <file alias="lightTheme">assets/style/stylesheet.qss</file>
