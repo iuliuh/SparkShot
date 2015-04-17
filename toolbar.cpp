@@ -156,6 +156,7 @@ QColor ToolBar::currentColor() const
 
 void ToolBar::hide()
 {
+	//! \todo Why is it not hiding?
 	m_colorPickerDialog.hide();
 	QWidget::hide();
 }
@@ -192,7 +193,7 @@ void ToolBar::mouseMoveEvent(QMouseEvent* pEvent)
 	if(m_leftButtonPressed)
 	{
 		move(pEvent->pos().x() - m_mousePosOnBar.x() + geometry().x(),
-			 pEvent->pos().y() - m_mousePosOnBar.y() + geometry().y());
+		     pEvent->pos().y() - m_mousePosOnBar.y() + geometry().y());
 
 		autoPositionColorPicker();
 	}
@@ -215,27 +216,25 @@ void ToolBar::paintEvent(QPaintEvent *pEvent)
 
 void ToolBar::autoPositionColorPicker()
 {
-	const QPoint globalPos = m_pColorButton->mapFromGlobal(QPoint(0, 0));
-	int posX = 0;
-	int posY = 0;
+	const int threshold = 5;
+	int colorPickerXPosition = -m_pColorButton->mapFromGlobal(QPoint(0, 0)).x();
+	int colorPickerYPosition = -m_pColorButton->mapFromGlobal(QPoint(0, 0)).y();
 
-	if(y() + height() + m_colorPickerDialog.height() > m_screenRect.height())
+	if(m_colorPickerDialog.height() + height() + y() > m_screenRect.height())
 	{
 		m_colorPickerDialog.setArrowLocation(ColorPickerDialog::Bottom);
-
-		posX = -globalPos.x() - m_pColorButton->width() + 5;
-		posY = -globalPos.y() - m_colorPickerDialog.height() - 5;
+		colorPickerXPosition -= m_pColorButton->width() - threshold;
+		colorPickerYPosition -= m_colorPickerDialog.height() + threshold;
 	}
 	else
 	{
 		m_colorPickerDialog.setArrowLocation(ColorPickerDialog::Top);
-
-		posX = -globalPos.x() - m_pColorButton->width() + 5;
-		posY = -globalPos.y() + m_pColorButton->height() + 5;
+		colorPickerXPosition -= m_pColorButton->width() - threshold;
+		colorPickerYPosition -= -m_pColorButton->height() - threshold;
 	}
 
-	m_colorPickerDialog.setGeometry(posX,
-	                                posY,
+	m_colorPickerDialog.setGeometry(colorPickerXPosition,
+	                                colorPickerYPosition,
 	                                m_colorPickerDialog.width(),
 	                                m_colorPickerDialog.height());
 }
@@ -244,37 +243,43 @@ void ToolBar::onColorButtonClicked()
 {
 	autoPositionColorPicker();
 
-	m_colorPickerDialog.show();
+	m_colorPickerDialog.isVisible() ? m_colorPickerDialog.hide() : m_colorPickerDialog.show();
 }
 
 void ToolBar::onTextToolButtonPressed()
 {
 	m_currentTool = Text;
+	m_colorPickerDialog.hide();
 }
 
 void ToolBar::onBrushToolButtonPressed()
 {
 	m_currentTool = Brush;
+	m_colorPickerDialog.hide();
 }
 
 void ToolBar::onEllipseToolButtonPressed()
 {
 	m_currentTool = Ellipse;
+	m_colorPickerDialog.hide();
 }
 
 void ToolBar::onSquareToolButtonPressed()
 {
 	m_currentTool = Square;
+	m_colorPickerDialog.hide();
 }
 
 void ToolBar::onLineToolButtonPressed()
 {
 	m_currentTool = Line;
+	m_colorPickerDialog.hide();
 }
 
 void ToolBar::onArrowToolButtonPressed()
 {
 	m_currentTool = Arrow;
+	m_colorPickerDialog.hide();
 }
 
 void ToolBar::onDrawingColorChanged(QColor newColor)

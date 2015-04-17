@@ -127,8 +127,8 @@ void ScreenshotArea::onUploadButtonPressed()
 
 	connect(m_pNetworkReply, &QNetworkReply::finished,
 	        this, &ScreenshotArea::replyFinished);
-//	connect(m_pNetworkReply, &QNetworkReply::error,
-//	        this, &ScreenshotArea::onError);
+	connect(m_pNetworkReply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
+	        this, &ScreenshotArea::onError);
 	connect(m_pNetworkReply, &QNetworkReply::sslErrors,
 	        this, &ScreenshotArea::onSslErrors);
 
@@ -171,13 +171,12 @@ void ScreenshotArea::replyFinished()
 		QJsonObject jsonData = jsonObject.take("data").toObject();
 
 		m_pUploadDialog->setLink(jsonData.take("link").toString());
-//		m_pUploadDialog->show();
 	}
 
 	disconnect(m_pNetworkReply, &QNetworkReply::finished,
 	           this, &ScreenshotArea::replyFinished);
-//	disconnect(m_pNetworkReply, &QNetworkReply::error,
-//	           this, &ScreenshotArea::onError);
+	disconnect(m_pNetworkReply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
+	           this, &ScreenshotArea::onError);
 	disconnect(m_pNetworkReply, &QNetworkReply::sslErrors,
 	           this, &ScreenshotArea::onSslErrors);
 
@@ -190,8 +189,8 @@ void ScreenshotArea::onError(QNetworkReply::NetworkError)
 {
 	disconnect(m_pNetworkReply, &QNetworkReply::finished,
 	           this, &ScreenshotArea::replyFinished);
-//	disconnect(m_pNetworkReply, &QNetworkReply::error,
-//	           this, &ScreenshotArea::onError);
+	disconnect(m_pNetworkReply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
+	this, &ScreenshotArea::onError);
 	disconnect(m_pNetworkReply, &QNetworkReply::sslErrors,
 	           this, &ScreenshotArea::onSslErrors);
 }
@@ -200,8 +199,8 @@ void ScreenshotArea::onSslErrors(QList<QSslError>)
 {
 	disconnect(m_pNetworkReply, &QNetworkReply::finished,
 	           this, &ScreenshotArea::replyFinished);
-//	disconnect(m_pNetworkReply, &QNetworkReply::error,
-//	           this, &ScreenshotArea::onError);
+	disconnect(m_pNetworkReply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
+	           this, &ScreenshotArea::onError);
 	disconnect(m_pNetworkReply, &QNetworkReply::sslErrors,
 	           this, &ScreenshotArea::onSslErrors);
 }
@@ -453,7 +452,7 @@ void ScreenshotArea::drawText(QPainter* painter)
 	Q_UNUSED(painter)
 	// TODO: Draw text here
 }
-
+#include <QRect>
 void ScreenshotArea::mouseMoveEvent(QMouseEvent *e)
 {
 	if (m_leftButtonPressed)
@@ -462,23 +461,14 @@ void ScreenshotArea::mouseMoveEvent(QMouseEvent *e)
 
 		if (m_pToolBar->currentTool() == ToolBar::NoTool)
 		{
-			const QPoint toolBarPositionPoint =  m_screenShotArea.normalized().bottomRight();
-			const int toolBarDistance = 10;
-			const int toolBarDistanceThreshold = 15;
-			int x = toolBarPositionPoint.x();
-			int y = toolBarPositionPoint.y();
+			const int threshold = 20;
 
-			if(x + m_pToolBar->width() + toolBarDistanceThreshold > m_originalCapture.width())
-			{
-				x = m_originalCapture.width() - m_pToolBar->width() - toolBarDistanceThreshold;
-			}
+			QPoint p(qMin(m_screenShotArea.normalized().bottomRight().x() + threshold,
+			              m_originalCapture.rect().bottomRight().x() - m_pToolBar->width()),
+			         qMin(m_screenShotArea.normalized().bottomRight().y() + threshold,
+			              m_originalCapture.rect().bottomRight().y() - m_pToolBar->height()));
 
-			if(y + m_pToolBar->height() + toolBarDistanceThreshold > m_originalCapture.height())
-			{
-				y = m_originalCapture.height() - m_pToolBar->height() - toolBarDistanceThreshold;
-			}
-
-			m_pToolBar->move(QPoint(x, y) + QPoint(toolBarDistance, toolBarDistance));
+			m_pToolBar->move(p);
 		}
 
 		update();
