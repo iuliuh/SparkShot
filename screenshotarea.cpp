@@ -50,7 +50,7 @@ ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
 
 	m_pUploadDialog = new UploadDialog;
 	//Uncomment when doing the resize mouse area
-	//setMouseTracking(true);
+	setMouseTracking(true);
 }
 
 ScreenshotArea::~ScreenshotArea()
@@ -410,11 +410,11 @@ void ScreenshotArea::drawBrush(QPainter* painter)
 	QPen backupPen = painter->pen();
 	QBrush backupBrush = painter->brush();
 
-	painter->setPen(Qt::NoPen);
 
 	QBrush brush(m_pToolBar->currentColor());
 
 	painter->setBrush(brush);
+	painter->setPen(QPen(brush, m_penWidth));
 
 	painter->drawEllipse(m_currentPressPoint.x(),
 	                     m_currentPressPoint.y(),
@@ -480,6 +480,8 @@ void ScreenshotArea::mouseMoveEvent(QMouseEvent *e)
 
 			m_pToolBar->move(QPoint(x, y) + QPoint(toolBarDistance, toolBarDistance));
 		}
+
+		update();
 	}
 }
 

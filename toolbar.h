@@ -35,6 +35,10 @@ public:
 	Tool currentTool() const;
 	QColor currentColor() const;
 
+public slots:
+	void hide();
+	void show();
+
 signals:
 	void discardButtonPressed();
 	void settingsButtonPressed();
@@ -55,6 +59,8 @@ private slots:
 	void onEllipseToolButtonPressed();
 	void onLineToolButtonPressed();
 	void onArrowToolButtonPressed();
+
+	void onDrawingColorChanged(QColor newColor);
 
 private:
 	void autoPositionColorPicker();
@@ -87,6 +93,7 @@ private:
 	bool m_leftButtonPressed;
 	QPoint m_mousePosOnBar;
 	QColor m_drawColor;
+	QRect m_screenRect;
 };
 
 #endif // TOOLBAR_H

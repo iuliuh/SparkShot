@@ -12,12 +12,29 @@ ColorPickerDialog::ColorPickerDialog(QWidget *parent) :
 	setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint | Qt::BypassWindowManagerHint);
 	setAttribute(Qt::WA_TranslucentBackground);
 
+	connect(ui->widget, &ColorPicker::colorChanged,
+	        this, &ColorPickerDialog::colorChanged);
+
+	m_arrowLocation = Top;
+
 	resize(100, 100);
 }
 
 ColorPickerDialog::~ColorPickerDialog()
 {
 	delete ui;
+}
+
+void ColorPickerDialog::setArrowLocation(ColorPickerDialog::ArrowLocation arrowLocation)
+{
+	m_arrowLocation = arrowLocation;
+
+	update();
+}
+
+ColorPickerDialog::ArrowLocation ColorPickerDialog::arrowLocation() const
+{
+	return m_arrowLocation;
 }
 
 void ColorPickerDialog::paintEvent(QPaintEvent* e)
@@ -53,12 +70,47 @@ void ColorPickerDialog::paintEvent(QPaintEvent* e)
 
 	int x = 10;
 
+	QPointF p1, p2, p3;
+	switch(m_arrowLocation)
+	{
+	case Top:
+		p1.setX(roundedRectDimensions.x() + roundedRectDimensions.width() / 2 - x / 2);
+		p1.setY(roundedRectDimensions.y());
+		p2.setX(roundedRectDimensions.x() + roundedRectDimensions.width() / 2 + x / 2);
+		p2.setY(roundedRectDimensions.y());
+		p3.setX(roundedRectDimensions.x() + roundedRectDimensions.width() / 2);
+		p3.setY(roundedRectDimensions.y() - x / 2);
+		break;
+	case Right:
+		p1.setX(roundedRectDimensions.x() + roundedRectDimensions.width());
+		p1.setY(roundedRectDimensions.y() + roundedRectDimensions.height() / 2 - x / 2);
+		p2.setX(roundedRectDimensions.x() + roundedRectDimensions.width());
+		p2.setY(roundedRectDimensions.y() + roundedRectDimensions.height() / 2 + x / 2);
+		p3.setX(roundedRectDimensions.x() + roundedRectDimensions.width() + x / 2);
+		p3.setY(roundedRectDimensions.y() + roundedRectDimensions.height() / 2);
+		break;
+	case Bottom:
+		p1.setX(roundedRectDimensions.x() + roundedRectDimensions.width() / 2 - x / 2);
+		p1.setY(roundedRectDimensions.y() + roundedRectDimensions.height());
+		p2.setX(roundedRectDimensions.x() + roundedRectDimensions.width() / 2 + x / 2);
+		p2.setY(roundedRectDimensions.y() + roundedRectDimensions.height());
+		p3.setX(roundedRectDimensions.x() + roundedRectDimensions.width() / 2);
+		p3.setY(roundedRectDimensions.y() + roundedRectDimensions.height() + x / 2);
+		break;
+	case Left:
+		p1.setX(roundedRectDimensions.x());
+		p1.setY(roundedRectDimensions.y() + roundedRectDimensions.height() / 2 - x / 2);
+		p2.setX(roundedRectDimensions.x());
+		p2.setY(roundedRectDimensions.y() + roundedRectDimensions.height() / 2 + x / 2);
+		p3.setX(roundedRectDimensions.x() - x / 2);
+		p3.setY(roundedRectDimensions.y() + roundedRectDimensions.height() / 2);
+		break;
+	default:
+		break;
+	}
+
 	// Draw the popup pointer
-	const QPointF points[3] = {
-		QPoint(roundedRectDimensions.x() + roundedRectDimensions.width() / 2 - x / 2, roundedRectDimensions.y()),
-		QPoint(roundedRectDimensions.x() + roundedRectDimensions.width() / 2 + x / 2, roundedRectDimensions.y()),
-		QPoint(roundedRectDimensions.x() + roundedRectDimensions.width() / 2, roundedRectDimensions.y() - x / 2)
-	};
+	const QPointF points[3] = { p1, p2, p3 };
 
 	painter.drawPolygon(points, 3);
 

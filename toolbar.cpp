@@ -10,6 +10,7 @@
 #include <QPoint>
 #include <QColorDialog>
 #include <QButtonGroup>
+#include <QScreen>
 
 ToolBar::ToolBar(Type type, QWidget *parent) :
 	QWidget(parent),
@@ -22,6 +23,8 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 	m_leftButtonPressed = false;
 	m_drawColor = Qt::black;
 	m_currentTool = NoTool;
+
+	m_screenRect = QGuiApplication::primaryScreen()->grabWindow(0).rect();
 
 	m_pColorButton = new QPushButton();
 	m_pArrowButton = new QPushButton(QIcon(":/images/arrowIcon"), "");
@@ -112,6 +115,9 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 	connect(m_pArrowButton, &QPushButton::clicked,
 			this, &ToolBar::onArrowToolButtonPressed);
 
+	connect(&m_colorPickerDialog, &ColorPickerDialog::colorChanged,
+	        this, &ToolBar::onDrawingColorChanged);
+
 	m_pLayout->setSpacing(1);
 	m_pLayout->addWidget(m_pHandler);
 	m_pLayout->addItem(new QSpacerItem(1, 0, QSizePolicy::Expanding, QSizePolicy::Minimum));
@@ -146,6 +152,18 @@ ToolBar::Tool ToolBar::currentTool() const
 QColor ToolBar::currentColor() const
 {
 	return m_drawColor;
+}
+
+void ToolBar::hide()
+{
+	m_colorPickerDialog.hide();
+	QWidget::hide();
+}
+
+void ToolBar::show()
+{
+	autoPositionColorPicker();
+	QWidget::show();
 }
 
 void ToolBar::mousePressEvent(QMouseEvent* pEvent)
@@ -194,14 +212,30 @@ void ToolBar::paintEvent(QPaintEvent *pEvent)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
+
 void ToolBar::autoPositionColorPicker()
 {
 	const QPoint globalPos = m_pColorButton->mapFromGlobal(QPoint(0, 0));
-	const int posX = -globalPos.x();
-	const int posY = -globalPos.y();
+	int posX = 0;
+	int posY = 0;
 
-	m_colorPickerDialog.setGeometry(posX - m_pColorButton->width() - 5,
-	                                posY + m_pColorButton->height() + 5,
+	if(y() + height() + m_colorPickerDialog.height() > m_screenRect.height())
+	{
+		m_colorPickerDialog.setArrowLocation(ColorPickerDialog::Bottom);
+
+		posX = -globalPos.x() - m_pColorButton->width() + 5;
+		posY = -globalPos.y() - m_colorPickerDialog.height() - 5;
+	}
+	else
+	{
+		m_colorPickerDialog.setArrowLocation(ColorPickerDialog::Top);
+
+		posX = -globalPos.x() - m_pColorButton->width() + 5;
+		posY = -globalPos.y() + m_pColorButton->height() + 5;
+	}
+
+	m_colorPickerDialog.setGeometry(posX,
+	                                posY,
 	                                m_colorPickerDialog.width(),
 	                                m_colorPickerDialog.height());
 }
@@ -241,6 +275,15 @@ void ToolBar::onLineToolButtonPressed()
 void ToolBar::onArrowToolButtonPressed()
 {
 	m_currentTool = Arrow;
+}
+
+void ToolBar::onDrawingColorChanged(QColor newColor)
+{
+	m_drawColor = newColor;
+	m_pColorButton->setStyleSheet(QString("background-color: rgb(%1, %2, %3);")
+	                              .arg(newColor.red())
+	                              .arg(newColor.green())
+	                              .arg(newColor.blue()));
 }
 
 void ToolBar::setTheme()
