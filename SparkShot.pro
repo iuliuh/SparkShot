@@ -12,27 +12,27 @@ TARGET = SparkShot
 TEMPLATE = app
 
 SOURCES += \
-    main.cpp \
-    screenshotarea.cpp \
-    toolbar.cpp \
-    uploaddialog.cpp \
-    colorpicker.cpp \
-    colorpickerdialog.cpp \
-    dialog.cpp \
-    settings.cpp
+    src/main.cpp \
+    src/screenshotarea.cpp \
+    src/toolbar.cpp \
+    src/uploaddialog.cpp \
+    src/colorpicker.cpp \
+    src/colorpickerdialog.cpp \
+    src/dialog.cpp \
+    src/settings.cpp
 
 HEADERS  += \
-    screenshotarea.h \
-    toolbar.h \
-    defines.h \
-    uploaddialog.h \
-    colorpicker.h \
-    colorpickerdialog.h \
-    dialog.h \
-    settings.h
+    src/screenshotarea.h \
+    src/toolbar.h \
+    src/defines.h \
+    src/uploaddialog.h \
+    src/colorpicker.h \
+    src/colorpickerdialog.h \
+    src/dialog.h \
+    src/settings.h
 
 FORMS += \
-    uploaddialog.ui
+    src/uploaddialog.ui
 
 RESOURCES += \
-    resources.qrc
+    src/resources.qrc
