@@ -1,40 +1,25 @@
 #ifndef COLORPICKERDIALOG_H
 #define COLORPICKERDIALOG_H
 
-#include <QDialog>
+#include "dialog.h"
+#include "colorpicker.h"
 
-namespace Ui {
-class ColorPickerDialog;
-}
+#include <QGridLayout>
 
-class ColorPickerDialog : public QDialog
+class ColorPickerDialog : public Dialog
 {
 	Q_OBJECT
 
 public:
-	enum ArrowLocation
-	{
-		Top,
-		Right,
-		Bottom,
-		Left
-	};
-
 	explicit ColorPickerDialog(QWidget *parent = 0);
 	~ColorPickerDialog();
-
-	void setArrowLocation(ArrowLocation arrowLocation);
-	ArrowLocation arrowLocation() const;
 
 signals:
 	void colorChanged(QColor);
 
-protected:
-	void paintEvent(QPaintEvent *e);
-
 private:
-	Ui::ColorPickerDialog *ui;
-	ArrowLocation m_arrowLocation;
+	QGridLayout *m_pLayout;
+	ColorPicker m_colorPicker;
 };
 
 #endif // COLORPICKERDIALOG_H

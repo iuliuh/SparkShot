@@ -30,8 +30,7 @@ HEADERS  += \
     dialog.h
 
 FORMS += \
-    uploaddialog.ui \
-    colorpickerdialog.ui
+    uploaddialog.ui
 
 RESOURCES += \
     resources.qrc
