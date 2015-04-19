@@ -22,6 +22,8 @@
  *               - error checking on network,
  *                 data saving and json
  *               - respect a coding convention
+ *               - you shouldn't use non-pointer
+ *                 QObjects
  *
  *  2.0:
  *   - Undo
@@ -45,10 +47,6 @@ int main(int argc, char *argv[])
 
 	ScreenshotArea s;
 	s.shoot();
-
-//	ColorPicker p;
-//	p.resize(100, 100);
-//	p.show();
 
 	return a.exec();
 }

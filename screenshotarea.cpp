@@ -38,18 +38,18 @@ ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
 	m_selectionStarted = false;
 
 	connect(m_pToolBar, &ToolBar::discardButtonPressed,
-			this, &QWidget::close);
+	        this, &QWidget::close);
 	connect(m_pToolBar, &ToolBar::settingsButtonPressed,
-			this, &ScreenshotArea::onSettingsButtonPressed);
+	        this, &ScreenshotArea::onSettingsButtonPressed);
 	connect(m_pToolBar, &ToolBar::uploadButtonPressed,
-			this, &ScreenshotArea::onUploadButtonPressed);
+	        this, &ScreenshotArea::onUploadButtonPressed);
 	connect(m_pToolBar, &ToolBar::saveButtonPressed,
-			this, &ScreenshotArea::onSaveButtonPressed);
+	        this, &ScreenshotArea::onSaveButtonPressed);
 
 	setGeometry(QGuiApplication::primaryScreen()->geometry());
 
 	m_pUploadDialog = new UploadDialog;
-	//Uncomment when doing the resize mouse area
+
 	setMouseTracking(true);
 }
 
@@ -155,6 +155,11 @@ void ScreenshotArea::onSaveButtonPressed()
 	}
 }
 
+Qt::CursorShape ScreenshotArea::currentCursorShape(const QPoint &point)
+{
+
+}
+
 void ScreenshotArea::replyFinished()
 {
 	qDebug() << "replyFinished";
@@ -207,10 +212,10 @@ void ScreenshotArea::onSslErrors(QList<QSslError>)
 
 void ScreenshotArea::drawRubberBand(QPainter* painter)
 {
-	QRect rubberBandRect(m_initialPressPoint.x(),
-	                     m_initialPressPoint.y(),
-	                     m_currentPressPoint.x() - m_initialPressPoint.x(),
-	                     m_currentPressPoint.y() - m_initialPressPoint.y());
+	QRect rubberBandRect(m_selectionTopLeftPoint.x(),
+	                     m_selectionTopLeftPoint.y(),
+	                     m_selectionBottomRightPoint.x() - m_selectionTopLeftPoint.x(),
+	                     m_selectionBottomRightPoint.y() - m_selectionTopLeftPoint.y());
 
 	m_screenShotArea = rubberBandRect;
 
@@ -242,10 +247,10 @@ void ScreenshotArea::drawCroppedArea(QPainter* painter)
 {
 	if(m_selectionStarted)
 	{
-		QRect pixmapRect(m_initialPressPoint.x(),
-		                 m_initialPressPoint.y(),
-		                 m_currentPressPoint.x() - m_initialPressPoint.x(),
-		                 m_currentPressPoint.y() - m_initialPressPoint.y());
+		QRect pixmapRect(m_selectionTopLeftPoint.x(),
+		                 m_selectionTopLeftPoint.y(),
+		                 m_selectionBottomRightPoint.x() - m_selectionTopLeftPoint.x(),
+		                 m_selectionBottomRightPoint.y() - m_selectionTopLeftPoint.y());
 
 		painter->drawPixmap(pixmapRect.normalized(), m_originalCapture, pixmapRect.normalized());
 	}
@@ -283,21 +288,21 @@ void ScreenshotArea::drawArrow(QPainter* painter)
 	pen.setBrush(QBrush(m_pToolBar->currentColor()));
 	pen.setWidth(m_penWidth);
 
-	QPoint currentShortenedLinePressPoint = m_currentPressPoint;
+	QPoint currentShortenedLinePressPoint = m_selectionBottomRightPoint;
 
-	if (m_initialPressPoint == currentShortenedLinePressPoint)
+	if (m_selectionTopLeftPoint == currentShortenedLinePressPoint)
 	{
 		// Not a line
 		return;
 	}
 
-	double dx = currentShortenedLinePressPoint.x() - m_initialPressPoint.x();
-	double dy = currentShortenedLinePressPoint.y() - m_initialPressPoint.y();
+	double dx = currentShortenedLinePressPoint.x() - m_selectionTopLeftPoint.x();
+	double dy = currentShortenedLinePressPoint.y() - m_selectionTopLeftPoint.y();
 	double shorteningFactor = -m_arrowHeight;
 	if (dx == 0)
 	{
 		// Vertical line
-		if (currentShortenedLinePressPoint.y() < m_initialPressPoint.y())
+		if (currentShortenedLinePressPoint.y() < m_selectionTopLeftPoint.y())
 		{
 			currentShortenedLinePressPoint.setY(currentShortenedLinePressPoint.y() - shorteningFactor);
 		}
@@ -309,7 +314,7 @@ void ScreenshotArea::drawArrow(QPainter* painter)
 	else if (dy == 0)
 	{
 		// Horizontal line
-		if (currentShortenedLinePressPoint.x() < m_initialPressPoint.x())
+		if (currentShortenedLinePressPoint.x() < m_selectionTopLeftPoint.x())
 		{
 			currentShortenedLinePressPoint.setX(currentShortenedLinePressPoint.x() - shorteningFactor);
 		}
@@ -325,16 +330,16 @@ void ScreenshotArea::drawArrow(QPainter* painter)
 		double scale = (length + shorteningFactor) / length;
 		dx *= scale;
 		dy *= scale;
-		currentShortenedLinePressPoint.setX(m_initialPressPoint.x() + dx);
-		currentShortenedLinePressPoint.setY(m_initialPressPoint.y() + dy);
+		currentShortenedLinePressPoint.setX(m_selectionTopLeftPoint.x() + dx);
+		currentShortenedLinePressPoint.setY(m_selectionTopLeftPoint.y() + dy);
 	}
 
 	painter->setPen(pen);
-	painter->drawLine(m_initialPressPoint, currentShortenedLinePressPoint);
+	painter->drawLine(m_selectionTopLeftPoint, currentShortenedLinePressPoint);
 
 	// Draw the arrow
-	QVector2D initPosVec(m_initialPressPoint);
-	QVector2D currPosVec(m_currentPressPoint);
+	QVector2D initPosVec(m_selectionTopLeftPoint);
+	QVector2D currPosVec(m_selectionBottomRightPoint);
 
 	QVector2D auxVec(currPosVec - initPosVec);
 	double length = qSqrt(qPow(auxVec.x(), 2.0) + qPow(auxVec.y(), 2.0));
@@ -348,7 +353,7 @@ void ScreenshotArea::drawArrow(QPainter* painter)
 	QPoint p2(arrowEdgeVec2.x(), arrowEdgeVec2.y());
 
 	QPolygon p;
-	p.append(m_currentPressPoint);
+	p.append(m_selectionBottomRightPoint);
 	p.append(p1);
 	p.append(p2);
 
@@ -375,7 +380,7 @@ void ScreenshotArea::drawLine(QPainter* painter)
 	pen.setWidth(m_penWidth);
 
 	painter->setPen(pen);
-	painter->drawLine(m_initialPressPoint, m_currentPressPoint);
+	painter->drawLine(m_selectionTopLeftPoint, m_selectionBottomRightPoint);
 }
 
 void ScreenshotArea::drawSquare(QPainter* painter)
@@ -392,10 +397,10 @@ void ScreenshotArea::drawSquare(QPainter* painter)
 	pen.setWidth(m_penWidth);
 
 	painter->setPen(pen);
-	painter->drawRect(m_initialPressPoint.x(),
-	                  m_initialPressPoint.y(),
-	                  m_currentPressPoint.x() - m_initialPressPoint.x(),
-	                  m_currentPressPoint.y() - m_initialPressPoint.y());
+	painter->drawRect(m_selectionTopLeftPoint.x(),
+	                  m_selectionTopLeftPoint.y(),
+	                  m_selectionBottomRightPoint.x() - m_selectionTopLeftPoint.x(),
+	                  m_selectionBottomRightPoint.y() - m_selectionTopLeftPoint.y());
 
 }
 
@@ -415,8 +420,8 @@ void ScreenshotArea::drawBrush(QPainter* painter)
 	painter->setBrush(brush);
 	painter->setPen(QPen(brush, m_penWidth));
 
-	painter->drawEllipse(m_currentPressPoint.x(),
-	                     m_currentPressPoint.y(),
+	painter->drawEllipse(m_selectionBottomRightPoint.x(),
+	                     m_selectionBottomRightPoint.y(),
 	                     m_penWidth,
 	                     m_penWidth);
 
@@ -439,10 +444,10 @@ void ScreenshotArea::drawEllipse(QPainter* painter)
 
 	painter->setPen(pen);
 
-	QRect ellipseRectangle(m_initialPressPoint.x(),
-	                       m_initialPressPoint.y(),
-	                       m_currentPressPoint.x() - m_initialPressPoint.x(),
-	                       m_currentPressPoint.y() - m_initialPressPoint.y());
+	QRect ellipseRectangle(m_selectionTopLeftPoint.x(),
+	                       m_selectionTopLeftPoint.y(),
+	                       m_selectionBottomRightPoint.x() - m_selectionTopLeftPoint.x(),
+	                       m_selectionBottomRightPoint.y() - m_selectionTopLeftPoint.y());
 
 	painter->drawEllipse(ellipseRectangle);
 }
@@ -452,12 +457,67 @@ void ScreenshotArea::drawText(QPainter* painter)
 	Q_UNUSED(painter)
 	// TODO: Draw text here
 }
-#include <QRect>
+
+void ScreenshotArea::mousePressEvent(QMouseEvent *e)
+{
+	if(e->button() == Qt::LeftButton)
+	{
+		m_leftButtonPressed = true;
+		m_selectionStarted = true;
+
+		m_helperBoard = m_paintBoard;
+
+		if(m_pToolBar->currentTool() == ToolBar::NoTool)
+		{
+			m_pToolBar->hide();
+		}
+
+		if(!m_screenShotArea.contains(e->pos()) || m_pToolBar->currentTool() != ToolBar::NoTool)
+		{
+			m_selectionTopLeftPoint = e->pos();
+			m_selectionBottomRightPoint = e->pos();
+		}
+		else
+		{
+			m_moveSelectionArea = true;
+			m_topLeftPointBeforeSelectionMove = m_selectionTopLeftPoint;
+			m_bottomRightPointBeforeSelectionMove = m_selectionBottomRightPoint;
+			m_pressPointBeforeSelectionMove = e->pos();
+		}
+
+		if(m_screenShotArea.contains(e->pos()))
+		{
+			setCursor(Qt::ClosedHandCursor);
+		}
+	}
+}
+
 void ScreenshotArea::mouseMoveEvent(QMouseEvent *e)
 {
+	if (m_screenShotArea.contains(e->pos(), true) && m_pToolBar->currentTool() == ToolBar::NoTool)
+	{
+		setCursor(Qt::OpenHandCursor);
+	}
+	else
+	{
+		setCursor(Qt::ArrowCursor);
+	}
+
 	if (m_leftButtonPressed)
 	{
-		m_currentPressPoint = e->pos();
+		if(!m_moveSelectionArea)
+		{
+			m_selectionBottomRightPoint = e->pos();
+		}
+		else
+		{
+			setCursor(Qt::ClosedHandCursor);
+
+			QRect translationRectangle(m_topLeftPointBeforeSelectionMove, m_bottomRightPointBeforeSelectionMove);
+			translationRectangle.translate(e->pos() - m_pressPointBeforeSelectionMove);
+			m_selectionTopLeftPoint = translationRectangle.topLeft();
+			m_selectionBottomRightPoint = translationRectangle.bottomRight();
+		}
 
 		if (m_pToolBar->currentTool() == ToolBar::NoTool)
 		{
@@ -470,27 +530,7 @@ void ScreenshotArea::mouseMoveEvent(QMouseEvent *e)
 
 			m_pToolBar->move(p);
 		}
-
 		update();
-	}
-}
-
-void ScreenshotArea::mousePressEvent(QMouseEvent *e)
-{
-	if(e->button() == Qt::LeftButton)
-	{
-		m_leftButtonPressed = true;
-		m_selectionStarted = true;
-
-		m_initialPressPoint = e->pos();
-		m_currentPressPoint = e->pos();
-
-		m_helperBoard = m_paintBoard;
-
-		if(m_pToolBar->currentTool() == ToolBar::NoTool)
-		{
-			m_pToolBar->hide();
-		}
 	}
 }
 
@@ -499,10 +539,16 @@ void ScreenshotArea::mouseReleaseEvent(QMouseEvent *e)
 	if (e->button() == Qt::LeftButton)
 	{
 		m_leftButtonPressed = false;
+		m_moveSelectionArea = false;
 
 		if (m_pToolBar->currentTool() == ToolBar::NoTool)
 		{
 			m_pToolBar->show();
+		}
+
+		if(m_screenShotArea.contains(e->pos()) && m_pToolBar->currentTool() == ToolBar::NoTool)
+		{
+			setCursor(Qt::OpenHandCursor);
 		}
 	}
 }
@@ -523,6 +569,8 @@ void ScreenshotArea::paintEvent(QPaintEvent *pEvent)
 
 	switch (m_pToolBar->currentTool())
 	{
+	case ToolBar::NoTool:
+		break;
 	case ToolBar::Arrow:
 		drawArrow(&paintBoardPainter);
 		break;
