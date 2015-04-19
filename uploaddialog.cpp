@@ -39,3 +39,13 @@ void UploadDialog::onOpenButtonClicked()
 
 	close();
 }
+
+void UploadDialog::setProgressBarView()
+{
+	ui->stackedWidget->setCurrentIndex(1);
+}
+
+void UploadDialog::setLinkView()
+{
+	ui->stackedWidget->setCurrentIndex(0);
+}

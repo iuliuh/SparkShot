@@ -13,9 +13,10 @@
 #include <QScreen>
 
 ToolBar::ToolBar(Type type, QWidget *parent) :
-	QWidget(parent),
-	m_type(type),
-	m_colorPickerDialog(this)
+    QWidget(parent),
+    m_type(type),
+    m_colorPickerDialog(this),
+    m_settingsDialog(this)
 {
 	setWindowFlags(Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
 	setAttribute(Qt::WA_TranslucentBackground);
@@ -93,30 +94,43 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 
 	// Connections
 	connect(m_pColorButton, &QPushButton::clicked,
-			this, &ToolBar::onColorButtonClicked);
+	        this, &ToolBar::onColorButtonClicked);
 	connect(m_pCloseButton, &QPushButton::clicked,
-			this, &ToolBar::discardButtonPressed);
+	        this, &ToolBar::discardButtonPressed);
 	connect(m_pSettingsButton, &QPushButton::clicked,
-			this, &ToolBar::settingsButtonPressed);
+	        this, &ToolBar::onSettingsButtonPressed);
 	connect(m_pUploadButton, &QPushButton::clicked,
-			this, &ToolBar::uploadButtonPressed);
+	        this, &ToolBar::uploadButtonPressed);
 	connect(m_pSaveButton, &QPushButton::clicked,
-			this, &ToolBar::saveButtonPressed);
+	        this, &ToolBar::saveButtonPressed);
 	connect(m_pTextButton, &QPushButton::clicked,
-			this, &ToolBar::onTextToolButtonPressed);
+	        this, &ToolBar::onTextToolButtonPressed);
 	connect(m_pBrushButton, &QPushButton::clicked,
-			this, &ToolBar::onBrushToolButtonPressed);
+	        this, &ToolBar::onBrushToolButtonPressed);
 	connect(m_pEllipseButton, &QPushButton::clicked,
-			this, &ToolBar::onEllipseToolButtonPressed);
+	        this, &ToolBar::onEllipseToolButtonPressed);
 	connect(m_pSquareButton, &QPushButton::clicked,
-			this, &ToolBar::onSquareToolButtonPressed);
+	        this, &ToolBar::onSquareToolButtonPressed);
 	connect(m_pLineButton, &QPushButton::clicked,
-			this, &ToolBar::onLineToolButtonPressed);
+	        this, &ToolBar::onLineToolButtonPressed);
 	connect(m_pArrowButton, &QPushButton::clicked,
-			this, &ToolBar::onArrowToolButtonPressed);
+	        this, &ToolBar::onArrowToolButtonPressed);
 
 	connect(&m_colorPickerDialog, &ColorPickerDialog::colorChanged,
 	        this, &ToolBar::onDrawingColorChanged);
+
+	connect(&m_settingsDialog, &Settings::overlayColorChanged,
+	        this, &ToolBar::overlayColorChanged);
+	connect(&m_settingsDialog, &Settings::rubberBandColorChanged,
+	        this, &ToolBar::rubberBandColorChanged);
+	connect(&m_settingsDialog, &Settings::rubberBandWidthChanged,
+	        this, &ToolBar::rubberBandWidthChanged);
+	connect(&m_settingsDialog, &Settings::penWidthChanged,
+	        this, &ToolBar::penWidthChanged);
+	connect(&m_settingsDialog, &Settings::dotsRadiusChanged,
+	        this, &ToolBar::dotsRadiusChanged);
+	connect(&m_settingsDialog, &Settings::fontSizeChanged,
+	        this, &ToolBar::fontSizeChanged);
 
 	m_pLayout->setSpacing(1);
 	m_pLayout->addWidget(m_pHandler);
@@ -156,14 +170,17 @@ QColor ToolBar::currentColor() const
 
 void ToolBar::hide()
 {
-	//! \todo Why is it not hiding?
 	m_colorPickerDialog.hide();
+	m_settingsDialog.hide();
+
 	QWidget::hide();
 }
 
 void ToolBar::show()
 {
 	autoPositionColorPicker();
+	autoPositionSettingsDialog();
+
 	QWidget::show();
 }
 
@@ -196,6 +213,7 @@ void ToolBar::mouseMoveEvent(QMouseEvent* pEvent)
 		     pEvent->pos().y() - m_mousePosOnBar.y() + geometry().y());
 
 		autoPositionColorPicker();
+		autoPositionSettingsDialog();
 	}
 
 
@@ -239,10 +257,38 @@ void ToolBar::autoPositionColorPicker()
 	                                m_colorPickerDialog.height());
 }
 
+void ToolBar::autoPositionSettingsDialog()
+{
+	const int threshold = 5;
+	const int xCorrection = 80;
+
+	int settingsXPosition = -m_pSettingsButton->mapFromGlobal(QPoint(0, 0)).x();
+	int settingsYPosition = -m_pSettingsButton->mapFromGlobal(QPoint(0, 0)).y();
+
+	if(m_settingsDialog.height() + height() + y() > m_screenRect.height())
+	{
+		m_settingsDialog.setArrowLocation(ColorPickerDialog::Bottom);
+		settingsXPosition -= m_pSettingsButton->width() - threshold + xCorrection;
+		settingsYPosition -= m_settingsDialog.height() + threshold;
+	}
+	else
+	{
+		m_settingsDialog.setArrowLocation(ColorPickerDialog::Top);
+		settingsXPosition -= m_pSettingsButton->width() - threshold + xCorrection;
+		settingsYPosition -= -m_pSettingsButton->height() - threshold;
+	}
+
+	m_settingsDialog.setGeometry(settingsXPosition,
+	                             settingsYPosition,
+	                             m_settingsDialog.width(),
+	                             m_settingsDialog.height());
+}
+
 void ToolBar::onColorButtonClicked()
 {
 	autoPositionColorPicker();
 
+	m_settingsDialog.hide();
 	m_colorPickerDialog.isVisible() ? m_colorPickerDialog.hide() : m_colorPickerDialog.show();
 }
 
@@ -250,36 +296,51 @@ void ToolBar::onTextToolButtonPressed()
 {
 	m_currentTool = Text;
 	m_colorPickerDialog.hide();
+	m_settingsDialog.hide();
 }
 
 void ToolBar::onBrushToolButtonPressed()
 {
 	m_currentTool = Brush;
 	m_colorPickerDialog.hide();
+	m_settingsDialog.hide();
 }
 
 void ToolBar::onEllipseToolButtonPressed()
 {
 	m_currentTool = Ellipse;
 	m_colorPickerDialog.hide();
+	m_settingsDialog.hide();
 }
 
 void ToolBar::onSquareToolButtonPressed()
 {
 	m_currentTool = Square;
 	m_colorPickerDialog.hide();
+	m_settingsDialog.hide();
 }
 
 void ToolBar::onLineToolButtonPressed()
 {
 	m_currentTool = Line;
 	m_colorPickerDialog.hide();
+	m_settingsDialog.hide();
 }
 
 void ToolBar::onArrowToolButtonPressed()
 {
 	m_currentTool = Arrow;
 	m_colorPickerDialog.hide();
+	m_settingsDialog.hide();
+}
+
+void ToolBar::onSettingsButtonPressed()
+{
+	m_colorPickerDialog.hide();
+
+	autoPositionSettingsDialog();
+
+	m_settingsDialog.isVisible() ? m_settingsDialog.hide() : m_settingsDialog.show();
 }
 
 void ToolBar::onDrawingColorChanged(QColor newColor)

@@ -30,9 +30,14 @@ protected:
 
 public slots:
 	void shoot();
+	void onOverlayColorChanged(QColor color);
+	void onRubberBandColorChanged(QColor color);
+	void onRubberBandWidthChanged(int width);
+	void onPenWidthChanged(int width);
+	void onDotsRadiusChanged(int radius);
+	void onFontSizeChanged(int size);
 
 private slots:
-	void onSettingsButtonPressed();
 	void onUploadButtonPressed();
 	void onSaveButtonPressed();
 
@@ -84,6 +89,7 @@ private:
 	int m_rubberBandWidth;
 	int m_penWidth;
 	int m_rubberBandPointRadius;
+	int m_fontSize;
 
 private:
 	float m_arrowHeight;

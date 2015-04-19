@@ -44,3 +44,72 @@ ToolBar QPushButton::pressed {
     border-radius: 2px;
     padding: 3px;
 }
+
+Settings QPushButton {
+	background-color: rgb(0, 0, 0);
+	border: 0px;
+	border-radius: 0px;
+	padding: 3px;
+	margin: 0px;
+	outline: none;
+}
+
+Settings QSpinBox {
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+	                                  stop: 0 rgb(220, 220, 220),
+	                                  stop: 0.3 rgb(240, 240, 240),
+	                                  stop: 0.7 rgb(240, 240, 240),
+	                                  stop: 1 rgb(220, 220, 220));
+	border: 1px solid rgb(100, 100, 100);
+	border-radius: 0px;
+	padding: 3px;
+	outline: none;
+}
+
+Settings QSpinBox::up-button {
+	subcontrol-origin: border;
+	subcontrol-position: top right;
+	width: 6px;
+	height: 6px;
+	margin: 4px 6px 4px 3px;
+	border-image: url(:/images/spinBoxUpArrow) 1;
+	border-width: 1px;
+}
+
+Settings QSpinBox::down-button {
+	subcontrol-origin: border;
+	subcontrol-position: bottom right;
+	width: 6px;
+	height: 6px;
+	margin: 4px 6px 4px 3px;
+	border-image: url(:/images/spinBoxDownArrow) 1;
+	border-width: 1px;
+	border-top-width: 0;
+}
+
+Settings QPushButton#ResetDefaultsButton {
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+	                                  stop: 1 rgb(220, 220, 220));
+	border: 1px solid darkgray;
+	border-radius: 3px;
+	padding: 5px;
+	outline: none;
+}
+
+Settings QPushButton#ResetDefaultsButton::hover {
+	background-color: qlineargradient(x1: 10, y1: 10, x2: 10, y2: 1,
+	                                  stop: 1 rgb(230, 230, 230));
+	border: 1px solid darkgray;
+	border-radius: 3px;
+	padding: 5px;
+	outline: none;
+}
+
+Settings QPushButton#ResetDefaultsButton::pressed {
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+	                                  stop: 1 rgb(180, 180, 180));
+	border: 1px solid darkgray;
+	border-radius: 3px;
+	padding: 5px;
+	outline: none;
+}

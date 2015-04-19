@@ -8,6 +8,7 @@
 #include <QLabel>
 
 #include "colorpickerdialog.h"
+#include "settings.h"
 
 class ToolBar : public QWidget
 {
@@ -45,6 +46,13 @@ signals:
 	void uploadButtonPressed();
 	void saveButtonPressed();
 
+	void overlayColorChanged(QColor color);
+	void rubberBandColorChanged(QColor color);
+	void rubberBandWidthChanged(int width);
+	void penWidthChanged(int width);
+	void dotsRadiusChanged(int radius);
+	void fontSizeChanged(int size);
+
 protected:
 	void mousePressEvent(QMouseEvent *pEvent);
 	void mouseReleaseEvent(QMouseEvent *pEvent);
@@ -59,12 +67,13 @@ private slots:
 	void onEllipseToolButtonPressed();
 	void onLineToolButtonPressed();
 	void onArrowToolButtonPressed();
+	void onSettingsButtonPressed();
 
 	void onDrawingColorChanged(QColor newColor);
 
 private:
 	void autoPositionColorPicker();
-	// Todo: Move this away from here
+	void autoPositionSettingsDialog();
 	void setTheme();
 
 private:
@@ -73,6 +82,7 @@ private:
 
 	Tool m_currentTool;
 	ColorPickerDialog m_colorPickerDialog;
+	Settings m_settingsDialog;
 
 	QButtonGroup *m_pButtonGroup;
 	QPushButton *m_pSettingsButton;

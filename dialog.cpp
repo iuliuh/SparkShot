@@ -13,8 +13,6 @@ Dialog::Dialog(QWidget *parent) :
 	setAttribute(Qt::WA_TranslucentBackground);
 
 	m_arrowLocation = Top;
-
-	resize(100, 100);
 }
 
 Dialog::~Dialog()

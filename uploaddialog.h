@@ -16,6 +16,8 @@ public:
 	~UploadDialog();
 
 	void setLink(const QString& text);
+	void setProgressBarView();
+	void setLinkView();
 
 private slots:
 	void onCopyButtonClicked();

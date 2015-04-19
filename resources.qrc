@@ -16,6 +16,8 @@
         <file alias="verticalSeparatorIcon">assets/images/verticalSeparator.png</file>
         <file alias="ellipseIcon">assets/images/ellipse.png</file>
         <file>assets/images/crop.png</file>
+        <file alias="spinBoxUpArrow">assets/images/spinBoxUpArrow.png</file>
+        <file alias="spinBoxDownArrow">assets/images/spinBoxDownArrow.png</file>
     </qresource>
     <qresource prefix="/theme">
         <file alias="lightTheme">assets/style/stylesheet.qss</file>

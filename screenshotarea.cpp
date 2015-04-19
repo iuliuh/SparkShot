@@ -41,12 +41,23 @@ ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
 
 	connect(m_pToolBar, &ToolBar::discardButtonPressed,
 	        this, &QWidget::close);
-	connect(m_pToolBar, &ToolBar::settingsButtonPressed,
-	        this, &ScreenshotArea::onSettingsButtonPressed);
 	connect(m_pToolBar, &ToolBar::uploadButtonPressed,
 	        this, &ScreenshotArea::onUploadButtonPressed);
 	connect(m_pToolBar, &ToolBar::saveButtonPressed,
 	        this, &ScreenshotArea::onSaveButtonPressed);
+
+	connect(m_pToolBar, &ToolBar::overlayColorChanged,
+	        this, &ScreenshotArea::onOverlayColorChanged);
+	connect(m_pToolBar, &ToolBar::rubberBandColorChanged,
+	        this, &ScreenshotArea::onRubberBandColorChanged);
+	connect(m_pToolBar, &ToolBar::rubberBandWidthChanged,
+	        this, &ScreenshotArea::onRubberBandWidthChanged);
+	connect(m_pToolBar, &ToolBar::penWidthChanged,
+	        this, &ScreenshotArea::onPenWidthChanged);
+	connect(m_pToolBar, &ToolBar::dotsRadiusChanged,
+	        this, &ScreenshotArea::onDotsRadiusChanged);
+	connect(m_pToolBar, &ToolBar::fontSizeChanged,
+	        this, &ScreenshotArea::onFontSizeChanged);
 
 	setGeometry(QGuiApplication::primaryScreen()->geometry());
 
@@ -109,9 +120,41 @@ void ScreenshotArea::shoot()
 	activateWindow();
 }
 
-void ScreenshotArea::onSettingsButtonPressed()
+void ScreenshotArea::onOverlayColorChanged(QColor color)
 {
-	qDebug() << Q_FUNC_INFO;
+	m_darkOverlayColor = color;
+	update();
+}
+
+void ScreenshotArea::onRubberBandColorChanged(QColor color)
+{
+	m_rubberBandColor = color;
+
+	update();
+}
+
+void ScreenshotArea::onRubberBandWidthChanged(int width)
+{
+	m_rubberBandWidth = width;
+	update();
+}
+
+void ScreenshotArea::onPenWidthChanged(int width)
+{
+	m_penWidth = width;
+	update();
+}
+
+void ScreenshotArea::onDotsRadiusChanged(int radius)
+{
+	m_rubberBandPointRadius = radius;
+	update();
+}
+
+void ScreenshotArea::onFontSizeChanged(int size)
+{
+	m_fontSize = size;
+	update();
 }
 
 void ScreenshotArea::onUploadButtonPressed()
@@ -152,7 +195,10 @@ void ScreenshotArea::onUploadButtonPressed()
 	connect(m_pNetworkReply, &QNetworkReply::sslErrors,
 	        this, &ScreenshotArea::onSslErrors);
 
+	m_pUploadDialog->setProgressBarView();
 	m_pUploadDialog->show();
+
+	m_pToolBar->hide();
 	hide();
 }
 
@@ -161,6 +207,7 @@ void ScreenshotArea::onSaveButtonPressed()
 	QPixmap newPixmap = m_paintBoard.copy(m_screenShotArea);
 
 	QString defaultFilter = tr("*.png");
+
 	QString fileName = QFileDialog::getSaveFileName(this,
 	                                                tr("Save File"),
 	                                                QDir::homePath(),
@@ -189,6 +236,7 @@ void ScreenshotArea::replyFinished()
 		QJsonObject jsonData = jsonObject.take("data").toObject();
 
 		m_pUploadDialog->setLink(jsonData.take("link").toString());
+		m_pUploadDialog->setLinkView();
 	}
 
 	disconnect(m_pNetworkReply, &QNetworkReply::finished,

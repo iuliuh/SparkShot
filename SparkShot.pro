@@ -8,17 +8,18 @@ QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = ScreenGrabber
+TARGET = SparkShot
 TEMPLATE = app
 
-
-SOURCES += main.cpp \
+SOURCES += \
+    main.cpp \
     screenshotarea.cpp \
     toolbar.cpp \
     uploaddialog.cpp \
     colorpicker.cpp \
     colorpickerdialog.cpp \
-    dialog.cpp
+    dialog.cpp \
+    settings.cpp
 
 HEADERS  += \
     screenshotarea.h \
@@ -27,7 +28,8 @@ HEADERS  += \
     uploaddialog.h \
     colorpicker.h \
     colorpickerdialog.h \
-    dialog.h
+    dialog.h \
+    settings.h
 
 FORMS += \
     uploaddialog.ui
