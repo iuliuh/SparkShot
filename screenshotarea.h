@@ -9,7 +9,6 @@
 #include <QPoint>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <QCursor>
 
 #include "toolbar.h"
 #include "uploaddialog.h"
@@ -37,7 +36,6 @@ private slots:
 	void onUploadButtonPressed();
 	void onSaveButtonPressed();
 
-	Qt::CursorShape currentCursorShape(const QPoint& point);
 	void replyFinished();
 	void onError(QNetworkReply::NetworkError);
 	void onSslErrors(QList<QSslError>);
@@ -63,6 +61,7 @@ private:
 	bool m_leftButtonPressed;
 	bool m_selectionStarted;
 	bool m_moveSelectionArea;
+	bool m_textPositioned;
 	QPoint m_selectionTopLeftPoint;
 	QPoint m_selectionBottomRightPoint;
 
@@ -70,6 +69,8 @@ private:
 	QPoint m_bottomRightPointBeforeSelectionMove;
 	QPoint m_pressPointBeforeSelectionMove;
 	QRect m_screenShotArea;
+	QString m_currentText;
+	QPoint m_textPoint;
 
 	// Imgur API
 	QString m_clientId;

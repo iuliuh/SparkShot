@@ -17,7 +17,8 @@ SOURCES += main.cpp \
     toolbar.cpp \
     uploaddialog.cpp \
     colorpicker.cpp \
-    colorpickerdialog.cpp
+    colorpickerdialog.cpp \
+    dialog.cpp
 
 HEADERS  += \
     screenshotarea.h \
@@ -25,7 +26,8 @@ HEADERS  += \
     defines.h \
     uploaddialog.h \
     colorpicker.h \
-    colorpickerdialog.h
+    colorpickerdialog.h \
+    dialog.h
 
 FORMS += \
     uploaddialog.ui \

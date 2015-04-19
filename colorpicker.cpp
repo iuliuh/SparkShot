@@ -13,9 +13,6 @@ ColorPicker::ColorPicker(QWidget *parent) :
 	m_wheelWidth(10),
 	m_mouseStatus(Nothing)
 {
-//	setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
-//	setAttribute(Qt::WA_TranslucentBackground);
-
 	setFixedSize(100, 100);
 }
 

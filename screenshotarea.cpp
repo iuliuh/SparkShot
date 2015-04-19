@@ -1,4 +1,5 @@
 #include "screenshotarea.h"
+
 #include <QDesktopWidget>
 #include <QDebug>
 #include <QApplication>
@@ -36,6 +37,7 @@ ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
 
 	m_leftButtonPressed = false;
 	m_selectionStarted = false;
+	m_textPositioned = false;
 
 	connect(m_pToolBar, &ToolBar::discardButtonPressed,
 	        this, &QWidget::close);
@@ -70,6 +72,24 @@ void ScreenshotArea::keyPressEvent(QKeyEvent *pEvent)
 	{
 		close();
 	}
+
+	if(m_textPositioned)
+	{
+		if(pEvent->key() == Qt::Key_Backspace)
+		{
+			m_currentText.remove(m_currentText.length() - 1, 1);
+		}
+		else
+		{
+			m_currentText.append(pEvent->text());
+		}
+		if(pEvent->key() == Qt::Key_Enter)
+		{
+			m_currentText.append("\n");
+		}
+	}
+
+	update();
 
 	QWidget::keyPressEvent(pEvent);
 }
@@ -155,22 +175,15 @@ void ScreenshotArea::onSaveButtonPressed()
 	}
 }
 
-Qt::CursorShape ScreenshotArea::currentCursorShape(const QPoint &point)
-{
-
-}
-
 void ScreenshotArea::replyFinished()
 {
-	qDebug() << "replyFinished";
 	if(m_pNetworkReply->error())
 	{
-		qDebug() << "ERROR!";
 		qDebug() << m_pNetworkReply->errorString();
 	}
 	else
 	{
-		// TODO: Make it nice, man!!!
+		//! \todo: Unsafe, make it safe and more elegant!!!
 		QJsonDocument jsonDocument = QJsonDocument::fromJson(m_pNetworkReply->readAll());
 		QJsonObject jsonObject = jsonDocument.object();
 		QJsonObject jsonData = jsonObject.take("data").toObject();
@@ -192,16 +205,20 @@ void ScreenshotArea::replyFinished()
 
 void ScreenshotArea::onError(QNetworkReply::NetworkError)
 {
+	qDebug() << Q_FUNC_INFO;
+
 	disconnect(m_pNetworkReply, &QNetworkReply::finished,
 	           this, &ScreenshotArea::replyFinished);
 	disconnect(m_pNetworkReply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
-	this, &ScreenshotArea::onError);
+	           this, &ScreenshotArea::onError);
 	disconnect(m_pNetworkReply, &QNetworkReply::sslErrors,
 	           this, &ScreenshotArea::onSslErrors);
 }
 
 void ScreenshotArea::onSslErrors(QList<QSslError>)
 {
+	qDebug() << Q_FUNC_INFO;
+
 	disconnect(m_pNetworkReply, &QNetworkReply::finished,
 	           this, &ScreenshotArea::replyFinished);
 	disconnect(m_pNetworkReply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
@@ -454,8 +471,41 @@ void ScreenshotArea::drawEllipse(QPainter* painter)
 
 void ScreenshotArea::drawText(QPainter* painter)
 {
-	Q_UNUSED(painter)
-	// TODO: Draw text here
+	if(!m_textPositioned)
+	{
+		return;
+	}
+
+	painter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
+
+	QPen backupPen = painter->pen();
+	QBrush backupBrush = painter->brush();
+
+	QPen p;
+	p.setStyle(Qt::DotLine);
+	p.setColor(Qt::black);
+	p.setWidth(1);
+
+	painter->setPen(p);
+
+	QFont font = painter->font();
+	QFontMetrics fontMetrics(font);
+
+	QRect textRect(m_textPoint.x(),
+	               m_textPoint.y(),
+	               fontMetrics.width(m_currentText),
+	               fontMetrics.height());
+
+	painter->drawText(textRect,
+	                  Qt::AlignLeft,
+	                  m_currentText);
+
+	textRect.adjust(-2, -2, 2, 2);
+
+	painter->drawRect(textRect);
+
+	painter->setPen(backupPen);
+	painter->setBrush(backupBrush);
 }
 
 void ScreenshotArea::mousePressEvent(QMouseEvent *e)
@@ -470,6 +520,13 @@ void ScreenshotArea::mousePressEvent(QMouseEvent *e)
 		if(m_pToolBar->currentTool() == ToolBar::NoTool)
 		{
 			m_pToolBar->hide();
+		}
+
+		if(m_pToolBar->currentTool() == ToolBar::Text)
+		{
+			m_textPoint = e->pos();
+			m_textPositioned = true;
+			m_currentText.clear();
 		}
 
 		if(!m_screenShotArea.contains(e->pos()) || m_pToolBar->currentTool() != ToolBar::NoTool)
