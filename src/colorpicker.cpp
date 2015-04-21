@@ -6,19 +6,20 @@
 #include <QColor>
 
 ColorPicker::ColorPicker(QWidget *parent) :
-	QWidget(parent),
+	Dialog(parent),
 	m_hue(0),
 	m_saturation(0),
 	m_value(0),
 	m_wheelWidth(10),
-	m_mouseStatus(Nothing)
+	m_mouseStatus(Nothing),
+    m_padding(30)
 {
 	setFixedSize(100, 100);
 }
 
 qreal ColorPicker::outerRadius() const
 {
-	return qMin(geometry().width(), geometry().height()) / 2;
+	return qMin(geometry().width() - m_padding, geometry().height() - m_padding) / 2;
 }
 
 qreal ColorPicker::innerRadius() const
@@ -76,9 +77,9 @@ void ColorPicker::setWheelWidth(unsigned w)
 	update();
 }
 
-void ColorPicker::paintEvent(QPaintEvent * )
+void ColorPicker::paintEvent(QPaintEvent * e)
 {
-	QPixmap pixmap;
+	Dialog::paintEvent(e);
 
 	double selectorW = 4;
 

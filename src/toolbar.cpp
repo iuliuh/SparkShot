@@ -116,7 +116,7 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 	connect(m_pArrowButton, &QPushButton::clicked,
 	        this, &ToolBar::onArrowToolButtonPressed);
 
-	connect(&m_colorPickerDialog, &ColorPickerDialog::colorChanged,
+	connect(&m_colorPickerDialog, &ColorPicker::colorChanged,
 	        this, &ToolBar::onDrawingColorChanged);
 
 	connect(&m_settingsDialog, &Settings::overlayColorChanged,
@@ -240,13 +240,13 @@ void ToolBar::autoPositionColorPicker()
 
 	if(m_colorPickerDialog.height() + height() + y() > m_screenRect.height())
 	{
-		m_colorPickerDialog.setArrowLocation(ColorPickerDialog::Bottom);
+		m_colorPickerDialog.setArrowLocation(ColorPicker::Bottom);
 		colorPickerXPosition -= m_pColorButton->width() - threshold;
 		colorPickerYPosition -= m_colorPickerDialog.height() + threshold;
 	}
 	else
 	{
-		m_colorPickerDialog.setArrowLocation(ColorPickerDialog::Top);
+		m_colorPickerDialog.setArrowLocation(ColorPicker::Top);
 		colorPickerXPosition -= m_pColorButton->width() - threshold;
 		colorPickerYPosition -= -m_pColorButton->height() - threshold;
 	}
@@ -267,13 +267,13 @@ void ToolBar::autoPositionSettingsDialog()
 
 	if(m_settingsDialog.height() + height() + y() > m_screenRect.height())
 	{
-		m_settingsDialog.setArrowLocation(ColorPickerDialog::Bottom);
+		m_settingsDialog.setArrowLocation(ColorPicker::Bottom);
 		settingsXPosition -= m_pSettingsButton->width() - threshold + xCorrection;
 		settingsYPosition -= m_settingsDialog.height() + threshold;
 	}
 	else
 	{
-		m_settingsDialog.setArrowLocation(ColorPickerDialog::Top);
+		m_settingsDialog.setArrowLocation(ColorPicker::Top);
 		settingsXPosition -= m_pSettingsButton->width() - threshold + xCorrection;
 		settingsYPosition -= -m_pSettingsButton->height() - threshold;
 	}

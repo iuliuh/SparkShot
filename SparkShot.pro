@@ -17,7 +17,6 @@ SOURCES += \
     src/toolbar.cpp \
     src/uploaddialog.cpp \
     src/colorpicker.cpp \
-    src/colorpickerdialog.cpp \
     src/dialog.cpp \
     src/settings.cpp
 
@@ -27,7 +26,6 @@ HEADERS  += \
     src/defines.h \
     src/uploaddialog.h \
     src/colorpicker.h \
-    src/colorpickerdialog.h \
     src/dialog.h \
     src/settings.h
 

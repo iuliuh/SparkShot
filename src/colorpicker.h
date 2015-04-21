@@ -2,6 +2,7 @@
 #define COLORPICKER_H
 
 #include <QWidget>
+#include "dialog.h"
 #include <qmath.h>
 #include <QGridLayout>
 #include <QLabel>
@@ -12,7 +13,7 @@
  * It has an outer wheel to select the Hue and an intenal square to select
  * Saturation and Lightness.
  */
-class ColorPicker : public QWidget
+class ColorPicker : public Dialog
 {
 	Q_OBJECT
 
@@ -59,7 +60,7 @@ Q_SIGNALS:
 	void colorSelected(QColor);
 
 protected:
-	void paintEvent(QPaintEvent *);
+	void paintEvent(QPaintEvent *e);
 	void mouseMoveEvent(QMouseEvent *);
 	void mousePressEvent(QMouseEvent *);
 	void mouseReleaseEvent(QMouseEvent *);
@@ -95,8 +96,7 @@ private:
 	QPixmap m_hueRing;
 	QImage m_satValSquare;
 
-//	QGridLayout *m_pLayout;
-//	QLabel *m_pDrawArea;
+	int m_padding;
 };
 
 #endif // COLORPICKER_H

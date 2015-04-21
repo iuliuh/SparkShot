@@ -9,7 +9,7 @@ class QPushButton;
 class QSpinBox;
 class QHBoxLayout;
 class QSpacerItem;
-class ColorPickerDialog;
+class ColorPicker;
 
 class Settings : public Dialog
 {
@@ -84,8 +84,8 @@ private:
 
 	QSpacerItem *m_pVerticalSpacer;
 
-	ColorPickerDialog *m_pOverlayColorPicker;
-	ColorPickerDialog *m_pRubberBandColorPicker;
+	ColorPicker *m_pOverlayColorPicker;
+	ColorPicker *m_pRubberBandColorPicker;
 
 	QColor m_overlayColor;
 	QColor m_rubberBandColor;

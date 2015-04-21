@@ -1,5 +1,5 @@
 #include "settings.h"
-#include "colorpickerdialog.h"
+#include "colorpicker.h"
 
 #include <QGridLayout>
 #include <QLabel>
@@ -50,11 +50,11 @@ Settings::Settings(QWidget *parent) :
 	m_pOverlayColorButton->setStyleSheet("background-color: black");
 	m_pRubberBandColorButton->setStyleSheet("background-color: cyan");
 
-	m_pOverlayColorPicker = new ColorPickerDialog(this);
-	m_pOverlayColorPicker->setArrowLocation(ColorPickerDialog::Left);
+	m_pOverlayColorPicker = new ColorPicker(this);
+	m_pOverlayColorPicker->setArrowLocation(ColorPicker::Left);
 
-	m_pRubberBandColorPicker = new ColorPickerDialog(this);
-	m_pRubberBandColorPicker->setArrowLocation(ColorPickerDialog::Left);
+	m_pRubberBandColorPicker = new ColorPicker(this);
+	m_pRubberBandColorPicker->setArrowLocation(ColorPicker::Left);
 
 	connect(m_pOverlayColorButton, &QPushButton::clicked,
 	        this, &Settings::onOverlayColorButtonClicked);
@@ -62,10 +62,10 @@ Settings::Settings(QWidget *parent) :
 	connect(m_pRubberBandColorButton, &QPushButton::clicked,
 	        this, &Settings::onRubberBandColorButtonClicked);
 
-	connect(m_pOverlayColorPicker, &ColorPickerDialog::colorChanged,
+	connect(m_pOverlayColorPicker, &ColorPicker::colorChanged,
 	        this, &Settings::onOverlayColorChanged);
 
-	connect(m_pRubberBandColorPicker, &ColorPickerDialog::colorChanged,
+	connect(m_pRubberBandColorPicker, &ColorPicker::colorChanged,
 	        this, &Settings::onRubberBandColorChanged);
 
 	m_pLayout->addWidget(m_pOverlayColorLabel, 0, 0);
