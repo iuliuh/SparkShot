@@ -1,4 +1,4 @@
-#include "colorpicker.h"
+#include "color-picker.h"
 
 #include <QMouseEvent>
 #include <QPainter>

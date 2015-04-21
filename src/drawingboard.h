@@ -1,6 +1,9 @@
 #ifndef SCREENSHOTAREA_H
 #define SCREENSHOTAREA_H
 
+#include "toolbar.h"
+#include "uploaddialog.h"
+
 #include <QWidget>
 #include <QLabel>
 #include <QGridLayout>
@@ -10,16 +13,13 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 
-#include "toolbar.h"
-#include "uploaddialog.h"
-
-class ScreenshotArea : public QWidget
+class DrawingBoard : public QWidget
 {
 	Q_OBJECT
 
 public:
-	explicit ScreenshotArea(QWidget *parent = 0);
-	~ScreenshotArea();
+	explicit DrawingBoard(QWidget *parent = 0);
+	~DrawingBoard();
 
 protected:
 	void keyPressEvent(QKeyEvent *pEvent);
@@ -90,6 +90,8 @@ private:
 	int m_penWidth;
 	int m_rubberBandPointRadius;
 	int m_fontSize;
+	QPoint m_brushInitialPoint;
+	QPoint m_brushFinalPoint;
 
 private:
 	float m_arrowHeight;

@@ -1,4 +1,4 @@
-#include "screenshotarea.h"
+#include "drawingboard.h"
 
 #include <QDesktopWidget>
 #include <QDebug>
@@ -17,7 +17,7 @@
 
 #include "defines.h"
 
-ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
+DrawingBoard::DrawingBoard(QWidget *parent) : QWidget(parent)
 {
 	setWindowFlags(Qt::WindowStaysOnTopHint |
 	               Qt::BypassWindowManagerHint |
@@ -42,22 +42,22 @@ ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
 	connect(m_pToolBar, &ToolBar::discardButtonPressed,
 	        this, &QWidget::close);
 	connect(m_pToolBar, &ToolBar::uploadButtonPressed,
-	        this, &ScreenshotArea::onUploadButtonPressed);
+	        this, &DrawingBoard::onUploadButtonPressed);
 	connect(m_pToolBar, &ToolBar::saveButtonPressed,
-	        this, &ScreenshotArea::onSaveButtonPressed);
+	        this, &DrawingBoard::onSaveButtonPressed);
 
 	connect(m_pToolBar, &ToolBar::overlayColorChanged,
-	        this, &ScreenshotArea::onOverlayColorChanged);
+	        this, &DrawingBoard::onOverlayColorChanged);
 	connect(m_pToolBar, &ToolBar::rubberBandColorChanged,
-	        this, &ScreenshotArea::onRubberBandColorChanged);
+	        this, &DrawingBoard::onRubberBandColorChanged);
 	connect(m_pToolBar, &ToolBar::rubberBandWidthChanged,
-	        this, &ScreenshotArea::onRubberBandWidthChanged);
+	        this, &DrawingBoard::onRubberBandWidthChanged);
 	connect(m_pToolBar, &ToolBar::penWidthChanged,
-	        this, &ScreenshotArea::onPenWidthChanged);
+	        this, &DrawingBoard::onPenWidthChanged);
 	connect(m_pToolBar, &ToolBar::dotsRadiusChanged,
-	        this, &ScreenshotArea::onDotsRadiusChanged);
+	        this, &DrawingBoard::onDotsRadiusChanged);
 	connect(m_pToolBar, &ToolBar::fontSizeChanged,
-	        this, &ScreenshotArea::onFontSizeChanged);
+	        this, &DrawingBoard::onFontSizeChanged);
 
 	setGeometry(QGuiApplication::primaryScreen()->geometry());
 
@@ -66,12 +66,12 @@ ScreenshotArea::ScreenshotArea(QWidget *parent) : QWidget(parent)
 	setMouseTracking(true);
 }
 
-ScreenshotArea::~ScreenshotArea()
+DrawingBoard::~DrawingBoard()
 {
 
 }
 
-void ScreenshotArea::keyPressEvent(QKeyEvent *pEvent)
+void DrawingBoard::keyPressEvent(QKeyEvent *pEvent)
 {
 	bool pressedAltF4 = pEvent->key() == Qt::Key_F4 &&
 	                    pEvent->modifiers() == Qt::AltModifier;
@@ -105,7 +105,7 @@ void ScreenshotArea::keyPressEvent(QKeyEvent *pEvent)
 	QWidget::keyPressEvent(pEvent);
 }
 
-void ScreenshotArea::shoot()
+void DrawingBoard::shoot()
 {
 	m_originalCapture = QPixmap();
 
@@ -120,44 +120,44 @@ void ScreenshotArea::shoot()
 	activateWindow();
 }
 
-void ScreenshotArea::onOverlayColorChanged(QColor color)
+void DrawingBoard::onOverlayColorChanged(QColor color)
 {
 	m_darkOverlayColor = color;
 	update();
 }
 
-void ScreenshotArea::onRubberBandColorChanged(QColor color)
+void DrawingBoard::onRubberBandColorChanged(QColor color)
 {
 	m_rubberBandColor = color;
 
 	update();
 }
 
-void ScreenshotArea::onRubberBandWidthChanged(int width)
+void DrawingBoard::onRubberBandWidthChanged(int width)
 {
 	m_rubberBandWidth = width;
 	update();
 }
 
-void ScreenshotArea::onPenWidthChanged(int width)
+void DrawingBoard::onPenWidthChanged(int width)
 {
 	m_penWidth = width;
 	update();
 }
 
-void ScreenshotArea::onDotsRadiusChanged(int radius)
+void DrawingBoard::onDotsRadiusChanged(int radius)
 {
 	m_rubberBandPointRadius = radius;
 	update();
 }
 
-void ScreenshotArea::onFontSizeChanged(int size)
+void DrawingBoard::onFontSizeChanged(int size)
 {
 	m_fontSize = size;
 	update();
 }
 
-void ScreenshotArea::onUploadButtonPressed()
+void DrawingBoard::onUploadButtonPressed()
 {
 	QNetworkRequest networkRequest;
 
@@ -189,11 +189,11 @@ void ScreenshotArea::onUploadButtonPressed()
 	m_pNetworkReply = m_networkAccessManager.post(networkRequest, multiPart);
 
 	connect(m_pNetworkReply, &QNetworkReply::finished,
-	        this, &ScreenshotArea::replyFinished);
+	        this, &DrawingBoard::replyFinished);
 	connect(m_pNetworkReply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
-	        this, &ScreenshotArea::onError);
+	        this, &DrawingBoard::onError);
 	connect(m_pNetworkReply, &QNetworkReply::sslErrors,
-	        this, &ScreenshotArea::onSslErrors);
+	        this, &DrawingBoard::onSslErrors);
 
 	m_pUploadDialog->setProgressBarView();
 	m_pUploadDialog->show();
@@ -202,7 +202,7 @@ void ScreenshotArea::onUploadButtonPressed()
 	hide();
 }
 
-void ScreenshotArea::onSaveButtonPressed()
+void DrawingBoard::onSaveButtonPressed()
 {
 	QPixmap newPixmap = m_paintBoard.copy(m_screenShotArea);
 
@@ -222,7 +222,7 @@ void ScreenshotArea::onSaveButtonPressed()
 	}
 }
 
-void ScreenshotArea::replyFinished()
+void DrawingBoard::replyFinished()
 {
 	if(m_pNetworkReply->error())
 	{
@@ -240,42 +240,42 @@ void ScreenshotArea::replyFinished()
 	}
 
 	disconnect(m_pNetworkReply, &QNetworkReply::finished,
-	           this, &ScreenshotArea::replyFinished);
+	           this, &DrawingBoard::replyFinished);
 	disconnect(m_pNetworkReply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
-	           this, &ScreenshotArea::onError);
+	           this, &DrawingBoard::onError);
 	disconnect(m_pNetworkReply, &QNetworkReply::sslErrors,
-	           this, &ScreenshotArea::onSslErrors);
+	           this, &DrawingBoard::onSslErrors);
 
 	m_pNetworkReply->deleteLater();
 
 	close();
 }
 
-void ScreenshotArea::onError(QNetworkReply::NetworkError)
+void DrawingBoard::onError(QNetworkReply::NetworkError)
 {
 	qDebug() << Q_FUNC_INFO;
 
 	disconnect(m_pNetworkReply, &QNetworkReply::finished,
-	           this, &ScreenshotArea::replyFinished);
+	           this, &DrawingBoard::replyFinished);
 	disconnect(m_pNetworkReply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
-	           this, &ScreenshotArea::onError);
+	           this, &DrawingBoard::onError);
 	disconnect(m_pNetworkReply, &QNetworkReply::sslErrors,
-	           this, &ScreenshotArea::onSslErrors);
+	           this, &DrawingBoard::onSslErrors);
 }
 
-void ScreenshotArea::onSslErrors(QList<QSslError>)
+void DrawingBoard::onSslErrors(QList<QSslError>)
 {
 	qDebug() << Q_FUNC_INFO;
 
 	disconnect(m_pNetworkReply, &QNetworkReply::finished,
-	           this, &ScreenshotArea::replyFinished);
+	           this, &DrawingBoard::replyFinished);
 	disconnect(m_pNetworkReply, static_cast<void (QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
-	           this, &ScreenshotArea::onError);
+	           this, &DrawingBoard::onError);
 	disconnect(m_pNetworkReply, &QNetworkReply::sslErrors,
-	           this, &ScreenshotArea::onSslErrors);
+	           this, &DrawingBoard::onSslErrors);
 }
 
-void ScreenshotArea::drawRubberBand(QPainter* painter)
+void DrawingBoard::drawRubberBand(QPainter* painter)
 {
 	QRect rubberBandRect(m_selectionTopLeftPoint.x(),
 	                     m_selectionTopLeftPoint.y(),
@@ -308,7 +308,7 @@ void ScreenshotArea::drawRubberBand(QPainter* painter)
 	painter->drawEllipse(leftMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
 }
 
-void ScreenshotArea::drawCroppedArea(QPainter* painter)
+void DrawingBoard::drawCroppedArea(QPainter* painter)
 {
 	if(m_selectionStarted)
 	{
@@ -321,7 +321,7 @@ void ScreenshotArea::drawCroppedArea(QPainter* painter)
 	}
 }
 
-void ScreenshotArea::drawDarkOverlay(QPainter* painter)
+void DrawingBoard::drawDarkOverlay(QPainter* painter)
 {
 	QPixmap drawnCapture = m_originalCapture;
 
@@ -333,7 +333,7 @@ void ScreenshotArea::drawDarkOverlay(QPainter* painter)
 	painter->drawRect(drawnCapture.rect());
 }
 
-void ScreenshotArea::drawArrow(QPainter* painter)
+void DrawingBoard::drawArrow(QPainter* painter)
 {
 	if(!m_leftButtonPressed)
 	{
@@ -431,7 +431,7 @@ void ScreenshotArea::drawArrow(QPainter* painter)
 	painter->setBrush(backupBrush);
 }
 
-void ScreenshotArea::drawLine(QPainter* painter)
+void DrawingBoard::drawLine(QPainter* painter)
 {
 	if(!m_leftButtonPressed)
 	{
@@ -448,7 +448,7 @@ void ScreenshotArea::drawLine(QPainter* painter)
 	painter->drawLine(m_selectionTopLeftPoint, m_selectionBottomRightPoint);
 }
 
-void ScreenshotArea::drawSquare(QPainter* painter)
+void DrawingBoard::drawSquare(QPainter* painter)
 {
 	if(!m_leftButtonPressed)
 	{
@@ -469,7 +469,7 @@ void ScreenshotArea::drawSquare(QPainter* painter)
 
 }
 
-void ScreenshotArea::drawBrush(QPainter* painter)
+void DrawingBoard::drawBrush(QPainter* painter)
 {
 	if(!m_leftButtonPressed)
 	{
@@ -479,22 +479,22 @@ void ScreenshotArea::drawBrush(QPainter* painter)
 	QPen backupPen = painter->pen();
 	QBrush backupBrush = painter->brush();
 
-
 	QBrush brush(m_pToolBar->currentColor());
 
 	painter->setBrush(brush);
 	painter->setPen(QPen(brush, m_penWidth));
 
-	painter->drawEllipse(m_selectionBottomRightPoint.x(),
-	                     m_selectionBottomRightPoint.y(),
-	                     m_penWidth,
-	                     m_penWidth);
+//	painter->drawEllipse(m_selectionBottomRightPoint.x(),
+//	                     m_selectionBottomRightPoint.y(),
+//	                     m_penWidth,
+//	                     m_penWidth);
+	painter->drawLine(m_brushInitialPoint, m_brushFinalPoint);
 
 	painter->setPen(backupPen);
 	painter->setBrush(backupBrush);
 }
 
-void ScreenshotArea::drawEllipse(QPainter* painter)
+void DrawingBoard::drawEllipse(QPainter* painter)
 {
 	if(!m_leftButtonPressed)
 	{
@@ -517,7 +517,7 @@ void ScreenshotArea::drawEllipse(QPainter* painter)
 	painter->drawEllipse(ellipseRectangle);
 }
 
-void ScreenshotArea::drawText(QPainter* painter)
+void DrawingBoard::drawText(QPainter* painter)
 {
 	if(!m_textPositioned)
 	{
@@ -556,7 +556,7 @@ void ScreenshotArea::drawText(QPainter* painter)
 	painter->setBrush(backupBrush);
 }
 
-void ScreenshotArea::mousePressEvent(QMouseEvent *e)
+void DrawingBoard::mousePressEvent(QMouseEvent *e)
 {
 	if(e->button() == Qt::LeftButton)
 	{
@@ -597,7 +597,7 @@ void ScreenshotArea::mousePressEvent(QMouseEvent *e)
 	}
 }
 
-void ScreenshotArea::mouseMoveEvent(QMouseEvent *e)
+void DrawingBoard::mouseMoveEvent(QMouseEvent *e)
 {
 	if (m_screenShotArea.contains(e->pos(), true) && m_pToolBar->currentTool() == ToolBar::NoTool)
 	{
@@ -635,11 +635,19 @@ void ScreenshotArea::mouseMoveEvent(QMouseEvent *e)
 
 			m_pToolBar->move(p);
 		}
+
+
 		update();
 	}
+
+	static bool pointGuard = true;
+	m_brushInitialPoint = pointGuard ? e->pos() : m_brushInitialPoint;
+	m_brushFinalPoint = pointGuard ? m_brushFinalPoint : e->pos();
+	pointGuard = !pointGuard;
+
 }
 
-void ScreenshotArea::mouseReleaseEvent(QMouseEvent *e)
+void DrawingBoard::mouseReleaseEvent(QMouseEvent *e)
 {
 	if (e->button() == Qt::LeftButton)
 	{
@@ -658,7 +666,7 @@ void ScreenshotArea::mouseReleaseEvent(QMouseEvent *e)
 	}
 }
 
-void ScreenshotArea::paintEvent(QPaintEvent *pEvent)
+void DrawingBoard::paintEvent(QPaintEvent *pEvent)
 {
 	Q_UNUSED(pEvent)
 

@@ -13,21 +13,21 @@ TEMPLATE = app
 
 SOURCES += \
     src/main.cpp \
-    src/screenshotarea.cpp \
     src/toolbar.cpp \
     src/uploaddialog.cpp \
     src/colorpicker.cpp \
     src/dialog.cpp \
-    src/settings.cpp
+    src/settings.cpp \
+    src/drawingboard.cpp
 
 HEADERS  += \
-    src/screenshotarea.h \
     src/toolbar.h \
     src/defines.h \
-    src/uploaddialog.h \
-    src/colorpicker.h \
     src/dialog.h \
-    src/settings.h
+    src/settings.h \
+    src/color-picker.h \
+    src/drawingboard.h \
+    src/uploaddialog.h
 
 FORMS += \
     src/uploaddialog.ui
