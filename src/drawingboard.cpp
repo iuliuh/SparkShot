@@ -40,7 +40,7 @@ DrawingBoard::DrawingBoard(QWidget *parent) : QWidget(parent)
 	m_textPositioned = false;
 
 	connect(m_pToolBar, &ToolBar::discardButtonPressed,
-	        this, &QWidget::close);
+	        this, &QWidget::hide);
 	connect(m_pToolBar, &ToolBar::uploadButtonPressed,
 	        this, &DrawingBoard::onUploadButtonPressed);
 	connect(m_pToolBar, &ToolBar::saveButtonPressed,
@@ -484,10 +484,6 @@ void DrawingBoard::drawBrush(QPainter* painter)
 	painter->setBrush(brush);
 	painter->setPen(QPen(brush, m_penWidth));
 
-//	painter->drawEllipse(m_selectionBottomRightPoint.x(),
-//	                     m_selectionBottomRightPoint.y(),
-//	                     m_penWidth,
-//	                     m_penWidth);
 	painter->drawLine(m_brushInitialPoint, m_brushFinalPoint);
 
 	painter->setPen(backupPen);
@@ -635,9 +631,6 @@ void DrawingBoard::mouseMoveEvent(QMouseEvent *e)
 
 			m_pToolBar->move(p);
 		}
-
-
-		update();
 	}
 
 	static bool pointGuard = true;
@@ -645,6 +638,7 @@ void DrawingBoard::mouseMoveEvent(QMouseEvent *e)
 	m_brushFinalPoint = pointGuard ? m_brushFinalPoint : e->pos();
 	pointGuard = !pointGuard;
 
+	update();
 }
 
 void DrawingBoard::mouseReleaseEvent(QMouseEvent *e)

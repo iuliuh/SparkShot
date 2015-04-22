@@ -7,7 +7,7 @@
 #include <QPushButton>
 #include <QLabel>
 
-#include "color-picker.h"
+#include "colorpicker.h"
 #include "settings.h"
 
 class ToolBar : public QWidget

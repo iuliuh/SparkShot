@@ -1,5 +1,5 @@
 #include "settings.h"
-#include "color-picker.h"
+#include "colorpicker.h"
 
 #include <QGridLayout>
 #include <QLabel>

@@ -18,16 +18,18 @@ SOURCES += \
     src/colorpicker.cpp \
     src/dialog.cpp \
     src/settings.cpp \
-    src/drawingboard.cpp
+    src/drawingboard.cpp \
+    src/controller.cpp
 
 HEADERS  += \
     src/toolbar.h \
     src/defines.h \
     src/dialog.h \
     src/settings.h \
-    src/color-picker.h \
     src/drawingboard.h \
-    src/uploaddialog.h
+    src/uploaddialog.h \
+    src/colorpicker.h \
+    src/controller.h
 
 FORMS += \
     src/uploaddialog.ui

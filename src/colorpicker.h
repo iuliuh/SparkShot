@@ -1,11 +1,9 @@
 #ifndef COLORPICKER_H
 #define COLORPICKER_H
 
-#include <QWidget>
 #include "dialog.h"
+
 #include <qmath.h>
-#include <QGridLayout>
-#include <QLabel>
 
 /**
  * \brief Display an analog widget that allows the selection of a HSV color
@@ -69,29 +67,37 @@ protected:
 private:
 	// Calculate outer wheel radius from idget center
 	qreal outerRadius() const;
+
 	// Calculate inner wheel radius from idget center
 	qreal innerRadius() const;
+
 	// return line from center to given point
 	QLineF lineToPoint(QPoint p) const;
+
 	// Calculate the edge length of the inner square
 	qreal squareSize() const;
+
 	// Updates the inner square that displays the saturation-value selector
 	void renderRectangle();
+
 	// Updates the outer ring that displays the hue selector
 	void renderRing();
 
 private:
-	qreal m_hue;
-	qreal m_saturation;
-	qreal m_value;
-	unsigned m_wheelWidth;
-
 	enum MouseStatus
 	{
 		Nothing,
 		DragCircle,
 		DragSquare
-	} m_mouseStatus;
+	};
+
+private:
+	qreal m_hue;
+	qreal m_saturation;
+	qreal m_value;
+	unsigned int m_wheelWidth;
+
+	MouseStatus m_mouseStatus;
 
 	QPixmap m_hueRing;
 	QImage m_satValSquare;

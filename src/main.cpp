@@ -1,13 +1,13 @@
 #include <QApplication>
 
-#include "drawingboard.h"
+#include "controller.h"
 
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
 
-	DrawingBoard s;
-	s.shoot();
+	Controller controller;
+	controller.start();
 
 	return a.exec();
 }
