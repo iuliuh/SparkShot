@@ -27,8 +27,8 @@ DrawingBoard::DrawingBoard(QWidget *parent) : QWidget(parent)
 	setAttribute(Qt::WA_CustomWhatsThis);
 
 	m_pToolBar = new ToolBar(ToolBar::Horizontal, this);
-	m_pToolBar->move(100, 100);
-	m_pToolBar->show();
+	m_pToolBar->hide();
+
 	m_darkOverlayColor = QColor(0, 0, 0, 155);
 	m_rubberBandColor = Qt::cyan;
 	m_rubberBandWidth = 2;
