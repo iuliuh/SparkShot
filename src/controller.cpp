@@ -9,7 +9,6 @@
 Controller::Controller(QObject *parent) : QObject(parent)
 {
 	m_systemTray = new QSystemTrayIcon(QIcon(":/images/trayIcon"), this);
-	m_drawingBoard = new DrawingBoard;
 	m_systemTrayMenu = new QMenu;
 
 	m_printScreenAction = m_systemTrayMenu->addAction(tr("Print Screen!"));
@@ -64,5 +63,6 @@ void Controller::onSystemTrayIconActivated(QSystemTrayIcon::ActivationReason rea
 
 void Controller::printScreen()
 {
+	m_drawingBoard = new DrawingBoard;
 	m_drawingBoard->shoot();
 }
