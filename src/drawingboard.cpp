@@ -38,9 +38,11 @@ DrawingBoard::DrawingBoard(QWidget *parent) : QWidget(parent)
 	m_leftButtonPressed = false;
 	m_selectionStarted = false;
 	m_textPositioned = false;
+	m_startedDrawing = false;
+	m_moveSelectionArea = false;
 
 	connect(m_pToolBar, &ToolBar::discardButtonPressed,
-	        this, &QWidget::hide);
+	        this, &DrawingBoard::close);
 	connect(m_pToolBar, &ToolBar::uploadButtonPressed,
 	        this, &DrawingBoard::onUploadButtonPressed);
 	connect(m_pToolBar, &ToolBar::saveButtonPressed,
@@ -114,6 +116,7 @@ void DrawingBoard::shoot()
 	{
 		m_originalCapture = pScreen->grabWindow(0);
 		m_paintBoard = m_originalCapture;
+		m_helperBoard = m_originalCapture;
 	}
 
 	show();
@@ -552,6 +555,11 @@ void DrawingBoard::drawText(QPainter* painter)
 	painter->setBrush(backupBrush);
 }
 
+void DrawingBoard::reset()
+{
+	shoot();
+}
+
 void DrawingBoard::mousePressEvent(QMouseEvent *e)
 {
 	if(e->button() == Qt::LeftButton)
@@ -578,7 +586,7 @@ void DrawingBoard::mousePressEvent(QMouseEvent *e)
 			m_selectionTopLeftPoint = e->pos();
 			m_selectionBottomRightPoint = e->pos();
 		}
-		else
+		else if(m_startedDrawing)
 		{
 			m_moveSelectionArea = true;
 			m_topLeftPointBeforeSelectionMove = m_selectionTopLeftPoint;
@@ -590,6 +598,8 @@ void DrawingBoard::mousePressEvent(QMouseEvent *e)
 		{
 			setCursor(Qt::ClosedHandCursor);
 		}
+
+		m_startedDrawing = true;
 	}
 }
 

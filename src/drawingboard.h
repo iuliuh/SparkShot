@@ -55,6 +55,7 @@ private:
 	void drawBrush(QPainter* painter);
 	void drawEllipse(QPainter* painter);
 	void drawText(QPainter* painter);
+	void reset();
 
 private:
 	ToolBar *m_pToolBar;
@@ -67,6 +68,7 @@ private:
 	bool m_selectionStarted;
 	bool m_moveSelectionArea;
 	bool m_textPositioned;
+	bool m_startedDrawing;
 	QPoint m_selectionTopLeftPoint;
 	QPoint m_selectionBottomRightPoint;
 

@@ -235,19 +235,21 @@ void ToolBar::paintEvent(QPaintEvent *pEvent)
 void ToolBar::autoPositionColorPicker()
 {
 	const int threshold = 5;
+	const int xCorrection = 10;
+
 	int colorPickerXPosition = -m_pColorButton->mapFromGlobal(QPoint(0, 0)).x();
 	int colorPickerYPosition = -m_pColorButton->mapFromGlobal(QPoint(0, 0)).y();
 
 	if(m_colorPickerDialog.height() + height() + y() > m_screenRect.height())
 	{
 		m_colorPickerDialog.setArrowLocation(ColorPicker::Bottom);
-		colorPickerXPosition -= m_pColorButton->width() - threshold;
+		colorPickerXPosition -= m_pColorButton->width() - threshold + xCorrection;
 		colorPickerYPosition -= m_colorPickerDialog.height() + threshold;
 	}
 	else
 	{
 		m_colorPickerDialog.setArrowLocation(ColorPicker::Top);
-		colorPickerXPosition -= m_pColorButton->width() - threshold;
+		colorPickerXPosition -= m_pColorButton->width() - threshold + xCorrection;
 		colorPickerYPosition -= -m_pColorButton->height() - threshold;
 	}
 

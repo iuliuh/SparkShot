@@ -10,7 +10,7 @@ Controller::Controller(QObject *parent) : QObject(parent)
 {
 	m_systemTray = new QSystemTrayIcon(QIcon(":/images/trayIcon"), this);
 	m_drawingBoard = new DrawingBoard;
-	m_systemTrayMenu = new QMenu(m_drawingBoard);
+	m_systemTrayMenu = new QMenu;
 
 	m_printScreenAction = m_systemTrayMenu->addAction(tr("Print Screen!"));
 	m_closeAction = m_systemTrayMenu->addAction(tr("Close"));
