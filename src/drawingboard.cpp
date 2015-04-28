@@ -345,7 +345,7 @@ void DrawingBoard::drawArrow(QPainter* painter)
 		return;
 	}
 
-	float halfWidth = m_arrowBaseWidth / 2;;
+	float halfWidth = m_arrowBaseWidth / 2;
 
 	// Backup pen and brush
 	QPen backupPen = painter->pen();
@@ -683,7 +683,12 @@ void DrawingBoard::paintEvent(QPaintEvent *pEvent)
 	{
 		drawDarkOverlay(&paintBoardPainter);
 		drawCroppedArea(&paintBoardPainter);
-		drawRubberBand(&paintBoardPainter);
+
+		// Draw rubber band only if selection has started
+		if(m_selectionStarted)
+		{
+			drawRubberBand(&paintBoardPainter);
+		}
 	}
 
 	switch (m_pToolBar->currentTool())

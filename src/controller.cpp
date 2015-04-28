@@ -18,14 +18,14 @@ Controller::Controller(QObject *parent) : QObject(parent)
 
 	m_systemTray->setContextMenu(m_systemTrayMenu);
 
-	connect(m_aboutAction, SIGNAL(triggered()),
-	        this, SLOT(onAboutActionClicked()));
-	connect(m_printScreenAction, SIGNAL(triggered()),
-	        this, SLOT(onPrintScreenActionClicked()));
-	connect(m_closeAction, SIGNAL(triggered()),
-	        this, SLOT(onCloseActionClicked()));
-	connect(m_systemTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-	        this, SLOT(onSystemTrayIconActivated(QSystemTrayIcon::ActivationReason)));
+	connect(m_aboutAction, &QAction::triggered,
+	        this, &Controller::onAboutActionClicked);
+	connect(m_printScreenAction, &QAction::triggered,
+	        this, &Controller::onPrintScreenActionClicked);
+	connect(m_closeAction, &QAction::triggered,
+	        this, &Controller::onCloseActionClicked);
+	connect(m_systemTray, &QSystemTrayIcon::activated,
+	        this, &Controller::onSystemTrayIconActivated);
 }
 
 Controller::~Controller()
