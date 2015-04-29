@@ -24,7 +24,7 @@ DrawingBoard::DrawingBoard(QWidget *parent) : QWidget(parent)
 	               Qt::FramelessWindowHint |
 	               Qt::NoDropShadowWindowHint);
 
-	setAttribute(Qt::WA_CustomWhatsThis);
+	setAttribute(Qt::WA_DeleteOnClose);
 
 	m_pToolBar = new ToolBar(ToolBar::Horizontal, this);
 	m_pToolBar->hide();
@@ -72,7 +72,7 @@ DrawingBoard::DrawingBoard(QWidget *parent) : QWidget(parent)
 
 DrawingBoard::~DrawingBoard()
 {
-
+	delete m_pUploadDialog;
 }
 
 void DrawingBoard::keyPressEvent(QKeyEvent *pEvent)

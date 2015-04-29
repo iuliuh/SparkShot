@@ -43,7 +43,7 @@ Settings::Settings(QWidget *parent) :
 	m_pResetDefaultsButton->setObjectName("ResetDefaultsButton");
 	m_pResetDefaultsSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding);
 
-	m_pVerticalSpacer = new QSpacerItem(20, 40,  QSizePolicy::Minimum, QSizePolicy::Expanding);
+	m_pVerticalSpacer = new QSpacerItem(20, 10,  QSizePolicy::Minimum, QSizePolicy::Fixed);
 	m_pResetDefaultLayout->addItem(m_pResetDefaultsSpacer);
 	m_pResetDefaultLayout->addWidget(m_pResetDefaultsButton);
 

@@ -3,8 +3,7 @@
 
 #include <QMenu>
 #include <QAction>
-
-#include <QDebug>
+#include <QApplication>
 
 Controller::Controller(QObject *parent) : QObject(parent)
 {
@@ -23,7 +22,7 @@ Controller::Controller(QObject *parent) : QObject(parent)
 	connect(m_printScreenAction, &QAction::triggered,
 	        this, &Controller::onPrintScreenActionClicked);
 	connect(m_closeAction, &QAction::triggered,
-	        this, &Controller::onCloseActionClicked);
+	        qApp, &QApplication::exit);
 	connect(m_systemTray, &QSystemTrayIcon::activated,
 	        this, &Controller::onSystemTrayIconActivated);
 }
@@ -46,11 +45,6 @@ void Controller::onAboutActionClicked()
 void Controller::onPrintScreenActionClicked()
 {
 	printScreen();
-}
-
-void Controller::onCloseActionClicked()
-{
-	qApp->quit();
 }
 
 void Controller::onSystemTrayIconActivated(QSystemTrayIcon::ActivationReason reason)

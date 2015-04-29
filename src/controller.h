@@ -21,7 +21,6 @@ public:
 private Q_SLOTS:
 	void onAboutActionClicked();
 	void onPrintScreenActionClicked();
-	void onCloseActionClicked();
 	void onSystemTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
 
 private:
