@@ -468,9 +468,9 @@ void DrawingBoard::drawSquare(QPainter* pPainter)
 
 	pPainter->setPen(pen);
 	pPainter->drawRect(m_selectionTopLeftPoint.x(),
-	                  m_selectionTopLeftPoint.y(),
-	                  m_selectionBottomRightPoint.x() - m_selectionTopLeftPoint.x(),
-	                  m_selectionBottomRightPoint.y() - m_selectionTopLeftPoint.y());
+	                   m_selectionTopLeftPoint.y(),
+	                   m_selectionBottomRightPoint.x() - m_selectionTopLeftPoint.x(),
+	                   m_selectionBottomRightPoint.y() - m_selectionTopLeftPoint.y());
 
 }
 
@@ -546,8 +546,8 @@ void DrawingBoard::drawText(QPainter* pPainter)
 	               fontMetrics.height());
 
 	pPainter->drawText(textRect,
-	                  Qt::AlignLeft,
-	                  m_currentText);
+	                   Qt::AlignLeft,
+	                   m_currentText);
 
 	textRect.adjust(-2, -2, 2, 2);
 
