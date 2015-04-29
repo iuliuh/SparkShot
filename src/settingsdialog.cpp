@@ -1,4 +1,4 @@
-#include "settings.h"
+#include "settingsdialog.h"
 #include "colorpicker.h"
 
 #include <QGridLayout>
@@ -8,14 +8,9 @@
 #include <QSpinBox>
 #include <QKeyEvent>
 
-Settings::Settings(QWidget *parent) :
+SettingsDialog::SettingsDialog(QWidget *parent) :
     Dialog(parent),
-    m_overlayColor(0, 0, 0, 155),
-    m_rubberBandColor(Qt::cyan),
-    m_rubberBandWidth(2),
-    m_penWidth(2),
-    m_dotsRadius(m_rubberBandWidth * 2),
-    m_fontSize(12)
+    m_dotsRadius(Preferences::instance().rubberBandWidth() * 2) // Fix this uglyness...
 {
 	m_pLayout = new QGridLayout;
 
@@ -48,26 +43,39 @@ Settings::Settings(QWidget *parent) :
 	m_pResetDefaultLayout->addItem(m_pResetDefaultsSpacer);
 	m_pResetDefaultLayout->addWidget(m_pResetDefaultsButton);
 
-	m_pOverlayColorButton->setStyleSheet("background-color: black");
-	m_pRubberBandColorButton->setStyleSheet("background-color: cyan");
+	const QColor defaultOverlayColor = Preferences::instance().overlayColor();
+	m_pOverlayColorButton->setStyleSheet(QString("background-color: rgba(%1, %2, %3, %4)")
+	                                     .arg(defaultOverlayColor.red())
+	                                     .arg(defaultOverlayColor.green())
+	                                     .arg(defaultOverlayColor.blue())
+	                                     .arg(defaultOverlayColor.alpha()));
+
+	const QColor defaultRubberBandColor = Preferences::instance().rubberBandColor();
+	m_pRubberBandColorButton->setStyleSheet(QString("background-color: rgba(%1, %2, %3, %4)")
+	                                        .arg(defaultRubberBandColor.red())
+	                                        .arg(defaultRubberBandColor.green())
+	                                        .arg(defaultRubberBandColor.blue())
+	                                        .arg(defaultRubberBandColor.alpha()));
 
 	m_pOverlayColorPicker = new ColorPicker(this);
+	m_pOverlayColorPicker->setColor(defaultOverlayColor);
 	m_pOverlayColorPicker->setArrowLocation(ColorPicker::Left);
 
 	m_pRubberBandColorPicker = new ColorPicker(this);
+	m_pRubberBandColorPicker->setColor(defaultRubberBandColor);
 	m_pRubberBandColorPicker->setArrowLocation(ColorPicker::Left);
 
 	connect(m_pOverlayColorButton, &QPushButton::clicked,
-	        this, &Settings::onOverlayColorButtonClicked);
+	        this, &SettingsDialog::onOverlayColorButtonClicked);
 
 	connect(m_pRubberBandColorButton, &QPushButton::clicked,
-	        this, &Settings::onRubberBandColorButtonClicked);
+	        this, &SettingsDialog::onRubberBandColorButtonClicked);
 
 	connect(m_pOverlayColorPicker, &ColorPicker::colorChanged,
-	        this, &Settings::onOverlayColorChanged);
+	        this, &SettingsDialog::onOverlayColorChanged);
 
 	connect(m_pRubberBandColorPicker, &ColorPicker::colorChanged,
-	        this, &Settings::onRubberBandColorChanged);
+	        this, &SettingsDialog::onRubberBandColorChanged);
 
 	m_pLayout->addWidget(m_pOverlayColorLabel, 0, 0);
 	m_pLayout->addWidget(m_pOverlayColorButton, 0, 1);
@@ -89,84 +97,83 @@ Settings::Settings(QWidget *parent) :
 	resize(200, 270);
 }
 
-Settings::~Settings()
+SettingsDialog::~SettingsDialog()
 {
-
 }
 
-QColor Settings::overlayColor() const
+QColor SettingsDialog::overlayColor() const
 {
-	return m_overlayColor;
+	return Preferences::instance().overlayColor();
 }
 
-void Settings::setOverlayColor(const QColor &overlayColor)
+void SettingsDialog::setOverlayColor(const QColor &overlayColor)
 {
-	m_overlayColor = overlayColor;
+	Preferences::instance().setOverlayColor(overlayColor);
 
 	emit overlayColorChanged(overlayColor);
 }
 
-QColor Settings::rubberBandColor() const
+QColor SettingsDialog::rubberBandColor() const
 {
-	return m_rubberBandColor;
+	return Preferences::instance().rubberBandColor();
 }
 
-void Settings::setRubberBandColor(const QColor &rubberBandColor)
+void SettingsDialog::setRubberBandColor(const QColor &rubberBandColor)
 {
-	m_rubberBandColor = rubberBandColor;
+	Preferences::instance().setRubberBandColor(rubberBandColor);
 
 	emit rubberBandColorChanged(rubberBandColor);
 }
 
-int Settings::rubberBandWidth() const
+int SettingsDialog::rubberBandWidth() const
 {
-	return m_rubberBandWidth;
+	return Preferences::instance().rubberBandWidth();
 }
 
-void Settings::setRubberBandWidth(int rubberBandWidth)
+void SettingsDialog::setRubberBandWidth(int rubberBandWidth)
 {
-	m_rubberBandWidth = rubberBandWidth;
+	Preferences::instance().setRubberBandWidth(rubberBandWidth);
 
 	emit rubberBandWidthChanged(rubberBandWidth);
 }
 
-int Settings::penWidth() const
+int SettingsDialog::penWidth() const
 {
-	return m_penWidth;
+	return Preferences::instance().penWidth();
 }
 
-void Settings::setPenWidth(int penWidth)
+void SettingsDialog::setPenWidth(int penWidth)
 {
-	m_penWidth = penWidth;
+	Preferences::instance().setPenWidth(penWidth);
 
 	emit penWidthChanged(penWidth);
 }
 
-int Settings::dotsRadius() const
+int SettingsDialog::dotsRadius() const
 {
 	return m_dotsRadius;
 }
 
-void Settings::setDotsRadius(int dotsRadius)
+void SettingsDialog::setDotsRadius(int dotsRadius)
 {
 	m_dotsRadius = dotsRadius;
 
 	emit dotsRadiusChanged(dotsRadius);
 }
 
-int Settings::fontSize() const
+int SettingsDialog::fontSize() const
 {
-	return m_fontSize;
+	return Preferences::instance().fontSize();
 }
 
-void Settings::setFontSize(int fontSize)
+void SettingsDialog::setFontSize(int fontSize)
 {
-	m_fontSize = fontSize;
+	Preferences::instance().setFontSize(fontSize);
 
 	emit fontSizeChanged(fontSize);
 }
 
-void Settings::moveEvent(QMoveEvent *pEvent)
+void SettingsDialog::moveEvent(QMoveEvent *pEvent)
 {
 	Q_UNUSED(pEvent)
 
@@ -174,7 +181,7 @@ void Settings::moveEvent(QMoveEvent *pEvent)
 	m_pOverlayColorPicker->hide();
 }
 
-void Settings::keyPressEvent(QKeyEvent *pEvent)
+void SettingsDialog::keyPressEvent(QKeyEvent *pEvent)
 {
 	if(pEvent->key() == Qt::Key_Escape)
 	{
@@ -185,7 +192,7 @@ void Settings::keyPressEvent(QKeyEvent *pEvent)
 	}
 }
 
-void Settings::onOverlayColorButtonClicked()
+void SettingsDialog::onOverlayColorButtonClicked()
 {
 	const int threshold = 15;
 	int colorPickerXPosition = -m_pOverlayColorButton->mapFromGlobal(QPoint(0, 0)).x();
@@ -201,20 +208,19 @@ void Settings::onOverlayColorButtonClicked()
 	m_pOverlayColorPicker->isVisible() ? m_pOverlayColorPicker->hide() : m_pOverlayColorPicker->show();
 }
 
-void Settings::onOverlayColorChanged(QColor newColor)
+void SettingsDialog::onOverlayColorChanged(QColor newColor)
 {
-	m_overlayColor = newColor;
-	m_overlayColor.setAlpha(127);
+	newColor.setAlpha(127);
 
 	m_pOverlayColorButton->setStyleSheet(QString("background-color: rgba(%1, %2, %3, %4);")
-	                                     .arg(m_overlayColor.red())
-	                                     .arg(m_overlayColor.green())
-	                                     .arg(m_overlayColor.blue())
-	                                     .arg(m_overlayColor.alpha()));
-	setOverlayColor(m_overlayColor);
+	                                     .arg(newColor.red())
+	                                     .arg(newColor.green())
+	                                     .arg(newColor.blue())
+	                                     .arg(newColor.alpha()));
+	setOverlayColor(newColor);
 }
 
-void Settings::onRubberBandColorButtonClicked()
+void SettingsDialog::onRubberBandColorButtonClicked()
 {
 	const int threshold = 15;
 	int colorPickerXPosition = -m_pRubberBandColorButton->mapFromGlobal(QPoint(0, 0)).x();
@@ -230,13 +236,12 @@ void Settings::onRubberBandColorButtonClicked()
 	m_pRubberBandColorPicker->isVisible() ? m_pRubberBandColorPicker->hide() : m_pRubberBandColorPicker->show();
 }
 
-void Settings::onRubberBandColorChanged(QColor newColor)
+void SettingsDialog::onRubberBandColorChanged(QColor newColor)
 {
-	m_rubberBandColor = newColor;
 	m_pRubberBandColorButton->setStyleSheet(QString("background-color: rgb(%1, %2, %3);")
 	                                        .arg(newColor.red())
 	                                        .arg(newColor.green())
 	                                        .arg(newColor.blue()));
-	setRubberBandColor(m_rubberBandColor);
+	setRubberBandColor(newColor);
 }
 

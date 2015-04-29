@@ -29,10 +29,11 @@ DrawingBoard::DrawingBoard(QWidget *parent) : QWidget(parent)
 	m_pToolBar = new ToolBar(ToolBar::Horizontal, this);
 	m_pToolBar->hide();
 
-	m_darkOverlayColor = QColor(0, 0, 0, 155);
-	m_rubberBandColor = Qt::cyan;
-	m_rubberBandWidth = 2;
-	m_penWidth = 2;
+	m_darkOverlayColor = Preferences::instance().overlayColor();
+	m_rubberBandColor = Preferences::instance().rubberBandColor();
+	m_rubberBandWidth = Preferences::instance().rubberBandWidth();
+	m_penWidth = Preferences::instance().penWidth();
+	m_fontSize = Preferences::instance().fontSize();
 	m_rubberBandPointRadius = 3;
 	m_arrowBaseWidth = 8;
 	m_arrowHeight = 11.0 * qSqrt(3.0);
@@ -134,7 +135,6 @@ void DrawingBoard::onOverlayColorChanged(QColor color)
 void DrawingBoard::onRubberBandColorChanged(QColor color)
 {
 	m_rubberBandColor = color;
-
 	update();
 }
 
@@ -544,6 +544,10 @@ void DrawingBoard::drawText(QPainter* pPainter)
 	               m_textPoint.y(),
 	               fontMetrics.width(m_currentText),
 	               fontMetrics.height());
+
+	QFont textFont;
+	textFont.setPointSize(m_fontSize);
+	pPainter->setFont(textFont);
 
 	pPainter->drawText(textRect,
 	                   Qt::AlignLeft,

@@ -119,17 +119,17 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 	connect(&m_colorPickerDialog, &ColorPicker::colorChanged,
 	        this, &ToolBar::onDrawingColorChanged);
 
-	connect(&m_settingsDialog, &Settings::overlayColorChanged,
+	connect(&m_settingsDialog, &SettingsDialog::overlayColorChanged,
 	        this, &ToolBar::overlayColorChanged);
-	connect(&m_settingsDialog, &Settings::rubberBandColorChanged,
+	connect(&m_settingsDialog, &SettingsDialog::rubberBandColorChanged,
 	        this, &ToolBar::rubberBandColorChanged);
-	connect(&m_settingsDialog, &Settings::rubberBandWidthChanged,
+	connect(&m_settingsDialog, &SettingsDialog::rubberBandWidthChanged,
 	        this, &ToolBar::rubberBandWidthChanged);
-	connect(&m_settingsDialog, &Settings::penWidthChanged,
+	connect(&m_settingsDialog, &SettingsDialog::penWidthChanged,
 	        this, &ToolBar::penWidthChanged);
-	connect(&m_settingsDialog, &Settings::dotsRadiusChanged,
+	connect(&m_settingsDialog, &SettingsDialog::dotsRadiusChanged,
 	        this, &ToolBar::dotsRadiusChanged);
-	connect(&m_settingsDialog, &Settings::fontSizeChanged,
+	connect(&m_settingsDialog, &SettingsDialog::fontSizeChanged,
 	        this, &ToolBar::fontSizeChanged);
 
 	m_pLayout->setSpacing(1);

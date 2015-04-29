@@ -2,6 +2,7 @@
 #define SETTINGS_H
 
 #include "dialog.h"
+#include "preferences.h"
 
 class QGridLayout;
 class QLabel;
@@ -11,13 +12,13 @@ class QHBoxLayout;
 class QSpacerItem;
 class ColorPicker;
 
-class Settings : public Dialog
+class SettingsDialog : public Dialog
 {
 	Q_OBJECT
 
 public:
-	explicit Settings(QWidget *parent = 0);
-	~Settings();
+	explicit SettingsDialog(QWidget *parent = 0);
+	~SettingsDialog();
 
 	QColor overlayColor() const;
 	void setOverlayColor(const QColor &overlayColor);
@@ -85,13 +86,7 @@ private:
 	ColorPicker *m_pOverlayColorPicker;
 	ColorPicker *m_pRubberBandColorPicker;
 
-	QColor m_overlayColor;
-	QColor m_rubberBandColor;
-
-	int m_rubberBandWidth;
-	int m_penWidth;
 	int m_dotsRadius;
-	int m_fontSize;
 };
 
 #endif // SETTINGS_H

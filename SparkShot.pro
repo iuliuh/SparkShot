@@ -17,19 +17,21 @@ SOURCES += \
     src/uploaddialog.cpp \
     src/colorpicker.cpp \
     src/dialog.cpp \
-    src/settings.cpp \
     src/drawingboard.cpp \
-    src/controller.cpp
+    src/controller.cpp \
+    src/settingsdialog.cpp \
+    src/preferences.cpp
 
 HEADERS  += \
     src/toolbar.h \
     src/defines.h \
     src/dialog.h \
-    src/settings.h \
     src/drawingboard.h \
     src/uploaddialog.h \
     src/colorpicker.h \
-    src/controller.h
+    src/controller.h \
+    src/settingsdialog.h \
+    src/preferences.h
 
 FORMS += \
     src/uploaddialog.ui
