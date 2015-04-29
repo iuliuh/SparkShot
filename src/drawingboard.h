@@ -42,20 +42,19 @@ private slots:
 	void onSaveButtonPressed();
 
 	void replyFinished();
-	void onError(QNetworkReply::NetworkError);
-	void onSslErrors(QList<QSslError>);
+	void onError(QNetworkReply::NetworkError error);
+	void onSslErrors(QList<QSslError> errorList);
 
 private:
-	void drawRubberBand(QPainter* painter);
-	void drawCroppedArea(QPainter* painter);
-	void drawDarkOverlay(QPainter* painter);
-	void drawArrow(QPainter* painter);
-	void drawLine(QPainter* painter);
-	void drawSquare(QPainter* painter);
-	void drawBrush(QPainter* painter);
-	void drawEllipse(QPainter* painter);
-	void drawText(QPainter* painter);
-	void reset();
+	void drawRubberBand(QPainter* pPainter);
+	void drawCroppedArea(QPainter* pPainter);
+	void drawDarkOverlay(QPainter* pPainter);
+	void drawArrow(QPainter* pPainter);
+	void drawLine(QPainter* pPainter);
+	void drawSquare(QPainter* pPainter);
+	void drawBrush(QPainter* pPainter);
+	void drawEllipse(QPainter *pPainter);
+	void drawText(QPainter* pPainter);
 
 private:
 	ToolBar *m_pToolBar;
@@ -64,11 +63,6 @@ private:
 	QPixmap m_paintBoard;
 	QPixmap m_helperBoard;
 
-	bool m_leftButtonPressed;
-	bool m_selectionStarted;
-	bool m_moveSelectionArea;
-	bool m_textPositioned;
-	bool m_startedDrawing;
 	QPoint m_selectionTopLeftPoint;
 	QPoint m_selectionBottomRightPoint;
 
@@ -79,23 +73,29 @@ private:
 	QString m_currentText;
 	QPoint m_textPoint;
 
-	// Imgur API
 	QString m_clientId;
 	QNetworkAccessManager m_networkAccessManager;
 	QNetworkReply *m_pNetworkReply;
 	UploadDialog *m_pUploadDialog;
 
+	bool m_leftButtonPressed;
+	bool m_selectionStarted;
+	bool m_moveSelectionArea;
+	bool m_textPositioned;
+	bool m_startedDrawing;
+
 private:
 	QColor m_darkOverlayColor;
 	QColor m_rubberBandColor;
+
+	QPoint m_brushInitialPoint;
+	QPoint m_brushFinalPoint;
+
 	int m_rubberBandWidth;
 	int m_penWidth;
 	int m_rubberBandPointRadius;
 	int m_fontSize;
-	QPoint m_brushInitialPoint;
-	QPoint m_brushFinalPoint;
 
-private:
 	float m_arrowHeight;
 	float m_arrowBaseWidth;
 };

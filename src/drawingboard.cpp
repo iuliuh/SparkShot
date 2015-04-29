@@ -211,7 +211,7 @@ void DrawingBoard::onSaveButtonPressed()
 {
 	QPixmap newPixmap = m_paintBoard.copy(m_screenShotArea);
 
-	QString defaultFilter = tr("*.png");
+	QString defaultFilter("*.png");
 
 	QString fileName = QFileDialog::getSaveFileName(this,
 	                                                tr("Save File"),
@@ -256,9 +256,9 @@ void DrawingBoard::replyFinished()
 	close();
 }
 
-void DrawingBoard::onError(QNetworkReply::NetworkError)
+void DrawingBoard::onError(QNetworkReply::NetworkError error)
 {
-	qDebug() << Q_FUNC_INFO;
+	Q_UNUSED(error)
 
 	disconnect(m_pNetworkReply, &QNetworkReply::finished,
 	           this, &DrawingBoard::replyFinished);
@@ -268,9 +268,9 @@ void DrawingBoard::onError(QNetworkReply::NetworkError)
 	           this, &DrawingBoard::onSslErrors);
 }
 
-void DrawingBoard::onSslErrors(QList<QSslError>)
+void DrawingBoard::onSslErrors(QList<QSslError> errorList)
 {
-	qDebug() << Q_FUNC_INFO;
+	Q_UNUSED(errorList)
 
 	disconnect(m_pNetworkReply, &QNetworkReply::finished,
 	           this, &DrawingBoard::replyFinished);
@@ -280,7 +280,7 @@ void DrawingBoard::onSslErrors(QList<QSslError>)
 	           this, &DrawingBoard::onSslErrors);
 }
 
-void DrawingBoard::drawRubberBand(QPainter* painter)
+void DrawingBoard::drawRubberBand(QPainter* pPainter)
 {
 	QRect rubberBandRect(m_selectionTopLeftPoint.x(),
 	                     m_selectionTopLeftPoint.y(),
@@ -292,28 +292,28 @@ void DrawingBoard::drawRubberBand(QPainter* painter)
 	QPen pen(m_rubberBandColor);
 	pen.setWidth(m_rubberBandWidth);
 
-	painter->setPen(pen);
-	painter->setBrush(Qt::NoBrush);
-	painter->drawRect(rubberBandRect.normalized());
+	pPainter->setPen(pen);
+	pPainter->setBrush(Qt::NoBrush);
+	pPainter->drawRect(rubberBandRect.normalized());
 
-	painter->setBrush(m_rubberBandColor);
+	pPainter->setBrush(m_rubberBandColor);
 
 	QPoint topMiddle(rubberBandRect.topLeft().x() + rubberBandRect.width() / 2, rubberBandRect.y());
 	QPoint rightMiddle(rubberBandRect.topLeft().x() + rubberBandRect.width(), rubberBandRect.y() + rubberBandRect.height() / 2);
 	QPoint bottomMiddle(rubberBandRect.topLeft().x() + rubberBandRect.width() / 2, rubberBandRect.y() + rubberBandRect.height());
 	QPoint leftMiddle(rubberBandRect.topLeft().x(), rubberBandRect.y() + rubberBandRect.height() / 2);
 
-	painter->drawEllipse(rubberBandRect.topLeft(), m_rubberBandPointRadius, m_rubberBandPointRadius);
-	painter->drawEllipse(rubberBandRect.topRight(), m_rubberBandPointRadius, m_rubberBandPointRadius);
-	painter->drawEllipse(rubberBandRect.bottomLeft(), m_rubberBandPointRadius, m_rubberBandPointRadius);
-	painter->drawEllipse(rubberBandRect.bottomRight(), m_rubberBandPointRadius, m_rubberBandPointRadius);
-	painter->drawEllipse(topMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
-	painter->drawEllipse(rightMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
-	painter->drawEllipse(bottomMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
-	painter->drawEllipse(leftMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
+	pPainter->drawEllipse(rubberBandRect.topLeft(), m_rubberBandPointRadius, m_rubberBandPointRadius);
+	pPainter->drawEllipse(rubberBandRect.topRight(), m_rubberBandPointRadius, m_rubberBandPointRadius);
+	pPainter->drawEllipse(rubberBandRect.bottomLeft(), m_rubberBandPointRadius, m_rubberBandPointRadius);
+	pPainter->drawEllipse(rubberBandRect.bottomRight(), m_rubberBandPointRadius, m_rubberBandPointRadius);
+	pPainter->drawEllipse(topMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
+	pPainter->drawEllipse(rightMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
+	pPainter->drawEllipse(bottomMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
+	pPainter->drawEllipse(leftMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
 }
 
-void DrawingBoard::drawCroppedArea(QPainter* painter)
+void DrawingBoard::drawCroppedArea(QPainter* pPainter)
 {
 	if(m_selectionStarted)
 	{
@@ -322,23 +322,23 @@ void DrawingBoard::drawCroppedArea(QPainter* painter)
 		                 m_selectionBottomRightPoint.x() - m_selectionTopLeftPoint.x(),
 		                 m_selectionBottomRightPoint.y() - m_selectionTopLeftPoint.y());
 
-		painter->drawPixmap(pixmapRect.normalized(), m_originalCapture, pixmapRect.normalized());
+		pPainter->drawPixmap(pixmapRect.normalized(), m_originalCapture, pixmapRect.normalized());
 	}
 }
 
-void DrawingBoard::drawDarkOverlay(QPainter* painter)
+void DrawingBoard::drawDarkOverlay(QPainter* pPainter)
 {
 	QPixmap drawnCapture = m_originalCapture;
 
-	painter->drawPixmap(0, 0, drawnCapture.width(), drawnCapture.height(), drawnCapture);
+	pPainter->drawPixmap(0, 0, drawnCapture.width(), drawnCapture.height(), drawnCapture);
 
 	QBrush darkOverlayBrush(m_darkOverlayColor);
 
-	painter->setBrush(darkOverlayBrush);
-	painter->drawRect(drawnCapture.rect());
+	pPainter->setBrush(darkOverlayBrush);
+	pPainter->drawRect(drawnCapture.rect());
 }
 
-void DrawingBoard::drawArrow(QPainter* painter)
+void DrawingBoard::drawArrow(QPainter* pPainter)
 {
 	if(!m_leftButtonPressed)
 	{
@@ -348,11 +348,11 @@ void DrawingBoard::drawArrow(QPainter* painter)
 	float halfWidth = m_arrowBaseWidth / 2;
 
 	// Backup pen and brush
-	QPen backupPen = painter->pen();
-	QBrush backupBrush = painter->brush();
+	QPen backupPen = pPainter->pen();
+	QBrush backupBrush = pPainter->brush();
 
 	// Draw the line
-	painter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
+	pPainter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
 
 	QPen pen;
 	pen.setBrush(QBrush(m_pToolBar->currentColor()));
@@ -404,8 +404,8 @@ void DrawingBoard::drawArrow(QPainter* painter)
 		currentShortenedLinePressPoint.setY(m_selectionTopLeftPoint.y() + dy);
 	}
 
-	painter->setPen(pen);
-	painter->drawLine(m_selectionTopLeftPoint, currentShortenedLinePressPoint);
+	pPainter->setPen(pen);
+	pPainter->drawLine(m_selectionTopLeftPoint, currentShortenedLinePressPoint);
 
 	// Draw the arrow
 	QVector2D initPosVec(m_selectionTopLeftPoint);
@@ -429,115 +429,115 @@ void DrawingBoard::drawArrow(QPainter* painter)
 
 	QPainterPath path;
 	path.addPolygon(p);
-	painter->fillPath(path, QBrush(m_pToolBar->currentColor()));
+	pPainter->fillPath(path, QBrush(m_pToolBar->currentColor()));
 
 	// Set the pen and brush back to normal
-	painter->setPen(backupPen);
-	painter->setBrush(backupBrush);
+	pPainter->setPen(backupPen);
+	pPainter->setBrush(backupBrush);
 }
 
-void DrawingBoard::drawLine(QPainter* painter)
+void DrawingBoard::drawLine(QPainter* pPainter)
 {
 	if(!m_leftButtonPressed)
 	{
 		return;
 	}
 
-	painter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
+	pPainter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
 
 	QPen pen;
 	pen.setBrush(QBrush(m_pToolBar->currentColor()));
 	pen.setWidth(m_penWidth);
 
-	painter->setPen(pen);
-	painter->drawLine(m_selectionTopLeftPoint, m_selectionBottomRightPoint);
+	pPainter->setPen(pen);
+	pPainter->drawLine(m_selectionTopLeftPoint, m_selectionBottomRightPoint);
 }
 
-void DrawingBoard::drawSquare(QPainter* painter)
+void DrawingBoard::drawSquare(QPainter* pPainter)
 {
 	if(!m_leftButtonPressed)
 	{
 		return;
 	}
 
-	painter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
+	pPainter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
 
 	QPen pen;
 	pen.setBrush(QBrush(m_pToolBar->currentColor()));
 	pen.setWidth(m_penWidth);
 
-	painter->setPen(pen);
-	painter->drawRect(m_selectionTopLeftPoint.x(),
+	pPainter->setPen(pen);
+	pPainter->drawRect(m_selectionTopLeftPoint.x(),
 	                  m_selectionTopLeftPoint.y(),
 	                  m_selectionBottomRightPoint.x() - m_selectionTopLeftPoint.x(),
 	                  m_selectionBottomRightPoint.y() - m_selectionTopLeftPoint.y());
 
 }
 
-void DrawingBoard::drawBrush(QPainter* painter)
+void DrawingBoard::drawBrush(QPainter* pPainter)
 {
 	if(!m_leftButtonPressed)
 	{
 		return;
 	}
 
-	QPen backupPen = painter->pen();
-	QBrush backupBrush = painter->brush();
+	QPen backupPen = pPainter->pen();
+	QBrush backupBrush = pPainter->brush();
 
 	QBrush brush(m_pToolBar->currentColor());
 
-	painter->setBrush(brush);
-	painter->setPen(QPen(brush, m_penWidth));
+	pPainter->setBrush(brush);
+	pPainter->setPen(QPen(brush, m_penWidth));
 
-	painter->drawLine(m_brushInitialPoint, m_brushFinalPoint);
+	pPainter->drawLine(m_brushInitialPoint, m_brushFinalPoint);
 
-	painter->setPen(backupPen);
-	painter->setBrush(backupBrush);
+	pPainter->setPen(backupPen);
+	pPainter->setBrush(backupBrush);
 }
 
-void DrawingBoard::drawEllipse(QPainter* painter)
+void DrawingBoard::drawEllipse(QPainter* pPainter)
 {
 	if(!m_leftButtonPressed)
 	{
 		return;
 	}
 
-	painter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
+	pPainter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
 
 	QPen pen;
 	pen.setBrush(QBrush(m_pToolBar->currentColor()));
 	pen.setWidth(m_penWidth);
 
-	painter->setPen(pen);
+	pPainter->setPen(pen);
 
 	QRect ellipseRectangle(m_selectionTopLeftPoint.x(),
 	                       m_selectionTopLeftPoint.y(),
 	                       m_selectionBottomRightPoint.x() - m_selectionTopLeftPoint.x(),
 	                       m_selectionBottomRightPoint.y() - m_selectionTopLeftPoint.y());
 
-	painter->drawEllipse(ellipseRectangle);
+	pPainter->drawEllipse(ellipseRectangle);
 }
 
-void DrawingBoard::drawText(QPainter* painter)
+void DrawingBoard::drawText(QPainter* pPainter)
 {
 	if(!m_textPositioned)
 	{
 		return;
 	}
 
-	painter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
+	pPainter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
 
-	QPen backupPen = painter->pen();
-	QBrush backupBrush = painter->brush();
+	QPen backupPen = pPainter->pen();
+	QBrush backupBrush = pPainter->brush();
 
 	QPen p;
 	p.setStyle(Qt::DotLine);
 	p.setColor(Qt::black);
 	p.setWidth(1);
 
-	painter->setPen(p);
+	pPainter->setPen(p);
 
-	QFont font = painter->font();
+	QFont font = pPainter->font();
 	QFontMetrics fontMetrics(font);
 
 	QRect textRect(m_textPoint.x(),
@@ -545,21 +545,16 @@ void DrawingBoard::drawText(QPainter* painter)
 	               fontMetrics.width(m_currentText),
 	               fontMetrics.height());
 
-	painter->drawText(textRect,
+	pPainter->drawText(textRect,
 	                  Qt::AlignLeft,
 	                  m_currentText);
 
 	textRect.adjust(-2, -2, 2, 2);
 
-	painter->drawRect(textRect);
+	pPainter->drawRect(textRect);
 
-	painter->setPen(backupPen);
-	painter->setBrush(backupBrush);
-}
-
-void DrawingBoard::reset()
-{
-	shoot();
+	pPainter->setPen(backupPen);
+	pPainter->setBrush(backupBrush);
 }
 
 void DrawingBoard::mousePressEvent(QMouseEvent *e)

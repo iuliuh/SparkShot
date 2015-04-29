@@ -6,6 +6,7 @@
 #include <QSpacerItem>
 #include <QPushButton>
 #include <QSpinBox>
+#include <QKeyEvent>
 
 Settings::Settings(QWidget *parent) :
     Dialog(parent),
@@ -165,20 +166,23 @@ void Settings::setFontSize(int fontSize)
 	emit fontSizeChanged(fontSize);
 }
 
-void Settings::hide()
-{
-	m_pOverlayColorPicker->hide();
-	m_pRubberBandColorPicker->hide();
-
-	QWidget::hide();
-}
-
 void Settings::moveEvent(QMoveEvent *pEvent)
 {
 	Q_UNUSED(pEvent)
 
 	m_pRubberBandColorPicker->hide();
 	m_pOverlayColorPicker->hide();
+}
+
+void Settings::keyPressEvent(QKeyEvent *pEvent)
+{
+	if(pEvent->key() == Qt::Key_Escape)
+	{
+
+		m_pRubberBandColorPicker->hide();
+		m_pOverlayColorPicker->hide();
+		hide();
+	}
 }
 
 void Settings::onOverlayColorButtonClicked()

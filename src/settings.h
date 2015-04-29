@@ -37,9 +37,6 @@ public:
 	int fontSize() const;
 	void setFontSize(int fontSize);
 
-public slots:
-	void hide();
-
 signals:
 	void overlayColorChanged(QColor color);
 	void rubberBandColorChanged(QColor color);
@@ -50,6 +47,7 @@ signals:
 
 protected:
 	void moveEvent(QMoveEvent *pEvent);
+	void keyPressEvent(QKeyEvent* pEvent);
 
 private:
 	void onOverlayColorButtonClicked();
@@ -89,6 +87,7 @@ private:
 
 	QColor m_overlayColor;
 	QColor m_rubberBandColor;
+
 	int m_rubberBandWidth;
 	int m_penWidth;
 	int m_dotsRadius;
