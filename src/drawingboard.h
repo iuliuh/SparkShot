@@ -88,6 +88,7 @@ private:
 	QColor m_darkOverlayColor;
 	QColor m_rubberBandColor;
 
+	QPoint m_currentMousePosition;
 	QPoint m_brushInitialPoint;
 	QPoint m_brushFinalPoint;
 

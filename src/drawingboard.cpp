@@ -489,6 +489,9 @@ void DrawingBoard::drawBrush(QPainter* pPainter)
 	pPainter->setBrush(brush);
 	pPainter->setPen(QPen(brush, m_penWidth));
 
+	m_brushInitialPoint = m_brushFinalPoint;
+	m_brushFinalPoint = m_currentMousePosition;
+
 	pPainter->drawLine(m_brushInitialPoint, m_brushFinalPoint);
 
 	pPainter->setPen(backupPen);
@@ -601,6 +604,7 @@ void DrawingBoard::mousePressEvent(QMouseEvent *e)
 		}
 
 		m_startedDrawing = true;
+		m_brushFinalPoint = e->pos();
 	}
 }
 
@@ -644,10 +648,7 @@ void DrawingBoard::mouseMoveEvent(QMouseEvent *e)
 		}
 	}
 
-	static bool pointGuard = true;
-	m_brushInitialPoint = pointGuard ? e->pos() : m_brushInitialPoint;
-	m_brushFinalPoint = pointGuard ? m_brushFinalPoint : e->pos();
-	pointGuard = !pointGuard;
+	m_currentMousePosition = e->pos();
 
 	update();
 }
