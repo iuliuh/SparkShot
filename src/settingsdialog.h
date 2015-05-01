@@ -38,7 +38,7 @@ public:
 	int fontSize() const;
 	void setFontSize(int fontSize);
 
-signals:
+Q_SIGNALS:
 	void overlayColorChanged(QColor color);
 	void rubberBandColorChanged(QColor color);
 	void rubberBandWidthChanged(int width);
@@ -50,7 +50,7 @@ protected:
 	void moveEvent(QMoveEvent *pEvent);
 	void keyPressEvent(QKeyEvent* pEvent);
 
-private slots:
+private Q_SLOTS:
 	void onOverlayColorButtonClicked();
 	void onOverlayColorChanged(QColor newColor);
 

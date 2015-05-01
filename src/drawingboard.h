@@ -28,7 +28,7 @@ protected:
 	void mouseReleaseEvent(QMouseEvent *pEvent);
 	void paintEvent(QPaintEvent *pEvent);
 
-public slots:
+public Q_SLOTS:
 	void shoot();
 	void onOverlayColorChanged(QColor color);
 	void onRubberBandColorChanged(QColor color);
@@ -37,7 +37,7 @@ public slots:
 	void onDotsRadiusChanged(int radius);
 	void onFontSizeChanged(int size);
 
-private slots:
+private Q_SLOTS:
 	void onToolbarToolChanged(ToolBar::Tool tool);
 	void onUploadButtonPressed();
 	void onSaveButtonPressed();

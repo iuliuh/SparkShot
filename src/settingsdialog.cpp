@@ -125,7 +125,7 @@ void SettingsDialog::setOverlayColor(const QColor &overlayColor)
 {
 	Preferences::instance().setOverlayColor(overlayColor);
 
-	emit overlayColorChanged(overlayColor);
+	Q_EMIT overlayColorChanged(overlayColor);
 }
 
 QColor SettingsDialog::rubberBandColor() const
@@ -137,7 +137,7 @@ void SettingsDialog::setRubberBandColor(const QColor &rubberBandColor)
 {
 	Preferences::instance().setRubberBandColor(rubberBandColor);
 
-	emit rubberBandColorChanged(rubberBandColor);
+	Q_EMIT rubberBandColorChanged(rubberBandColor);
 }
 
 int SettingsDialog::rubberBandWidth() const
@@ -149,7 +149,7 @@ void SettingsDialog::setRubberBandWidth(int rubberBandWidth)
 {
 	Preferences::instance().setRubberBandWidth(rubberBandWidth);
 
-	emit rubberBandWidthChanged(rubberBandWidth);
+	Q_EMIT rubberBandWidthChanged(rubberBandWidth);
 }
 
 int SettingsDialog::penWidth() const
@@ -161,7 +161,7 @@ void SettingsDialog::setPenWidth(int penWidth)
 {
 	Preferences::instance().setPenWidth(penWidth);
 
-	emit penWidthChanged(penWidth);
+	Q_EMIT penWidthChanged(penWidth);
 }
 
 int SettingsDialog::dotsRadius() const
@@ -173,7 +173,7 @@ void SettingsDialog::setDotsRadius(int dotsRadius)
 {
 	m_dotsRadius = dotsRadius;
 
-	emit dotsRadiusChanged(dotsRadius);
+	Q_EMIT dotsRadiusChanged(dotsRadius);
 }
 
 int SettingsDialog::fontSize() const
@@ -185,7 +185,7 @@ void SettingsDialog::setFontSize(int fontSize)
 {
 	Preferences::instance().setFontSize(fontSize);
 
-	emit fontSizeChanged(fontSize);
+	Q_EMIT fontSizeChanged(fontSize);
 }
 
 void SettingsDialog::moveEvent(QMoveEvent *pEvent)

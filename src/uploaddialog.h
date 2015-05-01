@@ -19,7 +19,7 @@ public:
 	void setProgressBarView();
 	void setLinkView();
 
-private slots:
+private Q_SLOTS:
 	void onCopyButtonClicked();
 	void onOpenButtonClicked();
 

@@ -134,8 +134,8 @@ void ColorPicker::mouseMoveEvent(QMouseEvent *ev)
 		m_hue = lineToPoint(ev->pos()).angle() / 360.0;
 		renderRectangle();
 
-		emit colorSelected(color());
-		emit colorChanged(color());
+		Q_EMIT colorSelected(color());
+		Q_EMIT colorChanged(color());
 		update();
 	}
 	else if (m_mouseStatus == DragSquare)
@@ -167,8 +167,8 @@ void ColorPicker::mouseMoveEvent(QMouseEvent *ev)
 			m_value = 0;
 		}
 
-		emit colorSelected(color());
-		emit colorChanged(color());
+		Q_EMIT colorSelected(color());
+		Q_EMIT colorChanged(color());
 		update();
 	}
 }

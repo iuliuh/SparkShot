@@ -36,11 +36,11 @@ public:
 	Tool currentTool() const;
 	QColor currentColor() const;
 
-public slots:
+public Q_SLOTS:
 	void hide();
 	void show();
 
-signals:
+Q_SIGNALS:
 	void discardButtonPressed();
 	void settingsButtonPressed();
 	void uploadButtonPressed();
@@ -59,7 +59,7 @@ protected:
 	void mouseMoveEvent(QMouseEvent *pEvent);
 	void paintEvent(QPaintEvent *pEvent);
 
-private slots:
+private Q_SLOTS:
 	void onColorButtonClicked();
 	void onTextToolButtonPressed();
 	void onBrushToolButtonPressed();
