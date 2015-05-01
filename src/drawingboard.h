@@ -38,6 +38,7 @@ public slots:
 	void onFontSizeChanged(int size);
 
 private slots:
+	void onToolbarToolChanged(ToolBar::Tool tool);
 	void onUploadButtonPressed();
 	void onSaveButtonPressed();
 
@@ -55,42 +56,39 @@ private:
 	void drawBrush(QPainter* pPainter);
 	void drawEllipse(QPainter *pPainter);
 	void drawText(QPainter* pPainter);
+	void commitSketches();
 
 private:
 	ToolBar *m_pToolBar;
 
 	QPixmap m_originalCapture;
-	QPixmap m_paintBoard;
-	QPixmap m_helperBoard;
+	QPixmap m_screenshotBoard;
+	QPixmap m_currentSketchesBoard;
+	QPixmap m_temporarySketchesBoard;
 
-	QPoint m_selectionTopLeftPoint;
-	QPoint m_selectionBottomRightPoint;
-
-	QPoint m_topLeftPointBeforeSelectionMove;
-	QPoint m_bottomRightPointBeforeSelectionMove;
-	QPoint m_pressPointBeforeSelectionMove;
-	QRect m_screenShotArea;
 	QString m_currentText;
 	QPoint m_textPoint;
+
+	QPoint m_initialMousePosition;
+	QPoint m_finalMousePosition;
+	QPoint m_brushInitialPosition;
+	QPoint m_brushFinalPosition;
+	QPoint m_initialCropRectMovePoint;
+	QPoint m_currentMousePosition;
+	QRect m_cropRect;
+	QRect m_cropRectBeforeMove;
+
+	bool m_leftButtonPressed;
+	bool m_moveCroppedArea;
 
 	QString m_clientId;
 	QNetworkAccessManager m_networkAccessManager;
 	QNetworkReply *m_pNetworkReply;
 	UploadDialog *m_pUploadDialog;
 
-	bool m_leftButtonPressed;
-	bool m_selectionStarted;
-	bool m_moveSelectionArea;
-	bool m_textPositioned;
-	bool m_startedDrawing;
-
 private:
 	QColor m_darkOverlayColor;
 	QColor m_rubberBandColor;
-
-	QPoint m_currentMousePosition;
-	QPoint m_brushInitialPoint;
-	QPoint m_brushFinalPoint;
 
 	int m_rubberBandWidth;
 	int m_penWidth;

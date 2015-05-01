@@ -23,7 +23,7 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 
 	m_leftButtonPressed = false;
 	m_drawColor = Qt::black;
-	m_currentTool = NoTool;
+	m_currentTool = CropTool;
 
 	m_screenRect = QGuiApplication::primaryScreen()->grabWindow(0).rect();
 
@@ -115,9 +115,6 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 	        this, &ToolBar::onLineToolButtonPressed);
 	connect(m_pArrowButton, &QPushButton::clicked,
 	        this, &ToolBar::onArrowToolButtonPressed);
-
-	connect(&m_colorPickerDialog, &ColorPicker::colorChanged,
-	        this, &ToolBar::onDrawingColorChanged);
 
 	connect(&m_settingsDialog, &SettingsDialog::overlayColorChanged,
 	        this, &ToolBar::overlayColorChanged);

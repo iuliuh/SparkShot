@@ -21,7 +21,7 @@ public:
 	};
 
 	enum Tool {
-		NoTool,
+		CropTool,
 		Arrow,
 		Line,
 		Square,

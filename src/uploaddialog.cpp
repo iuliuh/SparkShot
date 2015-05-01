@@ -12,6 +12,8 @@ UploadDialog::UploadDialog(QWidget *parent) :
 {
 	ui->setupUi(this);
 
+	setAttribute(Qt::WA_DeleteOnClose);
+
 	connect(ui->copyButton, &QPushButton::clicked, this, &UploadDialog::onCopyButtonClicked);
 	connect(ui->openButton, &QPushButton::clicked, this, &UploadDialog::onOpenButtonClicked);
 }

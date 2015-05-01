@@ -35,14 +35,11 @@ DrawingBoard::DrawingBoard(QWidget *parent) : QWidget(parent)
 	m_penWidth = Preferences::instance().penWidth();
 	m_fontSize = Preferences::instance().fontSize();
 	m_rubberBandPointRadius = 3;
-	m_arrowBaseWidth = 8;
-	m_arrowHeight = 11.0 * qSqrt(3.0);
+	m_arrowBaseWidth = m_penWidth * 4;
+	m_arrowHeight = m_arrowBaseWidth * qSqrt(3.0);
 
 	m_leftButtonPressed = false;
-	m_selectionStarted = false;
-	m_textPositioned = false;
-	m_startedDrawing = false;
-	m_moveSelectionArea = false;
+	m_moveCroppedArea = false;
 
 	connect(m_pToolBar, &ToolBar::discardButtonPressed,
 	        this, &DrawingBoard::close);
@@ -73,7 +70,7 @@ DrawingBoard::DrawingBoard(QWidget *parent) : QWidget(parent)
 
 DrawingBoard::~DrawingBoard()
 {
-	delete m_pUploadDialog;
+//	delete m_pUploadDialog;
 }
 
 void DrawingBoard::keyPressEvent(QKeyEvent *pEvent)
@@ -89,20 +86,13 @@ void DrawingBoard::keyPressEvent(QKeyEvent *pEvent)
 		close();
 	}
 
-	if(m_textPositioned)
+	if(pEvent->key() == Qt::Key_Backspace)
 	{
-		if(pEvent->key() == Qt::Key_Backspace)
-		{
-			m_currentText.remove(m_currentText.length() - 1, 1);
-		}
-		else
-		{
-			m_currentText.append(pEvent->text());
-		}
-		if(pEvent->key() == Qt::Key_Enter)
-		{
-			m_currentText.append("\n");
-		}
+		m_currentText.remove(m_currentText.length() - 1, 1);
+	}
+	else
+	{
+		m_currentText.append(pEvent->text());
 	}
 
 	update();
@@ -118,8 +108,9 @@ void DrawingBoard::shoot()
 	if (pScreen)
 	{
 		m_originalCapture = pScreen->grabWindow(0);
-		m_paintBoard = m_originalCapture;
-		m_helperBoard = m_originalCapture;
+		m_temporarySketchesBoard = QPixmap(m_originalCapture.width(), m_originalCapture.height());
+		m_temporarySketchesBoard.fill(QColor(0, 0, 0, 0));
+		m_currentSketchesBoard = m_temporarySketchesBoard;
 	}
 
 	show();
@@ -129,37 +120,55 @@ void DrawingBoard::shoot()
 void DrawingBoard::onOverlayColorChanged(QColor color)
 {
 	m_darkOverlayColor = color;
+
 	update();
 }
 
 void DrawingBoard::onRubberBandColorChanged(QColor color)
 {
 	m_rubberBandColor = color;
+
 	update();
 }
 
 void DrawingBoard::onRubberBandWidthChanged(int width)
 {
 	m_rubberBandWidth = width;
+
 	update();
 }
 
 void DrawingBoard::onPenWidthChanged(int width)
 {
 	m_penWidth = width;
+
+	m_arrowBaseWidth = m_penWidth * 4;
+	m_arrowHeight = m_arrowBaseWidth * qSqrt(3.0);
+
 	update();
 }
 
 void DrawingBoard::onDotsRadiusChanged(int radius)
 {
 	m_rubberBandPointRadius = radius;
+
 	update();
 }
 
 void DrawingBoard::onFontSizeChanged(int size)
 {
 	m_fontSize = size;
+
 	update();
+}
+
+void DrawingBoard::onToolbarToolChanged(ToolBar::Tool tool)
+{
+	switch(tool)
+	{
+	case ToolBar::Text: setCursor(Qt::IBeamCursor); break;
+	default: setCursor(Qt::ArrowCursor);
+	}
 }
 
 void DrawingBoard::onUploadButtonPressed()
@@ -180,7 +189,7 @@ void DrawingBoard::onUploadButtonPressed()
 	imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image"));
 	imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"image\""));
 
-	QPixmap newPixmap = m_paintBoard.copy(m_screenShotArea);
+	QPixmap newPixmap = grab(m_cropRect);
 
 	// Preparation of our QPixmap
 	QByteArray pixmapByteArray;
@@ -209,7 +218,7 @@ void DrawingBoard::onUploadButtonPressed()
 
 void DrawingBoard::onSaveButtonPressed()
 {
-	QPixmap newPixmap = m_paintBoard.copy(m_screenShotArea);
+	QPixmap newPixmap = grab(m_cropRect);
 
 	QString defaultFilter("*.png");
 
@@ -240,7 +249,9 @@ void DrawingBoard::replyFinished()
 		QJsonObject jsonObject = jsonDocument.object();
 		QJsonObject jsonData = jsonObject.take("data").toObject();
 
-		m_pUploadDialog->setLink(jsonData.take("link").toString());
+		QString str = jsonData.take("link").toString();
+		qDebug() << str;
+		m_pUploadDialog->setLink(str);
 		m_pUploadDialog->setLinkView();
 	}
 
@@ -258,7 +269,7 @@ void DrawingBoard::replyFinished()
 
 void DrawingBoard::onError(QNetworkReply::NetworkError error)
 {
-	Q_UNUSED(error)
+	qDebug() << "Error: " << error;
 
 	disconnect(m_pNetworkReply, &QNetworkReply::finished,
 	           this, &DrawingBoard::replyFinished);
@@ -267,10 +278,14 @@ void DrawingBoard::onError(QNetworkReply::NetworkError error)
 	disconnect(m_pNetworkReply, &QNetworkReply::sslErrors,
 	           this, &DrawingBoard::onSslErrors);
 }
+#include <QSslError>
 
 void DrawingBoard::onSslErrors(QList<QSslError> errorList)
 {
-	Q_UNUSED(errorList)
+	foreach (QSslError e, errorList)
+	{
+		qDebug() << e.errorString();
+	}
 
 	disconnect(m_pNetworkReply, &QNetworkReply::finished,
 	           this, &DrawingBoard::replyFinished);
@@ -282,31 +297,24 @@ void DrawingBoard::onSslErrors(QList<QSslError> errorList)
 
 void DrawingBoard::drawRubberBand(QPainter* pPainter)
 {
-	QRect rubberBandRect(m_selectionTopLeftPoint.x(),
-	                     m_selectionTopLeftPoint.y(),
-	                     m_selectionBottomRightPoint.x() - m_selectionTopLeftPoint.x(),
-	                     m_selectionBottomRightPoint.y() - m_selectionTopLeftPoint.y());
-
-	m_screenShotArea = rubberBandRect;
-
 	QPen pen(m_rubberBandColor);
 	pen.setWidth(m_rubberBandWidth);
 
 	pPainter->setPen(pen);
 	pPainter->setBrush(Qt::NoBrush);
-	pPainter->drawRect(rubberBandRect.normalized());
+	pPainter->drawRect(m_cropRect);
 
 	pPainter->setBrush(m_rubberBandColor);
 
-	QPoint topMiddle(rubberBandRect.topLeft().x() + rubberBandRect.width() / 2, rubberBandRect.y());
-	QPoint rightMiddle(rubberBandRect.topLeft().x() + rubberBandRect.width(), rubberBandRect.y() + rubberBandRect.height() / 2);
-	QPoint bottomMiddle(rubberBandRect.topLeft().x() + rubberBandRect.width() / 2, rubberBandRect.y() + rubberBandRect.height());
-	QPoint leftMiddle(rubberBandRect.topLeft().x(), rubberBandRect.y() + rubberBandRect.height() / 2);
+	QPoint topMiddle(m_cropRect.topLeft().x() + m_cropRect.width() / 2, m_cropRect.y());
+	QPoint rightMiddle(m_cropRect.topLeft().x() + m_cropRect.width(), m_cropRect.y() + m_cropRect.height() / 2);
+	QPoint bottomMiddle(m_cropRect.topLeft().x() + m_cropRect.width() / 2, m_cropRect.y() + m_cropRect.height());
+	QPoint leftMiddle(m_cropRect.topLeft().x(), m_cropRect.y() + m_cropRect.height() / 2);
 
-	pPainter->drawEllipse(rubberBandRect.topLeft(), m_rubberBandPointRadius, m_rubberBandPointRadius);
-	pPainter->drawEllipse(rubberBandRect.topRight(), m_rubberBandPointRadius, m_rubberBandPointRadius);
-	pPainter->drawEllipse(rubberBandRect.bottomLeft(), m_rubberBandPointRadius, m_rubberBandPointRadius);
-	pPainter->drawEllipse(rubberBandRect.bottomRight(), m_rubberBandPointRadius, m_rubberBandPointRadius);
+	pPainter->drawEllipse(m_cropRect.topLeft(), m_rubberBandPointRadius, m_rubberBandPointRadius);
+	pPainter->drawEllipse(m_cropRect.topRight(), m_rubberBandPointRadius, m_rubberBandPointRadius);
+	pPainter->drawEllipse(m_cropRect.bottomLeft(), m_rubberBandPointRadius, m_rubberBandPointRadius);
+	pPainter->drawEllipse(m_cropRect.bottomRight(), m_rubberBandPointRadius, m_rubberBandPointRadius);
 	pPainter->drawEllipse(topMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
 	pPainter->drawEllipse(rightMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
 	pPainter->drawEllipse(bottomMiddle, m_rubberBandPointRadius, m_rubberBandPointRadius);
@@ -315,27 +323,15 @@ void DrawingBoard::drawRubberBand(QPainter* pPainter)
 
 void DrawingBoard::drawCroppedArea(QPainter* pPainter)
 {
-	if(m_selectionStarted)
-	{
-		QRect pixmapRect(m_selectionTopLeftPoint.x(),
-		                 m_selectionTopLeftPoint.y(),
-		                 m_selectionBottomRightPoint.x() - m_selectionTopLeftPoint.x(),
-		                 m_selectionBottomRightPoint.y() - m_selectionTopLeftPoint.y());
-
-		pPainter->drawPixmap(pixmapRect.normalized(), m_originalCapture, pixmapRect.normalized());
-	}
+	pPainter->drawPixmap(m_cropRect.normalized(), m_originalCapture, m_cropRect.normalized());
 }
 
 void DrawingBoard::drawDarkOverlay(QPainter* pPainter)
 {
-	QPixmap drawnCapture = m_originalCapture;
-
-	pPainter->drawPixmap(0, 0, drawnCapture.width(), drawnCapture.height(), drawnCapture);
-
 	QBrush darkOverlayBrush(m_darkOverlayColor);
 
 	pPainter->setBrush(darkOverlayBrush);
-	pPainter->drawRect(drawnCapture.rect());
+	pPainter->drawRect(m_originalCapture.rect());
 }
 
 void DrawingBoard::drawArrow(QPainter* pPainter)
@@ -352,27 +348,25 @@ void DrawingBoard::drawArrow(QPainter* pPainter)
 	QBrush backupBrush = pPainter->brush();
 
 	// Draw the line
-	pPainter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
-
 	QPen pen;
 	pen.setBrush(QBrush(m_pToolBar->currentColor()));
 	pen.setWidth(m_penWidth);
 
-	QPoint currentShortenedLinePressPoint = m_selectionBottomRightPoint;
+	QPoint currentShortenedLinePressPoint = m_finalMousePosition;
 
-	if (m_selectionTopLeftPoint == currentShortenedLinePressPoint)
+	if (m_initialMousePosition == currentShortenedLinePressPoint)
 	{
 		// Not a line
 		return;
 	}
 
-	double dx = currentShortenedLinePressPoint.x() - m_selectionTopLeftPoint.x();
-	double dy = currentShortenedLinePressPoint.y() - m_selectionTopLeftPoint.y();
+	double dx = currentShortenedLinePressPoint.x() - m_initialMousePosition.x();
+	double dy = currentShortenedLinePressPoint.y() - m_initialMousePosition.y();
 	double shorteningFactor = -m_arrowHeight;
 	if (dx == 0)
 	{
 		// Vertical line
-		if (currentShortenedLinePressPoint.y() < m_selectionTopLeftPoint.y())
+		if (currentShortenedLinePressPoint.y() < m_initialMousePosition.y())
 		{
 			currentShortenedLinePressPoint.setY(currentShortenedLinePressPoint.y() - shorteningFactor);
 		}
@@ -384,7 +378,7 @@ void DrawingBoard::drawArrow(QPainter* pPainter)
 	else if (dy == 0)
 	{
 		// Horizontal line
-		if (currentShortenedLinePressPoint.x() < m_selectionTopLeftPoint.x())
+		if (currentShortenedLinePressPoint.x() < m_initialMousePosition.x())
 		{
 			currentShortenedLinePressPoint.setX(currentShortenedLinePressPoint.x() - shorteningFactor);
 		}
@@ -400,16 +394,16 @@ void DrawingBoard::drawArrow(QPainter* pPainter)
 		double scale = (length + shorteningFactor) / length;
 		dx *= scale;
 		dy *= scale;
-		currentShortenedLinePressPoint.setX(m_selectionTopLeftPoint.x() + dx);
-		currentShortenedLinePressPoint.setY(m_selectionTopLeftPoint.y() + dy);
+		currentShortenedLinePressPoint.setX(m_initialMousePosition.x() + dx);
+		currentShortenedLinePressPoint.setY(m_initialMousePosition.y() + dy);
 	}
 
 	pPainter->setPen(pen);
-	pPainter->drawLine(m_selectionTopLeftPoint, currentShortenedLinePressPoint);
+	pPainter->drawLine(m_initialMousePosition, currentShortenedLinePressPoint);
 
 	// Draw the arrow
-	QVector2D initPosVec(m_selectionTopLeftPoint);
-	QVector2D currPosVec(m_selectionBottomRightPoint);
+	QVector2D initPosVec(m_initialMousePosition);
+	QVector2D currPosVec(m_finalMousePosition);
 
 	QVector2D auxVec(currPosVec - initPosVec);
 	double length = qSqrt(qPow(auxVec.x(), 2.0) + qPow(auxVec.y(), 2.0));
@@ -423,7 +417,7 @@ void DrawingBoard::drawArrow(QPainter* pPainter)
 	QPoint p2(arrowEdgeVec2.x(), arrowEdgeVec2.y());
 
 	QPolygon p;
-	p.append(m_selectionBottomRightPoint);
+	p.append(m_finalMousePosition);
 	p.append(p1);
 	p.append(p2);
 
@@ -443,14 +437,12 @@ void DrawingBoard::drawLine(QPainter* pPainter)
 		return;
 	}
 
-	pPainter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
-
 	QPen pen;
 	pen.setBrush(QBrush(m_pToolBar->currentColor()));
 	pen.setWidth(m_penWidth);
 
 	pPainter->setPen(pen);
-	pPainter->drawLine(m_selectionTopLeftPoint, m_selectionBottomRightPoint);
+	pPainter->drawLine(m_initialMousePosition, m_finalMousePosition);
 }
 
 void DrawingBoard::drawSquare(QPainter* pPainter)
@@ -460,17 +452,12 @@ void DrawingBoard::drawSquare(QPainter* pPainter)
 		return;
 	}
 
-	pPainter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
-
 	QPen pen;
 	pen.setBrush(QBrush(m_pToolBar->currentColor()));
 	pen.setWidth(m_penWidth);
 
 	pPainter->setPen(pen);
-	pPainter->drawRect(m_selectionTopLeftPoint.x(),
-	                   m_selectionTopLeftPoint.y(),
-	                   m_selectionBottomRightPoint.x() - m_selectionTopLeftPoint.x(),
-	                   m_selectionBottomRightPoint.y() - m_selectionTopLeftPoint.y());
+	pPainter->drawRect(QRect(m_initialMousePosition, m_finalMousePosition).normalized());
 
 }
 
@@ -489,10 +476,12 @@ void DrawingBoard::drawBrush(QPainter* pPainter)
 	pPainter->setBrush(brush);
 	pPainter->setPen(QPen(brush, m_penWidth));
 
-	m_brushInitialPoint = m_brushFinalPoint;
-	m_brushFinalPoint = m_currentMousePosition;
+	m_brushInitialPosition = m_brushFinalPosition;
+	m_brushFinalPosition = m_currentMousePosition;
 
-	pPainter->drawLine(m_brushInitialPoint, m_brushFinalPoint);
+	pPainter->drawLine(m_brushInitialPosition, m_brushFinalPosition);
+
+	commitSketches();
 
 	pPainter->setPen(backupPen);
 	pPainter->setBrush(backupBrush);
@@ -505,31 +494,19 @@ void DrawingBoard::drawEllipse(QPainter* pPainter)
 		return;
 	}
 
-	pPainter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
-
 	QPen pen;
 	pen.setBrush(QBrush(m_pToolBar->currentColor()));
 	pen.setWidth(m_penWidth);
 
 	pPainter->setPen(pen);
 
-	QRect ellipseRectangle(m_selectionTopLeftPoint.x(),
-	                       m_selectionTopLeftPoint.y(),
-	                       m_selectionBottomRightPoint.x() - m_selectionTopLeftPoint.x(),
-	                       m_selectionBottomRightPoint.y() - m_selectionTopLeftPoint.y());
+	QRect ellipseRectangle(QRect(m_initialMousePosition, m_finalMousePosition));
 
 	pPainter->drawEllipse(ellipseRectangle);
 }
 
 void DrawingBoard::drawText(QPainter* pPainter)
 {
-	if(!m_textPositioned)
-	{
-		return;
-	}
-
-	pPainter->drawPixmap(m_helperBoard.rect(), m_helperBoard, m_helperBoard.rect());
-
 	QPen backupPen = pPainter->pen();
 	QBrush backupBrush = pPainter->brush();
 
@@ -564,88 +541,80 @@ void DrawingBoard::drawText(QPainter* pPainter)
 	pPainter->setBrush(backupBrush);
 }
 
+void DrawingBoard::commitSketches()
+{
+	m_temporarySketchesBoard = m_currentSketchesBoard;
+}
+
 void DrawingBoard::mousePressEvent(QMouseEvent *e)
 {
 	if(e->button() == Qt::LeftButton)
 	{
 		m_leftButtonPressed = true;
-		m_selectionStarted = true;
 
-		m_helperBoard = m_paintBoard;
+		m_initialMousePosition = e->pos();
+		m_finalMousePosition = e->pos();
 
-		if(m_pToolBar->currentTool() == ToolBar::NoTool)
+		if(m_pToolBar->currentTool() == ToolBar::CropTool)
 		{
 			m_pToolBar->hide();
-		}
 
-		if(m_pToolBar->currentTool() == ToolBar::Text)
+			if(m_cropRect.contains(e->pos(), true))
+			{
+				m_moveCroppedArea = true;
+				m_initialCropRectMovePoint = e->pos();
+				m_cropRectBeforeMove = m_cropRect;
+
+				setCursor(Qt::ClosedHandCursor);
+			}
+		}
+		else if(m_pToolBar->currentTool() == ToolBar::Text)
 		{
-			m_textPoint = e->pos();
-			m_textPositioned = true;
+			commitSketches();
+
 			m_currentText.clear();
 		}
 
-		if(!m_screenShotArea.contains(e->pos()) || m_pToolBar->currentTool() != ToolBar::NoTool)
-		{
-			m_selectionTopLeftPoint = e->pos();
-			m_selectionBottomRightPoint = e->pos();
-		}
-		else if(m_startedDrawing)
-		{
-			m_moveSelectionArea = true;
-			m_topLeftPointBeforeSelectionMove = m_selectionTopLeftPoint;
-			m_bottomRightPointBeforeSelectionMove = m_selectionBottomRightPoint;
-			m_pressPointBeforeSelectionMove = e->pos();
-		}
-
-		if(m_screenShotArea.contains(e->pos()))
-		{
-			setCursor(Qt::ClosedHandCursor);
-		}
-
-		m_startedDrawing = true;
-		m_brushFinalPoint = e->pos();
+		m_brushInitialPosition = e->pos();
+		m_brushFinalPosition = e->pos();
+		m_textPoint = e->pos();
 	}
+
+	update();
 }
 
 void DrawingBoard::mouseMoveEvent(QMouseEvent *e)
 {
-	if (m_screenShotArea.contains(e->pos(), true) && m_pToolBar->currentTool() == ToolBar::NoTool)
+	if(m_leftButtonPressed)
 	{
-		setCursor(Qt::OpenHandCursor);
+		m_finalMousePosition = e->pos();
+	}
+
+	if(m_pToolBar->currentTool() == ToolBar::CropTool)
+	{
+		if(m_moveCroppedArea && m_leftButtonPressed)
+		{
+			m_cropRect = m_cropRectBeforeMove.translated(e->pos() - m_initialCropRectMovePoint);
+		}
+
+		if(!m_moveCroppedArea && m_leftButtonPressed)\
+		{
+			m_cropRect = QRect(m_initialMousePosition, m_finalMousePosition).normalized();
+		}
+	}
+
+	if(m_pToolBar->currentTool() == ToolBar::CropTool &&
+	   m_cropRect.contains(e->pos()))
+	{
+		setCursor(m_leftButtonPressed ? Qt::ClosedHandCursor : Qt::OpenHandCursor);
+	}
+	else if(m_pToolBar->currentTool() == ToolBar::Text)
+	{
+		setCursor(Qt::IBeamCursor);
 	}
 	else
 	{
 		setCursor(Qt::ArrowCursor);
-	}
-
-	if (m_leftButtonPressed)
-	{
-		if(!m_moveSelectionArea)
-		{
-			m_selectionBottomRightPoint = e->pos();
-		}
-		else
-		{
-			setCursor(Qt::ClosedHandCursor);
-
-			QRect translationRectangle(m_topLeftPointBeforeSelectionMove, m_bottomRightPointBeforeSelectionMove);
-			translationRectangle.translate(e->pos() - m_pressPointBeforeSelectionMove);
-			m_selectionTopLeftPoint = translationRectangle.topLeft();
-			m_selectionBottomRightPoint = translationRectangle.bottomRight();
-		}
-
-		if (m_pToolBar->currentTool() == ToolBar::NoTool)
-		{
-			const int threshold = 20;
-
-			QPoint p(qMin(m_screenShotArea.normalized().bottomRight().x() + threshold,
-			              m_originalCapture.rect().bottomRight().x() - m_pToolBar->width()),
-			         qMin(m_screenShotArea.normalized().bottomRight().y() + threshold,
-			              m_originalCapture.rect().bottomRight().y() - m_pToolBar->height()));
-
-			m_pToolBar->move(p);
-		}
 	}
 
 	m_currentMousePosition = e->pos();
@@ -658,65 +627,69 @@ void DrawingBoard::mouseReleaseEvent(QMouseEvent *e)
 	if (e->button() == Qt::LeftButton)
 	{
 		m_leftButtonPressed = false;
-		m_moveSelectionArea = false;
+		m_moveCroppedArea = false;
 
-		if (m_pToolBar->currentTool() == ToolBar::NoTool)
+		if(m_pToolBar->currentTool() != ToolBar::Text)
 		{
-			m_pToolBar->show();
+			commitSketches();
 		}
 
-		if(m_screenShotArea.contains(e->pos()) && m_pToolBar->currentTool() == ToolBar::NoTool)
+		if(m_pToolBar->currentTool() == ToolBar::CropTool &&
+		   m_cropRect.contains(e->pos(), true))
 		{
 			setCursor(Qt::OpenHandCursor);
 		}
+
+		m_pToolBar->move(m_cropRect.bottomRight() + QPoint(20, 20));
+		m_pToolBar->show();
 	}
+
+	update();
 }
 
 void DrawingBoard::paintEvent(QPaintEvent *pEvent)
 {
 	Q_UNUSED(pEvent)
 
-	QPainter paintBoardPainter(&m_paintBoard);
+	m_screenshotBoard = m_originalCapture;
+	QPainter paintBoardPainter(&m_screenshotBoard);
 	paintBoardPainter.setRenderHint(QPainter::Antialiasing);
 
-	if (m_pToolBar->currentTool() == ToolBar::NoTool)
-	{
-		drawDarkOverlay(&paintBoardPainter);
-		drawCroppedArea(&paintBoardPainter);
+	drawDarkOverlay(&paintBoardPainter);
+	drawCroppedArea(&paintBoardPainter);
+	drawRubberBand(&paintBoardPainter);
 
-		// Draw rubber band only if selection has started
-		if(m_selectionStarted)
-		{
-			drawRubberBand(&paintBoardPainter);
-		}
-	}
+	m_currentSketchesBoard = m_temporarySketchesBoard;
+	QPainter sketchesBoardPainter(&m_currentSketchesBoard);
+	sketchesBoardPainter.setRenderHint(QPainter::Antialiasing);
 
 	switch (m_pToolBar->currentTool())
 	{
-	case ToolBar::NoTool:
+	case ToolBar::CropTool:
 		break;
 	case ToolBar::Arrow:
-		drawArrow(&paintBoardPainter);
+		drawArrow(&sketchesBoardPainter);
 		break;
 	case ToolBar::Line:
-		drawLine(&paintBoardPainter);
+		drawLine(&sketchesBoardPainter);
 		break;
 	case ToolBar::Square:
-		drawSquare(&paintBoardPainter);
+		drawSquare(&sketchesBoardPainter);
 		break;
 	case ToolBar::Brush:
-		drawBrush(&paintBoardPainter);
+		drawBrush(&sketchesBoardPainter);
 		break;
 	case ToolBar::Ellipse:
-		drawEllipse(&paintBoardPainter);
+		drawEllipse(&sketchesBoardPainter);
 		break;
 	case ToolBar::Text:
-		drawText(&paintBoardPainter);
+		drawText(&sketchesBoardPainter);
 		break;
 	default:
 		break;
 	}
 
 	QPainter formPainter(this);
-	formPainter.drawPixmap(m_paintBoard.rect(), m_paintBoard, m_paintBoard.rect());
+	formPainter.drawPixmap(m_screenshotBoard.rect(), m_screenshotBoard, m_screenshotBoard.rect());
+	formPainter.drawPixmap(m_currentSketchesBoard.rect(), m_currentSketchesBoard, m_currentSketchesBoard.rect());
 }
