@@ -69,7 +69,6 @@ private slots:
 	void onArrowToolButtonPressed();
 	void onCropToolButtonPressed();
 	void onSettingsButtonPressed();
-
 	void onDrawingColorChanged(QColor newColor);
 
 private:

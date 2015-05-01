@@ -135,6 +135,9 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 	connect(&m_settingsDialog, &SettingsDialog::fontSizeChanged,
 	        this, &ToolBar::fontSizeChanged);
 
+	connect(&m_colorPickerDialog, &ColorPicker::colorChanged,
+	        this, &ToolBar::onDrawingColorChanged);
+
 	m_pLayout->setSpacing(1);
 	m_pLayout->addWidget(m_pHandler);
 	m_pLayout->addItem(new QSpacerItem(1, 0, QSizePolicy::Expanding, QSizePolicy::Minimum));
@@ -235,11 +238,9 @@ void ToolBar::paintEvent(QPaintEvent *pEvent)
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-
 void ToolBar::autoPositionColorPicker()
 {
-	const int threshold = 5;
-	const int xCorrection = 10;
+	const int padding = 5;
 
 	int colorPickerXPosition = -m_pColorButton->mapFromGlobal(QPoint(0, 0)).x();
 	int colorPickerYPosition = -m_pColorButton->mapFromGlobal(QPoint(0, 0)).y();
@@ -247,14 +248,14 @@ void ToolBar::autoPositionColorPicker()
 	if(m_colorPickerDialog.height() + height() + y() > m_screenRect.height())
 	{
 		m_colorPickerDialog.setArrowLocation(ColorPicker::Bottom);
-		colorPickerXPosition -= m_pColorButton->width() - threshold + xCorrection;
-		colorPickerYPosition -= m_colorPickerDialog.height() + threshold;
+		colorPickerXPosition -= m_pColorButton->width() - m_pColorButton->width() / 2 + padding;
+		colorPickerYPosition -= m_colorPickerDialog.height() + padding;
 	}
 	else
 	{
 		m_colorPickerDialog.setArrowLocation(ColorPicker::Top);
-		colorPickerXPosition -= m_pColorButton->width() - threshold + xCorrection;
-		colorPickerYPosition -= -m_pColorButton->height() - threshold;
+		colorPickerXPosition -= m_pColorButton->width() - m_pColorButton->width() / 2 + padding;
+		colorPickerYPosition -= -m_pColorButton->height() - padding;
 	}
 
 	m_colorPickerDialog.setGeometry(colorPickerXPosition,
