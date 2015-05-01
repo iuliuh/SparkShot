@@ -27,6 +27,8 @@ public:
 	void setFontSize(int size);
 	int fontSize() const;
 
+	void reset();
+
 private:
 	Preferences(QObject* pParent = 0);
 	~Preferences();

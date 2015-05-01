@@ -80,6 +80,15 @@ int Preferences::fontSize() const
 	return m_pSettings->value(FONT_SIZE_KEY, FONT_SIZE_DEFAULT_VALUE).toInt();
 }
 
+void Preferences::reset()
+{
+	setOverlayColor(OVERLAY_COLOR_DEFAULT_VALUE);
+	setRubberBandColor(RUBBER_BAND_COLOR_DEFAULT_VALUE);
+	setRubberBandWidth(RUBBER_BAND_WIDTH_DEFAULT_VALUE);
+	setPenWidth(PEN_WIDTH_DEFAULT_VALUE);
+	setFontSize(FONT_SIZE_DEFAULT_VALUE);
+}
+
 Preferences::Preferences(QObject *pParent) : QObject(pParent)
 {
 	m_pSettings = new QSettings();

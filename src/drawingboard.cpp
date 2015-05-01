@@ -540,17 +540,17 @@ void DrawingBoard::drawText(QPainter* pPainter)
 
 	pPainter->setPen(p);
 
-	QFont font = pPainter->font();
-	QFontMetrics fontMetrics(font);
-
-	QRect textRect(m_textPoint.x(),
-	               m_textPoint.y(),
-	               fontMetrics.width(m_currentText),
-	               fontMetrics.height());
-
 	QFont textFont;
 	textFont.setPointSize(m_fontSize);
 	pPainter->setFont(textFont);
+
+	QFontMetrics fontMetrics(textFont);
+
+	const int padding = 10;
+	QRect textRect(m_textPoint.x(),
+	               m_textPoint.y(),
+	               fontMetrics.width(m_currentText) + padding,
+	               fontMetrics.height());
 
 	pPainter->drawText(textRect,
 	                   Qt::AlignLeft,

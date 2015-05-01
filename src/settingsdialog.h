@@ -50,14 +50,18 @@ protected:
 	void moveEvent(QMoveEvent *pEvent);
 	void keyPressEvent(QKeyEvent* pEvent);
 
-private:
+private slots:
 	void onOverlayColorButtonClicked();
-	void autopositionOverlayColorPicker();
 	void onOverlayColorChanged(QColor newColor);
 
 	void onRubberBandColorButtonClicked();
-	void autopositionRubberBandColorPicker();
 	void onRubberBandColorChanged(QColor newColor);
+
+	void onRubberBandWidthChanged(int width);
+	void onPenWidthChanged(int width);
+	void onFontSizeChanged(int size);
+
+	void onResetButtonClicked();
 
 private:
 	QGridLayout *m_pLayout;

@@ -25,14 +25,17 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 	m_pPenWidthLabel = new QLabel(tr("Pen width:"));
 	m_pPenWidthSpinBox = new QSpinBox;
 	m_pPenWidthSpinBox->setRange(0, 100);
+	m_pPenWidthSpinBox->setValue(Preferences::instance().penWidth());
 
 	m_pRubberBandWidthLabel = new QLabel(tr("Band width:"));
 	m_pRubberBandWidthSpinBox = new QSpinBox;
 	m_pRubberBandWidthSpinBox->setRange(0, 100);
+	m_pRubberBandWidthSpinBox->setValue(Preferences::instance().rubberBandWidth());
 
 	m_pFontSizeLabel = new QLabel(tr("Font size:"));
 	m_pFontSizeSpinBox = new QSpinBox;
 	m_pFontSizeSpinBox->setRange(0, 100);
+	m_pFontSizeSpinBox->setValue(Preferences::instance().fontSize());
 
 	m_pResetDefaultLayout = new QHBoxLayout;
 	m_pResetDefaultsButton = new QPushButton(tr("Reset Defaults"));
@@ -76,6 +79,18 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
 	connect(m_pRubberBandColorPicker, &ColorPicker::colorChanged,
 	        this, &SettingsDialog::onRubberBandColorChanged);
+
+	connect(m_pRubberBandWidthSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+	        this, &SettingsDialog::onRubberBandWidthChanged);
+
+	connect(m_pPenWidthSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+	        this, &SettingsDialog::onPenWidthChanged);
+
+	connect(m_pFontSizeSpinBox,static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+	        this, &SettingsDialog::onFontSizeChanged);
+
+	connect(m_pResetDefaultsButton, &QPushButton::clicked,
+	        this, &SettingsDialog::onResetButtonClicked);
 
 	m_pLayout->addWidget(m_pOverlayColorLabel, 0, 0);
 	m_pLayout->addWidget(m_pOverlayColorButton, 0, 1);
@@ -243,5 +258,55 @@ void SettingsDialog::onRubberBandColorChanged(QColor newColor)
 	                                        .arg(newColor.green())
 	                                        .arg(newColor.blue()));
 	setRubberBandColor(newColor);
+}
+
+void SettingsDialog::onRubberBandWidthChanged(int width)
+{
+	setRubberBandWidth(width);
+}
+
+void SettingsDialog::onPenWidthChanged(int width)
+{
+	setPenWidth(width);
+}
+
+void SettingsDialog::onFontSizeChanged(int size)
+{
+	setFontSize(size);
+}
+
+void SettingsDialog::onResetButtonClicked()
+{
+	Preferences::instance().reset();
+
+	// Overlay color
+	const QColor overlayColor = Preferences::instance().overlayColor();
+	m_pOverlayColorButton->setStyleSheet(QString("background-color: rgba(%1, %2, %3, %4);")
+	                                     .arg(overlayColor.red())
+	                                     .arg(overlayColor.green())
+	                                     .arg(overlayColor.blue())
+	                                     .arg(overlayColor.alpha()));
+	m_pOverlayColorPicker->setColor(overlayColor);
+	setOverlayColor(overlayColor);
+
+	// Rubber band color
+	const QColor rubberBandColor = Preferences::instance().rubberBandColor();
+	m_pRubberBandColorPicker->setColor(rubberBandColor);
+	setRubberBandColor(rubberBandColor);
+
+	// Rubber band width
+	const int rubberBandWidth = Preferences::instance().rubberBandWidth();
+	setRubberBandWidth(rubberBandWidth);
+	m_pRubberBandWidthSpinBox->setValue(rubberBandWidth);
+
+	// Pen width
+	const int penWidth = Preferences::instance().penWidth();
+	setPenWidth(penWidth);
+	m_pPenWidthSpinBox->setValue(penWidth);
+
+	// Font size
+	const int fontSize =Preferences::instance().fontSize();
+	setFontSize(fontSize);
+	m_pFontSizeSpinBox->setValue(fontSize);
 }
 
