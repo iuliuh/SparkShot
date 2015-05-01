@@ -21,7 +21,8 @@ SOURCES += \
 	src/drawingboard.cpp \
 	src/controller.cpp \
 	src/settingsdialog.cpp \
-	src/preferences.cpp
+	src/preferences.cpp \
+    src/gnulinuxtray.cpp
 
 HEADERS  += \
 	src/toolbar.h \
@@ -32,7 +33,8 @@ HEADERS  += \
 	src/colorpicker.h \
 	src/controller.h \
 	src/settingsdialog.h \
-	src/preferences.h
+	src/preferences.h \
+    src/gnulinuxtray.h
 
 FORMS += \
 	src/uploaddialog.ui
