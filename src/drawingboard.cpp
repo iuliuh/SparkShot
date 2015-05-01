@@ -70,7 +70,6 @@ DrawingBoard::DrawingBoard(QWidget *parent) : QWidget(parent)
 
 DrawingBoard::~DrawingBoard()
 {
-//	delete m_pUploadDialog;
 }
 
 void DrawingBoard::keyPressEvent(QKeyEvent *pEvent)
@@ -555,7 +554,7 @@ void DrawingBoard::mousePressEvent(QMouseEvent *e)
 		m_initialMousePosition = e->pos();
 		m_finalMousePosition = e->pos();
 
-		if(m_pToolBar->currentTool() == ToolBar::CropTool)
+		if(m_pToolBar->currentTool() == ToolBar::Crop)
 		{
 			m_pToolBar->hide();
 
@@ -590,7 +589,7 @@ void DrawingBoard::mouseMoveEvent(QMouseEvent *e)
 		m_finalMousePosition = e->pos();
 	}
 
-	if(m_pToolBar->currentTool() == ToolBar::CropTool)
+	if(m_pToolBar->currentTool() == ToolBar::Crop)
 	{
 		if(m_moveCroppedArea && m_leftButtonPressed)
 		{
@@ -603,7 +602,7 @@ void DrawingBoard::mouseMoveEvent(QMouseEvent *e)
 		}
 	}
 
-	if(m_pToolBar->currentTool() == ToolBar::CropTool &&
+	if(m_pToolBar->currentTool() == ToolBar::Crop &&
 	   m_cropRect.contains(e->pos()))
 	{
 		setCursor(m_leftButtonPressed ? Qt::ClosedHandCursor : Qt::OpenHandCursor);
@@ -634,7 +633,7 @@ void DrawingBoard::mouseReleaseEvent(QMouseEvent *e)
 			commitSketches();
 		}
 
-		if(m_pToolBar->currentTool() == ToolBar::CropTool &&
+		if(m_pToolBar->currentTool() == ToolBar::Crop &&
 		   m_cropRect.contains(e->pos(), true))
 		{
 			setCursor(Qt::OpenHandCursor);
@@ -665,7 +664,7 @@ void DrawingBoard::paintEvent(QPaintEvent *pEvent)
 
 	switch (m_pToolBar->currentTool())
 	{
-	case ToolBar::CropTool:
+	case ToolBar::Crop:
 		break;
 	case ToolBar::Arrow:
 		drawArrow(&sketchesBoardPainter);

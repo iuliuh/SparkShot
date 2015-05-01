@@ -21,7 +21,7 @@ public:
 	};
 
 	enum Tool {
-		CropTool,
+		Crop,
 		Arrow,
 		Line,
 		Square,
@@ -67,6 +67,7 @@ private slots:
 	void onEllipseToolButtonPressed();
 	void onLineToolButtonPressed();
 	void onArrowToolButtonPressed();
+	void onCropToolButtonPressed();
 	void onSettingsButtonPressed();
 
 	void onDrawingColorChanged(QColor newColor);
@@ -87,6 +88,7 @@ private:
 	QButtonGroup *m_pButtonGroup;
 	QPushButton *m_pSettingsButton;
 	QPushButton *m_pColorButton;
+	QPushButton *m_pCropButton;
 	QPushButton *m_pArrowButton;
 	QPushButton *m_pLineButton;
 	QPushButton *m_pSquareButton;

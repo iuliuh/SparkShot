@@ -15,7 +15,7 @@
         <file alias="undoIcon">assets/images/undo.png</file>
         <file alias="verticalSeparatorIcon">assets/images/verticalSeparator.png</file>
         <file alias="ellipseIcon">assets/images/ellipse.png</file>
-        <file>assets/images/crop.png</file>
+        <file alias="cropIcon">assets/images/crop.png</file>
         <file alias="spinBoxUpArrow">assets/images/spinBoxUpArrow.png</file>
         <file alias="spinBoxDownArrow">assets/images/spinBoxDownArrow.png</file>
         <file alias="trayIcon">assets/images/trayIcon.png</file>

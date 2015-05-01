@@ -23,11 +23,12 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 
 	m_leftButtonPressed = false;
 	m_drawColor = Qt::black;
-	m_currentTool = CropTool;
+	m_currentTool = Crop;
 
 	m_screenRect = QGuiApplication::primaryScreen()->grabWindow(0).rect();
 
 	m_pColorButton = new QPushButton();
+	m_pCropButton = new QPushButton(QIcon(":/images/cropIcon"), "");
 	m_pArrowButton = new QPushButton(QIcon(":/images/arrowIcon"), "");
 	m_pLineButton = new QPushButton(QIcon(":/images/lineIcon"), "");
 	m_pSquareButton = new QPushButton(QIcon(":/images/squareIcon"), "");
@@ -66,6 +67,7 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 	}
 
 	m_pColorButton->setFlat(true);
+	m_pCropButton->setFlat(true);
 	m_pArrowButton->setFlat(true);
 	m_pLineButton->setFlat(true);
 	m_pSquareButton->setFlat(true);
@@ -77,6 +79,7 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 	m_pSaveButton->setFlat(true);
 	m_pCloseButton->setFlat(true);
 
+	m_pCropButton->setCheckable(true);
 	m_pArrowButton->setCheckable(true);
 	m_pLineButton->setCheckable(true);
 	m_pSquareButton->setCheckable(true);
@@ -84,6 +87,7 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 	m_pTextButton->setCheckable(true);
 	m_pBrushButton->setCheckable(true);
 
+	m_pButtonGroup->addButton(m_pCropButton);
 	m_pButtonGroup->addButton(m_pArrowButton);
 	m_pButtonGroup->addButton(m_pLineButton);
 	m_pButtonGroup->addButton(m_pSquareButton);
@@ -115,6 +119,8 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 	        this, &ToolBar::onLineToolButtonPressed);
 	connect(m_pArrowButton, &QPushButton::clicked,
 	        this, &ToolBar::onArrowToolButtonPressed);
+	connect(m_pCropButton, &QPushButton::clicked,
+	        this, &ToolBar::onCropToolButtonPressed);
 
 	connect(&m_settingsDialog, &SettingsDialog::overlayColorChanged,
 	        this, &ToolBar::overlayColorChanged);
@@ -133,6 +139,7 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 	m_pLayout->addWidget(m_pHandler);
 	m_pLayout->addItem(new QSpacerItem(1, 0, QSizePolicy::Expanding, QSizePolicy::Minimum));
 	m_pLayout->addWidget(m_pColorButton);
+	m_pLayout->addWidget(m_pCropButton);
 	m_pLayout->addWidget(m_pArrowButton);
 	m_pLayout->addWidget(m_pLineButton);
 	m_pLayout->addWidget(m_pSquareButton);
@@ -329,6 +336,13 @@ void ToolBar::onLineToolButtonPressed()
 void ToolBar::onArrowToolButtonPressed()
 {
 	m_currentTool = Arrow;
+	m_colorPickerDialog.hide();
+	m_settingsDialog.hide();
+}
+
+void ToolBar::onCropToolButtonPressed()
+{
+	m_currentTool = Crop;
 	m_colorPickerDialog.hide();
 	m_settingsDialog.hide();
 }
