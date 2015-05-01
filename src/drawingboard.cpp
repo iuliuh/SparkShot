@@ -719,6 +719,4 @@ void DrawingBoard::paintEvent(QPaintEvent *pEvent)
 
 	QPainter formPainter(this);
 	formPainter.drawPixmap(m_paintBoard.rect(), m_paintBoard, m_paintBoard.rect());
-
-	update();
 }
