@@ -1,28 +1,28 @@
 <RCC>
     <qresource prefix="/images">
-        <file alias="closeIcon">assets/images/x.png</file>
-        <file alias="textIcon">assets/images/text.png</file>
-        <file alias="lineIcon">assets/images/line.png</file>
-        <file alias="settingsIcon">assets/images/cog.png</file>
-        <file alias="uploadIcon">assets/images/cloud-upload.png</file>
-        <file alias="rejectIcon">assets/images/x.png</file>
-        <file alias="arrowIcon">assets/images/arrow.png</file>
-        <file alias="brushIcon">assets/images/brush.png</file>
-        <file alias="horizontalSeparatorIcon">assets/images/horizontalSeparator.png</file>
-        <file alias="handleIcon">assets/images/handle.png</file>
-        <file alias="saveIcon">assets/images/save.png</file>
-        <file alias="squareIcon">assets/images/square.png</file>
-        <file alias="undoIcon">assets/images/undo.png</file>
-        <file alias="verticalSeparatorIcon">assets/images/verticalSeparator.png</file>
-        <file alias="ellipseIcon">assets/images/ellipse.png</file>
-        <file alias="cropIcon">assets/images/crop.png</file>
-        <file alias="spinBoxUpArrow">assets/images/spinBoxUpArrow.png</file>
-        <file alias="spinBoxDownArrow">assets/images/spinBoxDownArrow.png</file>
-        <file alias="trayIconNormal">assets/images/trayIcon.png</file>
-        <file alias="trayIconLight">assets/images/trayIconLight.png</file>
-        <file alias="trayIconDark">assets/images/trayIconDark.png</file>
+        <file alias="closeIcon">../resources/images/x.png</file>
+        <file alias="textIcon">../resources/images/text.png</file>
+        <file alias="lineIcon">../resources/images/line.png</file>
+        <file alias="settingsIcon">../resources/images/cog.png</file>
+        <file alias="uploadIcon">../resources/images/cloud-upload.png</file>
+        <file alias="rejectIcon">../resources/images/x.png</file>
+        <file alias="arrowIcon">../resources/images/arrow.png</file>
+        <file alias="brushIcon">../resources/images/brush.png</file>
+        <file alias="horizontalSeparatorIcon">../resources/images/horizontalSeparator.png</file>
+        <file alias="handleIcon">../resources/images/handle.png</file>
+        <file alias="saveIcon">../resources/images/save.png</file>
+        <file alias="squareIcon">../resources/images/square.png</file>
+        <file alias="undoIcon">../resources/images/undo.png</file>
+        <file alias="verticalSeparatorIcon">../resources/images/verticalSeparator.png</file>
+        <file alias="ellipseIcon">../resources/images/ellipse.png</file>
+        <file alias="cropIcon">../resources/images/crop.png</file>
+        <file alias="spinBoxUpArrow">../resources/images/spinBoxUpArrow.png</file>
+        <file alias="spinBoxDownArrow">../resources/images/spinBoxDownArrow.png</file>
+        <file alias="trayIconNormal">../resources/images/trayIcon.png</file>
+        <file alias="trayIconLight">../resources/images/trayIconLight.png</file>
+        <file alias="trayIconDark">../resources/images/trayIconDark.png</file>
     </qresource>
     <qresource prefix="/theme">
-        <file alias="lightTheme">assets/style/stylesheet.qss</file>
+        <file alias="lightTheme">../resources/style/stylesheet.qss</file>
     </qresource>
 </RCC>
