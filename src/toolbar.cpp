@@ -122,17 +122,17 @@ ToolBar::ToolBar(Type type, QWidget *parent) :
 	connect(m_pCropButton, &QPushButton::clicked,
 	        this, &ToolBar::onCropToolButtonPressed);
 
-	connect(&m_settingsDialog, &SettingsDialog::overlayColorChanged,
+	connect(&m_settingsDialog, &QuickSettingsDialog::overlayColorChanged,
 	        this, &ToolBar::overlayColorChanged);
-	connect(&m_settingsDialog, &SettingsDialog::rubberBandColorChanged,
+	connect(&m_settingsDialog, &QuickSettingsDialog::rubberBandColorChanged,
 	        this, &ToolBar::rubberBandColorChanged);
-	connect(&m_settingsDialog, &SettingsDialog::rubberBandWidthChanged,
+	connect(&m_settingsDialog, &QuickSettingsDialog::rubberBandWidthChanged,
 	        this, &ToolBar::rubberBandWidthChanged);
-	connect(&m_settingsDialog, &SettingsDialog::penWidthChanged,
+	connect(&m_settingsDialog, &QuickSettingsDialog::penWidthChanged,
 	        this, &ToolBar::penWidthChanged);
-	connect(&m_settingsDialog, &SettingsDialog::dotsRadiusChanged,
+	connect(&m_settingsDialog, &QuickSettingsDialog::dotsRadiusChanged,
 	        this, &ToolBar::dotsRadiusChanged);
-	connect(&m_settingsDialog, &SettingsDialog::fontSizeChanged,
+	connect(&m_settingsDialog, &QuickSettingsDialog::fontSizeChanged,
 	        this, &ToolBar::fontSizeChanged);
 
 	connect(&m_colorPickerDialog, &ColorPicker::colorChanged,

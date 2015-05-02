@@ -6,7 +6,7 @@
 #include <QColor>
 
 ColorPicker::ColorPicker(QWidget *parent) :
-	Dialog(parent),
+	ToolBarDialog(parent),
 	m_hue(0),
 	m_saturation(0),
 	m_value(0),
@@ -79,7 +79,7 @@ void ColorPicker::setWheelWidth(unsigned w)
 
 void ColorPicker::paintEvent(QPaintEvent * e)
 {
-	Dialog::paintEvent(e);
+	ToolBarDialog::paintEvent(e);
 
 	double selectorW = 4;
 

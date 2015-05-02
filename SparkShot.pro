@@ -17,27 +17,32 @@ SOURCES += \
 	src/toolbar.cpp \
 	src/uploaddialog.cpp \
 	src/colorpicker.cpp \
-	src/dialog.cpp \
 	src/drawingboard.cpp \
 	src/controller.cpp \
-	src/settingsdialog.cpp \
 	src/preferences.cpp \
-	src/gnulinuxtray.cpp
+	src/quicksettingsdialog.cpp \
+	src/settingsdialog.cpp \
+	src/toolbardialog.cpp \
+    src/keysequenceedit.cpp
 
 HEADERS  += \
 	src/toolbar.h \
 	src/defines.h \
-	src/dialog.h \
 	src/drawingboard.h \
 	src/uploaddialog.h \
 	src/colorpicker.h \
 	src/controller.h \
-	src/settingsdialog.h \
 	src/preferences.h \
-	src/gnulinuxtray.h
+	src/quicksettingsdialog.h \
+	src/settingsdialog.h \
+	src/toolbardialog.h \
+    src/keysequenceedit.h
 
 FORMS += \
-	src/uploaddialog.ui
+	src/uploaddialog.ui \
+	src/settingsdialog.ui
 
 RESOURCES += \
 	src/resources.qrc
+
+INCLUDEPATH += src/

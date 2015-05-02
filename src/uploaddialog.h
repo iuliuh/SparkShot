@@ -4,7 +4,7 @@
 #include <QDialog>
 
 namespace Ui {
-class UploadDialog;
+	class UploadDialog;
 }
 
 class UploadDialog : public QDialog

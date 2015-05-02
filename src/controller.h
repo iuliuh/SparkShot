@@ -7,6 +7,7 @@
 class QMenu;
 class DrawingBoard;
 class QAction;
+class SettingsDialog;
 
 class Controller : public QObject
 {
@@ -28,13 +29,17 @@ private:
 	void printScreen();
 
 private:
-	DrawingBoard *m_drawingBoard;
+	DrawingBoard *m_pDrawingBoard;
+	SettingsDialog *m_pSettingsDialog;
+
 	QSystemTrayIcon *m_systemTray;
-	QMenu *m_systemTrayMenu;
+
 	QAction *m_printScreenAction;
 	QAction *m_settingsAction;
 	QAction *m_closeAction;
 	QAction *m_aboutAction;
+
+	QMenu *m_systemTrayMenu;
 };
 
 #endif // CONTROLLER_H

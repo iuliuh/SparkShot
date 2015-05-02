@@ -113,3 +113,15 @@ Settings QPushButton#ResetDefaultsButton::pressed {
 	padding: 5px;
 	outline: none;
 }
+
+QKeySequenceEdit QLineEdit {
+	text-align: center;
+	margin-left: 100px;
+	padding-left: 100px;
+}
+
+QLineEdit {
+	text-align: center;
+	margin-left: 100px;
+	padding-left: 100px;
+}

@@ -1,8 +1,8 @@
-#include "dialog.h"
+#include "toolbardialog.h"
 
 #include <QPainter>
 
-Dialog::Dialog(QWidget *parent) :
+ToolBarDialog::ToolBarDialog(QWidget *parent) :
     QDialog(parent)
 {
 	setWindowFlags(Qt::Tool |
@@ -15,23 +15,23 @@ Dialog::Dialog(QWidget *parent) :
 	m_arrowLocation = Top;
 }
 
-Dialog::~Dialog()
+ToolBarDialog::~ToolBarDialog()
 {
 }
 
-void Dialog::setArrowLocation(Dialog::ArrowLocation arrowLocation)
+void ToolBarDialog::setArrowLocation(ToolBarDialog::ArrowLocation arrowLocation)
 {
 	m_arrowLocation = arrowLocation;
 
 	update();
 }
 
-Dialog::ArrowLocation Dialog::arrowLocation() const
+ToolBarDialog::ArrowLocation ToolBarDialog::arrowLocation() const
 {
 	return m_arrowLocation;
 }
 
-void Dialog::paintEvent(QPaintEvent* e)
+void ToolBarDialog::paintEvent(QPaintEvent* e)
 {
 	Q_UNUSED(e)
 

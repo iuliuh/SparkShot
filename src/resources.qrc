@@ -18,7 +18,9 @@
         <file alias="cropIcon">assets/images/crop.png</file>
         <file alias="spinBoxUpArrow">assets/images/spinBoxUpArrow.png</file>
         <file alias="spinBoxDownArrow">assets/images/spinBoxDownArrow.png</file>
-        <file alias="trayIcon">assets/images/trayIcon.png</file>
+        <file alias="trayIconNormal">assets/images/trayIcon.png</file>
+        <file alias="trayIconLight">assets/images/trayIconLight.png</file>
+        <file alias="trayIconDark">assets/images/trayIconDark.png</file>
     </qresource>
     <qresource prefix="/theme">
         <file alias="lightTheme">assets/style/stylesheet.qss</file>

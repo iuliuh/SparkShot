@@ -8,7 +8,7 @@
 #include <QLabel>
 
 #include "colorpicker.h"
-#include "settingsdialog.h"
+#include "quicksettingsdialog.h"
 
 class ToolBar : public QWidget
 {
@@ -82,7 +82,7 @@ private:
 
 	Tool m_currentTool;
 	ColorPicker m_colorPickerDialog;
-	SettingsDialog m_settingsDialog;
+	QuickSettingsDialog m_settingsDialog;
 
 	QButtonGroup *m_pButtonGroup;
 	QPushButton *m_pSettingsButton;

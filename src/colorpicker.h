@@ -1,7 +1,7 @@
 #ifndef COLORPICKER_H
 #define COLORPICKER_H
 
-#include "dialog.h"
+#include "toolbardialog.h"
 
 #include <qmath.h>
 
@@ -11,7 +11,7 @@
  * It has an outer wheel to select the Hue and an intenal square to select
  * Saturation and Lightness.
  */
-class ColorPicker : public Dialog
+class ColorPicker : public ToolBarDialog
 {
 	Q_OBJECT
 

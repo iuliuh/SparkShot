@@ -1,5 +1,6 @@
 #include "controller.h"
 #include "drawingboard.h"
+#include "settingsdialog.h"
 
 #include <QMenu>
 #include <QAction>
@@ -8,7 +9,7 @@
 
 Controller::Controller(QObject *parent) : QObject(parent)
 {
-	m_systemTray = new QSystemTrayIcon(QIcon(":/images/trayIcon"), this);
+	m_systemTray = new QSystemTrayIcon(QIcon(":/images/trayIconLight"), this);
 	m_systemTrayMenu = new QMenu;
 
 	m_printScreenAction = m_systemTrayMenu->addAction(tr("Print screen"));
@@ -33,7 +34,7 @@ Controller::Controller(QObject *parent) : QObject(parent)
 
 Controller::~Controller()
 {
-	delete m_drawingBoard;
+	delete m_pDrawingBoard;
 }
 
 void Controller::start()
@@ -53,7 +54,8 @@ void Controller::onPrintScreenActionClicked()
 
 void Controller::onSettingsActionClicked()
 {
-	qDebug() << Q_FUNC_INFO;
+	m_pSettingsDialog = new SettingsDialog;
+	m_pSettingsDialog->show();
 }
 
 void Controller::onSystemTrayIconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -66,7 +68,7 @@ void Controller::onSystemTrayIconActivated(QSystemTrayIcon::ActivationReason rea
 
 void Controller::printScreen()
 {
-	m_drawingBoard = new DrawingBoard;
+	m_pDrawingBoard = new DrawingBoard;
 
-	QTimer::singleShot(10, m_drawingBoard, &DrawingBoard::shoot);
+	QTimer::singleShot(10, m_pDrawingBoard, &DrawingBoard::shoot);
 }
