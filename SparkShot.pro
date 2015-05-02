@@ -22,7 +22,7 @@ SOURCES += \
 	src/controller.cpp \
 	src/settingsdialog.cpp \
 	src/preferences.cpp \
-    src/gnulinuxtray.cpp
+	src/gnulinuxtray.cpp
 
 HEADERS  += \
 	src/toolbar.h \
@@ -34,30 +34,10 @@ HEADERS  += \
 	src/controller.h \
 	src/settingsdialog.h \
 	src/preferences.h \
-    src/gnulinuxtray.h
+	src/gnulinuxtray.h
 
 FORMS += \
 	src/uploaddialog.ui
 
 RESOURCES += \
 	src/resources.qrc
-
-unix:!macx{
-	INCLUDEPATH += /usr/include/libappindicator-0.1
-	INCLUDEPATH += /usr/include/gtk-2.0
-	INCLUDEPATH += /usr/include/glib-2.0
-	INCLUDEPATH += /usr/lib/x86_64-linux-gnu/glib-2.0/include
-	INCLUDEPATH += /usr/include/cairo
-	INCLUDEPATH += /usr/include/pango-1.0
-	INCLUDEPATH += /usr/lib/x86_64-linux-gnu/gtk-2.0/include
-	INCLUDEPATH += /usr/include/gdk-pixbuf-2.0
-	INCLUDEPATH += /usr/include/atk-1.0
-
-	LIBS += -L/usr/lib/x86_64-linux-gnu -lgobject-2.0
-	LIBS += -L/usr/lib/x86_64-linux-gnu -lappindicator
-	LIBS += -L/usr/lib/x86_64-linux-gnu -lgtk-x11-2.0
-	LIBS += -L/usr/lib/x86_64-linux-gnu -lkeybinder
-
-	CONFIG	+= link_pkgconfig
-	PKGCONFIG += gtkmm-3.0
-}

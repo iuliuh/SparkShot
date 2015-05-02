@@ -281,7 +281,7 @@ void DrawingBoard::onError(QNetworkReply::NetworkError error)
 
 void DrawingBoard::onSslErrors(QList<QSslError> errorList)
 {
-	foreach (QSslError e, errorList)
+	Q_FOREACH (QSslError e, errorList)
 	{
 		qDebug() << e.errorString();
 	}

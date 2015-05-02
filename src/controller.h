@@ -19,9 +19,10 @@ public:
 	void start();
 
 private Q_SLOTS:
-	void onAboutActionClicked();
-	void onPrintScreenActionClicked();
 	void onSystemTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
+	void onPrintScreenActionClicked();
+	void onSettingsActionClicked();
+	void onAboutActionClicked();
 
 private:
 	void printScreen();
@@ -31,6 +32,7 @@ private:
 	QSystemTrayIcon *m_systemTray;
 	QMenu *m_systemTrayMenu;
 	QAction *m_printScreenAction;
+	QAction *m_settingsAction;
 	QAction *m_closeAction;
 	QAction *m_aboutAction;
 };
