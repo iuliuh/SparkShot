@@ -3,11 +3,22 @@
 
 #include "shortcutkeybinder_global.h"
 
-class SHORTCUTKEYBINDERSHARED_EXPORT ShortcutKeyBinder
+#include <QObject>
+#include <QString>
+#include <QKeySequence>
+
+class SHORTCUTKEYBINDERSHARED_EXPORT ShortcutKeyBinder : public QObject
 {
 
 public:
-	ShortcutKeyBinder();
+	ShortcutKeyBinder(QObject *parent = 0);
+	~ShortcutKeyBinder();
+
+	QKeySequence keySequence() const;
+	void setKeySequence(const QKeySequence &key);
+
+private:
+	QKeySequence m_keySequence;
 };
 
 #endif // SHORTCUTKEYBINDER_H
