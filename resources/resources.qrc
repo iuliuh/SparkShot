@@ -22,7 +22,6 @@
         <file alias="trayIconLight">images/tray-icon-light.png</file>
         <file alias="trayIconDark">images/tray-icon-dark.png</file>
         <file alias="splashScreen">images/splash-screen.png</file>
-        <file alias="splashScreenSidePanel">images/splash-screen-side-panel.png</file>
         <file alias="splashScreenBlured">images/splash-screen-blured.png</file>
         <file alias="splashScreenSidePanelTool">images/splash-screen-side-panel-tool.png</file>
         <file alias="splashScreenSidePanelSupport">images/splash-screen-side-panel-support.png</file>
