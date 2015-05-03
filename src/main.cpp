@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QTranslator>
 
 #include "controller.h"
 

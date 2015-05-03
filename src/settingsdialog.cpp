@@ -1,8 +1,10 @@
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
+#include "preferences.h"
 
 #include <QKeyEvent>
 #include <QDebug>
+#include <QApplication>
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),
@@ -24,6 +26,8 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 	        this, SLOT(onShowTrayIcon(bool)));
 	connect(ui->languageComboBox, SIGNAL(currentIndexChanged(QString)),
 	        this, SLOT(onLanguageChanged(const QString&)));
+
+	ui->languageComboBox->setCurrentText(Preferences::instance().language());
 }
 
 SettingsDialog::~SettingsDialog()
@@ -58,7 +62,7 @@ void SettingsDialog::onShowTrayIcon(bool state)
 
 void SettingsDialog::onLanguageChanged(const QString& language)
 {
-	Q_UNUSED(language)
+	Preferences::instance().setLanguage(language);
 }
 
 

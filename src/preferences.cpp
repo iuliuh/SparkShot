@@ -20,6 +20,9 @@ const int Preferences::PEN_WIDTH_DEFAULT_VALUE = 2;
 const QString Preferences::FONT_SIZE_KEY = "FontSize";
 const int Preferences::FONT_SIZE_DEFAULT_VALUE = 12;
 
+const QString Preferences::LANGUAGE_KEY = "Language";
+const QString Preferences::LANGUAGE_DEFAULT_VALUE = "English";
+
 Preferences& Preferences::instance()
 {
 	if (m_pInstance == 0)
@@ -80,6 +83,16 @@ int Preferences::fontSize() const
 	return m_pSettings->value(FONT_SIZE_KEY, FONT_SIZE_DEFAULT_VALUE).toInt();
 }
 
+void Preferences::setLanguage(const QString &language)
+{
+	m_pSettings->setValue(LANGUAGE_KEY, language);
+}
+
+QString Preferences::language() const
+{
+	return m_pSettings->value(LANGUAGE_KEY, LANGUAGE_DEFAULT_VALUE).toString();
+}
+
 void Preferences::reset()
 {
 	setOverlayColor(OVERLAY_COLOR_DEFAULT_VALUE);
@@ -87,6 +100,7 @@ void Preferences::reset()
 	setRubberBandWidth(RUBBER_BAND_WIDTH_DEFAULT_VALUE);
 	setPenWidth(PEN_WIDTH_DEFAULT_VALUE);
 	setFontSize(FONT_SIZE_DEFAULT_VALUE);
+	setLanguage(LANGUAGE_DEFAULT_VALUE);
 }
 
 Preferences::Preferences(QObject *pParent) : QObject(pParent)

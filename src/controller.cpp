@@ -2,14 +2,17 @@
 #include "drawingboard.h"
 #include "settingsdialog.h"
 
+#include <QApplication>
+#include <QTranslator>
 #include <QMenu>
 #include <QAction>
-#include <QApplication>
 #include <QTimer>
 
 Controller::Controller(QObject *parent) : QObject(parent)
 {
-	m_systemTray = new QSystemTrayIcon(QIcon(":/images/trayIconLight"), this);
+	loadTranslator();
+
+	m_pSystemTray = new QSystemTrayIcon(QIcon(":/images/trayIconLight"), this);
 	m_systemTrayMenu = new QMenu;
 
 	m_printScreenAction = m_systemTrayMenu->addAction(tr("Print screen"));
@@ -18,9 +21,9 @@ Controller::Controller(QObject *parent) : QObject(parent)
 	m_systemTrayMenu->addSeparator();
 	m_aboutAction = m_systemTrayMenu->addAction(tr("About"));
 
-	m_systemTray->setContextMenu(m_systemTrayMenu);
+	m_pSystemTray->setContextMenu(m_systemTrayMenu);
 
-	connect(m_systemTray, &QSystemTrayIcon::activated,
+	connect(m_pSystemTray, &QSystemTrayIcon::activated,
 	        this, &Controller::onSystemTrayIconActivated);
 	connect(m_printScreenAction, &QAction::triggered,
 	        this, &Controller::onPrintScreenActionClicked);
@@ -39,12 +42,24 @@ Controller::~Controller()
 
 void Controller::start()
 {
-	m_systemTray->show();
+	m_pSystemTray->show();
 }
 
-void Controller::onAboutActionClicked()
+void Controller ::onAboutActionClicked()
 {
 	qDebug() << Q_FUNC_INFO;
+}
+
+void Controller::loadTranslator()
+{
+	m_pTranslator = new QTranslator(this);
+
+	if(Preferences::instance().language() == "Romana")
+	{
+		m_pTranslator->load(":/translations/romanian");
+	}
+
+	qApp->installTranslator(m_pTranslator);
 }
 
 void Controller::onPrintScreenActionClicked()

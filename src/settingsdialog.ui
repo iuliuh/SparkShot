@@ -49,7 +49,7 @@
        <string>Normal</string>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources/resources.qrc">
         <normaloff>:/images/trayIconNormal</normaloff>:/images/trayIconNormal</iconset>
       </property>
      </item>
@@ -58,7 +58,7 @@
        <string>Light</string>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources/resources.qrc">
         <normaloff>:/images/trayIconLight</normaloff>:/images/trayIconLight</iconset>
       </property>
      </item>
@@ -67,7 +67,7 @@
        <string>Dark</string>
       </property>
       <property name="icon">
-       <iconset resource="resources.qrc">
+       <iconset resource="../resources/resources.qrc">
         <normaloff>:/images/trayIconDark</normaloff>:/images/trayIconDark</iconset>
       </property>
      </item>
@@ -221,7 +221,7 @@
      </item>
      <item>
       <property name="text">
-       <string>Romanian</string>
+       <string>Romana</string>
       </property>
      </item>
     </widget>
@@ -236,7 +236,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="resources.qrc"/>
+  <include location="../resources/resources.qrc"/>
  </resources>
  <connections/>
 </ui>

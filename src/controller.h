@@ -4,9 +4,10 @@
 #include <QObject>
 #include <QSystemTrayIcon>
 
+class QTranslator;
 class QMenu;
-class DrawingBoard;
 class QAction;
+class DrawingBoard;
 class SettingsDialog;
 
 class Controller : public QObject
@@ -26,13 +27,15 @@ private Q_SLOTS:
 	void onAboutActionClicked();
 
 private:
+	void loadTranslator();
 	void printScreen();
 
 private:
 	DrawingBoard *m_pDrawingBoard;
 	SettingsDialog *m_pSettingsDialog;
 
-	QSystemTrayIcon *m_systemTray;
+	QSystemTrayIcon *m_pSystemTray;
+	QTranslator *m_pTranslator;
 
 	QAction *m_printScreenAction;
 	QAction *m_settingsAction;

@@ -27,6 +27,9 @@ public:
 	void setFontSize(int size);
 	int fontSize() const;
 
+	void setLanguage(const QString& language);
+	QString language() const;
+
 	void reset();
 
 private:
@@ -56,6 +59,9 @@ private:
 
 	static const QString FONT_SIZE_KEY;
 	static const int FONT_SIZE_DEFAULT_VALUE;
+
+	static const QString LANGUAGE_KEY;
+	static const QString LANGUAGE_DEFAULT_VALUE;
 };
 
 #endif // PREFERENCES_H

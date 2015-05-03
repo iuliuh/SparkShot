@@ -1,0 +1,31 @@
+<RCC>
+    <qresource prefix="/images">
+        <file alias="closeIcon">images/x.png</file>
+        <file alias="textIcon">images/text.png</file>
+        <file alias="lineIcon">images/line.png</file>
+        <file alias="settingsIcon">images/cog.png</file>
+        <file alias="uploadIcon">images/cloud-upload.png</file>
+        <file alias="rejectIcon">images/x.png</file>
+        <file alias="arrowIcon">images/arrow.png</file>
+        <file alias="brushIcon">images/brush.png</file>
+        <file alias="horizontalSeparatorIcon">images/horizontalSeparator.png</file>
+        <file alias="handleIcon">images/handle.png</file>
+        <file alias="saveIcon">images/save.png</file>
+        <file alias="squareIcon">images/square.png</file>
+        <file alias="undoIcon">images/undo.png</file>
+        <file alias="verticalSeparatorIcon">images/verticalSeparator.png</file>
+        <file alias="ellipseIcon">images/ellipse.png</file>
+        <file alias="cropIcon">images/crop.png</file>
+        <file alias="spinBoxUpArrow">images/spinBoxUpArrow.png</file>
+        <file alias="spinBoxDownArrow">images/spinBoxDownArrow.png</file>
+        <file alias="trayIconNormal">images/trayIcon.png</file>
+        <file alias="trayIconLight">images/trayIconLight.png</file>
+        <file alias="trayIconDark">images/trayIconDark.png</file>
+    </qresource>
+    <qresource prefix="/theme">
+        <file alias="lightTheme">style/stylesheet.qss</file>
+    </qresource>
+    <qresource prefix="/translations">
+        <file alias="romanian">translations/romanian.qm</file>
+    </qresource>
+</RCC>

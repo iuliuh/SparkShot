@@ -12,13 +12,6 @@ class SettingsDialog : public QDialog
 	Q_OBJECT
 
 public:
-	enum Language
-	{
-		English,
-		Romanian
-	};
-
-public:
 	explicit SettingsDialog(QWidget *parent = 0);
 	~SettingsDialog();
 

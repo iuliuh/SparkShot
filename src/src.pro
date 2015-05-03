@@ -43,7 +43,10 @@ FORMS += \
 	settingsdialog.ui
 
 RESOURCES += \
-	resources.qrc
+	../resources/resources.qrc
+
+TRANSLATIONS += \
+	../resources/translations/romanian.ts
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib/shortcutkeybinder/release/ -lshortcutkeybinder
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib/shortcutkeybinder/debug/ -lshortcutkeybinder
