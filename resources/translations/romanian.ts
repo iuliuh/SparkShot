@@ -135,7 +135,8 @@
     <message>
         <location filename="../../src/settingsdialog.ui" line="224"/>
         <source>Română</source>
-        <translation type="unfinished"></translation>
+        <translation>Română
+</translation>
     </message>
     <message>
         <source>Romanian</source>

@@ -8,19 +8,20 @@
         <file alias="rejectIcon">images/x.png</file>
         <file alias="arrowIcon">images/arrow.png</file>
         <file alias="brushIcon">images/brush.png</file>
-        <file alias="horizontalSeparatorIcon">images/horizontalSeparator.png</file>
+        <file alias="horizontalSeparatorIcon">images/horizontal-separator.png</file>
         <file alias="handleIcon">images/handle.png</file>
         <file alias="saveIcon">images/save.png</file>
         <file alias="squareIcon">images/square.png</file>
         <file alias="undoIcon">images/undo.png</file>
-        <file alias="verticalSeparatorIcon">images/verticalSeparator.png</file>
+        <file alias="verticalSeparatorIcon">images/vertical-separator.png</file>
         <file alias="ellipseIcon">images/ellipse.png</file>
         <file alias="cropIcon">images/crop.png</file>
-        <file alias="spinBoxUpArrow">images/spinBoxUpArrow.png</file>
-        <file alias="spinBoxDownArrow">images/spinBoxDownArrow.png</file>
-        <file alias="trayIconNormal">images/trayIcon.png</file>
-        <file alias="trayIconLight">images/trayIconLight.png</file>
-        <file alias="trayIconDark">images/trayIconDark.png</file>
+        <file alias="spinBoxUpArrow">images/spin-box-up-arrow.png</file>
+        <file alias="spinBoxDownArrow">images/spin-box-down-arrow.png</file>
+        <file alias="trayIconNormal">images/tray-icon.png</file>
+        <file alias="trayIconLight">images/tray-icon-light.png</file>
+        <file alias="trayIconDark">images/tray-icon-dark.png</file>
+        <file alias="splashScreen">images/splash-screen.png</file>
     </qresource>
     <qresource prefix="/theme">
         <file alias="lightTheme">style/stylesheet.qss</file>

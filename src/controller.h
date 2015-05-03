@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QSystemTrayIcon>
 
+class QSplashScreen;
 class QTranslator;
 class QMenu;
 class QAction;
@@ -36,6 +37,7 @@ private:
 
 	QSystemTrayIcon *m_pSystemTray;
 	QTranslator *m_pTranslator;
+	QSplashScreen *m_pSplashScreen;
 
 	QAction *m_printScreenAction;
 	QAction *m_settingsAction;

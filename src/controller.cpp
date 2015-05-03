@@ -3,6 +3,7 @@
 #include "settingsdialog.h"
 
 #include <QApplication>
+#include <QSplashScreen>
 #include <QTranslator>
 #include <QMenu>
 #include <QAction>
@@ -37,7 +38,6 @@ Controller::Controller(QObject *parent) : QObject(parent)
 
 Controller::~Controller()
 {
-	delete m_pDrawingBoard;
 }
 
 void Controller::start()
@@ -47,7 +47,9 @@ void Controller::start()
 
 void Controller ::onAboutActionClicked()
 {
-	qDebug() << Q_FUNC_INFO;
+	m_pSplashScreen = new QSplashScreen(QPixmap(":/images/splashScreen"));
+	m_pSplashScreen->setAttribute(Qt::WA_DeleteOnClose);
+	m_pSplashScreen->show();
 }
 
 void Controller::loadTranslator()
