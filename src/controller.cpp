@@ -1,9 +1,9 @@
 #include "controller.h"
 #include "drawingboard.h"
 #include "settingsdialog.h"
+#include "splashscreen.h"
 
 #include <QApplication>
-#include <QSplashScreen>
 #include <QTranslator>
 #include <QMenu>
 #include <QAction>
@@ -18,9 +18,10 @@ Controller::Controller(QObject *parent) : QObject(parent)
 
 	m_printScreenAction = m_systemTrayMenu->addAction(tr("Print screen"));
 	m_settingsAction = m_systemTrayMenu->addAction(tr("Settings"));
-	m_closeAction = m_systemTrayMenu->addAction(tr("Close"));
 	m_systemTrayMenu->addSeparator();
 	m_aboutAction = m_systemTrayMenu->addAction(tr("About"));
+	m_systemTrayMenu->addSeparator();
+	m_closeAction = m_systemTrayMenu->addAction(tr("Close"));
 
 	m_pSystemTray->setContextMenu(m_systemTrayMenu);
 
@@ -47,8 +48,7 @@ void Controller::start()
 
 void Controller ::onAboutActionClicked()
 {
-	m_pSplashScreen = new QSplashScreen(QPixmap(":/images/splashScreen"));
-	m_pSplashScreen->setAttribute(Qt::WA_DeleteOnClose);
+	m_pSplashScreen = new SplashScreen;
 	m_pSplashScreen->show();
 }
 

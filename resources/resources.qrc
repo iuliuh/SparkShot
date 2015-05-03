@@ -22,6 +22,12 @@
         <file alias="trayIconLight">images/tray-icon-light.png</file>
         <file alias="trayIconDark">images/tray-icon-dark.png</file>
         <file alias="splashScreen">images/splash-screen.png</file>
+        <file alias="splashScreenSidePanel">images/splash-screen-side-panel.png</file>
+        <file alias="splashScreenBlured">images/splash-screen-blured.png</file>
+        <file alias="splashScreenSidePanelTool">images/splash-screen-side-panel-tool.png</file>
+        <file alias="splashScreenSidePanelSupport">images/splash-screen-side-panel-support.png</file>
+        <file alias="splashScreenSidePanelLicense">images/splash-screen-side-panel-license.png</file>
+        <file alias="splashScreenSidePanelAuthor">images/splash-screen-side-panel-author.png</file>
     </qresource>
     <qresource prefix="/theme">
         <file alias="lightTheme">style/stylesheet.qss</file>

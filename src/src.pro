@@ -23,7 +23,9 @@ SOURCES += \
 	quicksettingsdialog.cpp \
 	settingsdialog.cpp \
 	toolbardialog.cpp \
-	keysequenceedit.cpp
+	keysequenceedit.cpp \
+	splashscreen.cpp \
+	splashscreenitem.cpp
 
 HEADERS  += \
 	toolbar.h \
@@ -36,7 +38,9 @@ HEADERS  += \
 	quicksettingsdialog.h \
 	settingsdialog.h \
 	toolbardialog.h \
-	keysequenceedit.h
+	keysequenceedit.h \
+	splashscreen.h \
+	splashscreenitem.h
 
 FORMS += \
 	uploaddialog.ui \

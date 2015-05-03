@@ -29,7 +29,7 @@ QuickSettingsDialog::QuickSettingsDialog(QWidget *parent) :
 
 	m_pRubberBandWidthLabel = new QLabel(tr("Band width:"));
 	m_pRubberBandWidthSpinBox = new QSpinBox;
-	m_pRubberBandWidthSpinBox->setRange(0, 100);
+	m_pRubberBandWidthSpinBox->setRange(0, 30);
 	m_pRubberBandWidthSpinBox->setValue(Preferences::instance().rubberBandWidth());
 
 	m_pFontSizeLabel = new QLabel(tr("Font size:"));

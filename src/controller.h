@@ -4,12 +4,12 @@
 #include <QObject>
 #include <QSystemTrayIcon>
 
-class QSplashScreen;
 class QTranslator;
 class QMenu;
 class QAction;
 class DrawingBoard;
 class SettingsDialog;
+class SplashScreen;
 
 class Controller : public QObject
 {
@@ -34,10 +34,10 @@ private:
 private:
 	DrawingBoard *m_pDrawingBoard;
 	SettingsDialog *m_pSettingsDialog;
+	SplashScreen *m_pSplashScreen;
 
 	QSystemTrayIcon *m_pSystemTray;
 	QTranslator *m_pTranslator;
-	QSplashScreen *m_pSplashScreen;
 
 	QAction *m_printScreenAction;
 	QAction *m_settingsAction;

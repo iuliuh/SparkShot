@@ -229,6 +229,8 @@ void DrawingBoard::onSaveButtonPressed()
 
 	if(!fileName.isEmpty())
 	{
+		fileName.append(fileName.endsWith(".png") ? "" : ".png");
+
 		newPixmap.save(fileName);
 
 		close();
