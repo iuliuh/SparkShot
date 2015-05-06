@@ -52,9 +52,9 @@ RESOURCES += \
 TRANSLATIONS += \
 	../resources/translations/romanian.ts
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib/shortcutkeybinder/release/ -lshortcutkeybinder
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib/shortcutkeybinder/debug/ -lshortcutkeybinder
-else:unix: LIBS += -L$$OUT_PWD/../lib/shortcutkeybinder/ -lshortcutkeybinder
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib/hotkeybinder/release/ -lhotkeybinder
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib/hotkeybinder/debug/ -lhotkeybinder
+else:unix: LIBS += -L$$OUT_PWD/../lib/hotkeybinder/ -lhotkeybinder
 
-INCLUDEPATH += $$PWD/../lib/shortcutkeybinder
-DEPENDPATH += $$PWD/../lib/shortcutkeybinder
+INCLUDEPATH += $$PWD/../lib/hotkeybinder
+DEPENDPATH += $$PWD/../lib/hotkeybinder

@@ -36,7 +36,7 @@ private:
 	DrawingBoard *m_pDrawingBoard;
 	SettingsDialog *m_pSettingsDialog;
 	SplashScreen *m_pSplashScreen;
-	HotKeyBinder *m_pShortcutKeyBinder;
+	HotKeyBinder *m_pHotKeyBinder;
 
 	QSystemTrayIcon *m_pSystemTray;
 	QTranslator *m_pTranslator;

@@ -14,7 +14,7 @@ Controller::Controller(QObject *parent) : QObject(parent)
 {
 	loadTranslator();
 
-	m_pShortcutKeyBinder = new HotKeyBinder;
+	m_pHotKeyBinder = new HotKeyBinder;
 
 	m_pSystemTray = new QSystemTrayIcon(QIcon(":/images/trayIconLight"), this);
 	m_systemTrayMenu = new QMenu;
@@ -77,7 +77,7 @@ void Controller::onSettingsActionClicked()
 	m_pSettingsDialog = new SettingsDialog;
 
 	connect(m_pSettingsDialog, &SettingsDialog::keySequenceChanged,
-	        m_pShortcutKeyBinder, &HotKeyBinder::setKeySequence);
+	        m_pHotKeyBinder, &HotKeyBinder::setHotKey);
 
 	m_pSettingsDialog->show();
 }

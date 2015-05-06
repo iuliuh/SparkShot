@@ -1,0 +1,49 @@
+#-------------------------------------------------
+#
+# Project created by QtCreator 2015-05-03T01:42:16
+#
+#-------------------------------------------------
+
+QT += gui core
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+CONFIG += no_keywords
+
+TARGET = hotkeybinder
+TEMPLATE = lib
+
+DEFINES += HOTKEYBINDER_LIBRARY
+
+SOURCES += \
+	hotkeybinder.cpp
+
+HEADERS += \
+	hotkeybinder.h \
+	hotkeybinder_global.h
+
+unix {
+	target.path = /usr/lib
+	INSTALLS += target
+}
+
+win32 {
+	SOURCES += \
+		winhotkeybinder.cpp
+
+	HEADERS += \
+		winhotkeybinder.h
+}
+
+unix:!macx {
+	CONFIG += link_pkgconfig
+	PKGCONFIG += x11
+
+	SOURCES += \
+		gnulinuxhotkeybinder.cpp \
+		gnulinuxhotkeyworker.cpp \
+
+	HEADERS += \
+		gnulinuxhotkeyworker.h \
+		gnulinuxhotkeybinder.h \
+}
