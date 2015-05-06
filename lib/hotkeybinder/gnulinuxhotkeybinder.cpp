@@ -5,7 +5,7 @@
 GNULinuxHotKeyBinder::GNULinuxHotKeyBinder(QObject *parent) :
     QObject(parent)
 {
-	m_pHotKeyWorker = new HotKeyWorker;
+	m_pHotKeyWorker = new GNULinuxHotKeyWorker;
 	m_pHotKeyThread = new QThread;
 
 	m_pHotKeyWorker->moveToThread(m_pHotKeyThread);
@@ -24,7 +24,7 @@ QKeySequence GNULinuxHotKeyBinder::keySequence() const
 	return m_keySequence;
 }
 
-void GNULinuxHotKeyBinder::setKeySequence(const QString &keySequence)
+void GNULinuxHotKeyBinder::setHotKey(uint modifiers, uint key)
 {
 	m_pHotKeyWorker->setHotKey(ControlMask | ShiftMask, XK_Y);
 }

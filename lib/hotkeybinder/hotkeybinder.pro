@@ -36,9 +36,6 @@ win32 {
 }
 
 unix:!macx {
-	CONFIG += link_pkgconfig
-	PKGCONFIG += x11
-
 	SOURCES += \
 		gnulinuxhotkeybinder.cpp \
 		gnulinuxhotkeyworker.cpp \
@@ -46,4 +43,7 @@ unix:!macx {
 	HEADERS += \
 		gnulinuxhotkeyworker.h \
 		gnulinuxhotkeybinder.h \
+
+	CONFIG += link_pkgconfig
+	PKGCONFIG += x11
 }

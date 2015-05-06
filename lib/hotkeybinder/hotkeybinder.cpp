@@ -8,11 +8,14 @@ HotKeyBinder::HotKeyBinder(QObject *parent) : QObject(parent)
 	connect(m_pWinHotKeyBinder, &WinHotKeyBinder::hotKeyTriggered,
 	        this, &HotKeyBinder::hotKeyTriggered);
 #endif
+
+#ifdef Q_OS_LINUX
+	m_pGNULinuxHotBinder = new GNULinuxHotKeyBinder(this);
+#endif
 }
 
 HotKeyBinder::~HotKeyBinder()
 {
-
 }
 
 void HotKeyBinder::setHotKey(const QString& keySequence)
@@ -24,6 +27,10 @@ void HotKeyBinder::setHotKey(const QString& keySequence)
 
 #ifdef Q_OS_WIN
 	m_pWinHotKeyBinder->setHotKey(modifiers, key);
+#endif
+
+#ifdef Q_OS_LINUX
+	m_pGNULinuxHotBinder->setHotKey(modifiers, key);
 #endif
 }
 

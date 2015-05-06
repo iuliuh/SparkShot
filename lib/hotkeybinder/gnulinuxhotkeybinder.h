@@ -7,7 +7,7 @@
 
 #include "gnulinuxhotkeyworker.h"
 
-class HotKeyWorker;
+class GNULinuxHotKeyWorker;
 class QThread;
 
 class GNULinuxHotKeyBinder : public QObject
@@ -21,12 +21,12 @@ public:
 	QKeySequence keySequence() const;
 
 public Q_SLOTS:
-	void setKeySequence(const QString &key);
+	void setHotKey(uint modifiers, uint key);
 
 private:
 	QKeySequence m_keySequence;
 
-	HotKeyWorker* m_pHotKeyWorker;
+	GNULinuxHotKeyWorker* m_pHotKeyWorker;
 	QThread* m_pHotKeyThread;
 };
 

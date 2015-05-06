@@ -30,6 +30,10 @@ private:
 #ifdef Q_OS_WIN
 	WinHotKeyBinder* m_pWinHotKeyBinder;
 #endif
+
+#ifdef Q_OS_LINUX
+	GNULinuxHotKeyBinder* m_pGNULinuxHotBinder;
+#endif
 };
 
 #endif // HOTKEYBINDER_H

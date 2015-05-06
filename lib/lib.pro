@@ -1,5 +1,4 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-	hotkeybinder \
-    hotkeybinder
+	hotkeybinder
