@@ -2,6 +2,7 @@
 #include "drawingboard.h"
 #include "settingsdialog.h"
 #include "splashscreen.h"
+#include "hotkeybinder.h"
 
 #include <QApplication>
 #include <QTranslator>
@@ -12,6 +13,8 @@
 Controller::Controller(QObject *parent) : QObject(parent)
 {
 	loadTranslator();
+
+	m_pShortcutKeyBinder = new HotKeyBinder;
 
 	m_pSystemTray = new QSystemTrayIcon(QIcon(":/images/trayIconLight"), this);
 	m_systemTrayMenu = new QMenu;
@@ -72,6 +75,10 @@ void Controller::onPrintScreenActionClicked()
 void Controller::onSettingsActionClicked()
 {
 	m_pSettingsDialog = new SettingsDialog;
+
+	connect(m_pSettingsDialog, &SettingsDialog::keySequenceChanged,
+	        m_pShortcutKeyBinder, &HotKeyBinder::setKeySequence);
+
 	m_pSettingsDialog->show();
 }
 

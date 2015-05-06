@@ -37,7 +37,7 @@ SettingsDialog::~SettingsDialog()
 
 void SettingsDialog::onKeySequenceChanged(const QKeySequence &keySequence)
 {
-	qDebug() << keySequence.toString();
+	Q_EMIT keySequenceChanged(keySequence.toString());
 }
 
 void SettingsDialog::onTrayIconTypeChanged(const QString &icon)

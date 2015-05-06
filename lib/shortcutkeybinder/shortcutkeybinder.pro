@@ -15,10 +15,14 @@ TEMPLATE = lib
 
 DEFINES += SHORTCUTKEYBINDER_LIBRARY
 
-SOURCES += shortcutkeybinder.cpp
+SOURCES += \
+	hotkeyworker.cpp \
+    hotkeybinder.cpp
 
-HEADERS += shortcutkeybinder.h\
-	shortcutkeybinder_global.h
+HEADERS += \
+	shortcutkeybinder_global.h \
+	hotkeyworker.h \
+    hotkeybinder.h
 
 unix {
 	target.path = /usr/lib
@@ -26,15 +30,6 @@ unix {
 }
 
 unix:!macx {
-	INCLUDEPATH += /usr/include/glib-2.0
-	INCLUDEPATH += /usr/include/gtk-2.0
-	INCLUDEPATH += /usr/include/atk-1.0
-	INCLUDEPATH += /usr/include/cairo
-	INCLUDEPATH += /usr/include/pango-1.0
-	INCLUDEPATH += /usr/include/gdk-pixbuf-2.0
-	INCLUDEPATH += /usr/lib/x86_64-linux-gnu/glib-2.0/include
-	INCLUDEPATH += /usr/lib/x86_64-linux-gnu/gtk-2.0/include
-
-	LIBS += -L/usr/lib/x86_64-linux-gnu -lgtk-x11-2.0
-	LIBS += -L/usr/lib/x86_64-linux-gnu -lkeybinder
+	CONFIG	+= link_pkgconfig
+	PKGCONFIG += x11
 }

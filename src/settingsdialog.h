@@ -23,6 +23,9 @@ private Q_SLOTS:
 	void onShowTrayIcon(bool state);
 	void onLanguageChanged(const QString &language);
 
+Q_SIGNALS:
+	void keySequenceChanged(const QString& keySequence);
+
 private:
 	Ui::SettingsDialog *ui;
 };

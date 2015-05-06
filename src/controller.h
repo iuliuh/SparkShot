@@ -10,6 +10,7 @@ class QAction;
 class DrawingBoard;
 class SettingsDialog;
 class SplashScreen;
+class HotKeyBinder;
 
 class Controller : public QObject
 {
@@ -35,6 +36,7 @@ private:
 	DrawingBoard *m_pDrawingBoard;
 	SettingsDialog *m_pSettingsDialog;
 	SplashScreen *m_pSplashScreen;
+	HotKeyBinder *m_pShortcutKeyBinder;
 
 	QSystemTrayIcon *m_pSystemTray;
 	QTranslator *m_pTranslator;
