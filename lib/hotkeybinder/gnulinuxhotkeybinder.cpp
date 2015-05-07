@@ -6,6 +6,10 @@ GNULinuxHotKeyBinder::GNULinuxHotKeyBinder(QObject *parent) :
     QObject(parent)
 {
 	m_pHotKeyWorker = new GNULinuxHotKeyWorker;
+
+	connect(m_pHotKeyWorker, &GNULinuxHotKeyWorker::hotKeyTriggered,
+	        this, &GNULinuxHotKeyBinder::hotKeyTriggered);
+
 	m_pHotKeyThread = new QThread;
 
 	m_pHotKeyWorker->moveToThread(m_pHotKeyThread);

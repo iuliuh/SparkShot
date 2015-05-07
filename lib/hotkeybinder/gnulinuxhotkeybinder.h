@@ -23,6 +23,9 @@ public:
 public Q_SLOTS:
 	void setHotKey(uint modifiers, uint key);
 
+Q_SIGNALS:
+	void hotKeyTriggered();
+
 private:
 	QKeySequence m_keySequence;
 

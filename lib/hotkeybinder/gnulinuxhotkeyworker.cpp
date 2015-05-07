@@ -79,7 +79,8 @@ void GNULinuxHotKeyWorker::listen()
 
 		if(ev.type == KeyPress)
 		{
-			qDebug() << "Hot key pressed!";
+			//! \todo Handle key here
+			qDebug() << "KeyPressed";
 		}
 	}
 }

@@ -16,11 +16,14 @@ TEMPLATE = lib
 DEFINES += HOTKEYBINDER_LIBRARY
 
 SOURCES += \
-	hotkeybinder.cpp
+	hotkeybinder.cpp \
+	hotkey.cpp
 
 HEADERS += \
 	hotkeybinder.h \
-	hotkeybinder_global.h
+	hotkeybinder_global.h \
+	utils.h \
+	hotkey.h
 
 unix {
 	target.path = /usr/lib
