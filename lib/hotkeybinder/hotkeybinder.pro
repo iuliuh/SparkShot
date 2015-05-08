@@ -17,12 +17,12 @@ DEFINES += HOTKEYBINDER_LIBRARY
 
 SOURCES += \
 	hotkeybinder.cpp \
-	hotkey.cpp
+    hotkey.cpp
 
 HEADERS += \
 	hotkeybinder.h \
 	hotkeybinder_global.h \
-	utils.h \
+	defines.h \
 	hotkey.h
 
 unix {
@@ -41,11 +41,11 @@ win32 {
 unix:!macx {
 	SOURCES += \
 		gnulinuxhotkeybinder.cpp \
-		gnulinuxhotkeyworker.cpp \
+		gnulinuxhotkeyworker.cpp
 
 	HEADERS += \
 		gnulinuxhotkeyworker.h \
-		gnulinuxhotkeybinder.h \
+		gnulinuxhotkeybinder.h
 
 	CONFIG += link_pkgconfig
 	PKGCONFIG += x11

@@ -2,6 +2,7 @@
 #define WINHOTKEYBINDER_H
 
 #include <QObject>
+#include <QString>
 
 #include <Windows.h>
 
@@ -14,7 +15,7 @@ public:
 
 	~WinHotKeyBinder();
 
-	void setHotKey(DWORD modifiers, DWORD key);
+	void setHotKey(const QString& hotKey);
 
 Q_SIGNALS:
 	void hotKeyTriggered();

@@ -4,6 +4,10 @@
 #include "hotkeybinder_global.h"
 
 #include <QtGlobal>
+#include <QVector>
+#include <QMap>
+
+#include <Windows.h>
 
 class HOTKEYBINDERSHARED_EXPORT HotKey
 {
@@ -11,28 +15,25 @@ public:
 	HotKey();
 	~HotKey();
 
-	bool valid() const;
-	void setValid(bool valid);
-
-#ifdef Q_OS_LINUX
-	uint modifiers() const;
-	void setModifiers(uint modifiers);
-
-	uint key() const;
-	void setKey(uint key);
-#endif
+	bool isValid() const;
 
 #ifdef Q_OS_WIN
-	DWORD modifiers() const;
-	void setModifiers(DWORD modifiers);
-
-	DWORD key() const;
-	void setKey(DWORD key);
+	QVector<DWORD> keys() const;
+	int count() const;
 #endif
 
+	static HotKey fromString(const QString& hotKeyString);
+
 private:
-	uint m_modifiers;
-	uint m_key;
+	void setValid(bool valid);
+	void initializeHotKeyMap();
+
+private:
+#ifdef Q_OS_WIN
+	QVector<DWORD> m_keys;
+	QMap<QString, DWORD> m_keyMap;
+#endif
+
 	bool m_valid;
 };
 

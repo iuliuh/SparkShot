@@ -21,7 +21,7 @@ public:
 	QKeySequence keySequence() const;
 
 public Q_SLOTS:
-	void setHotKey(uint modifiers, uint key);
+	void setHotKey(const QString& hotKey);
 
 Q_SIGNALS:
 	void hotKeyTriggered();

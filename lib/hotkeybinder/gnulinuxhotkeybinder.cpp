@@ -28,7 +28,7 @@ QKeySequence GNULinuxHotKeyBinder::keySequence() const
 	return m_keySequence;
 }
 
-void GNULinuxHotKeyBinder::setHotKey(uint modifiers, uint key)
+void GNULinuxHotKeyBinder::setHotKey(const QString& hotKey)
 {
 	m_pHotKeyWorker->setHotKey(ControlMask | ShiftMask, XK_Y);
 }

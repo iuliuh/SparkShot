@@ -43,8 +43,9 @@ LRESULT CALLBACK WinHotKeyBinder::keyboardProcedure(int nCode, WPARAM wParam, LP
 	return false;
 }
 
-void WinHotKeyBinder::setHotKey(DWORD modifiers, DWORD key)
+void WinHotKeyBinder::setHotKey(const QString& hotKey)
 {
-	m_modifiers = modifiers;
-	m_key = key;
+//	m_modifiers = hotKey;
+//	m_key = key;
+	qDebug() << hotKey;
 }

@@ -1,6 +1,4 @@
 #include "hotkeybinder.h"
-#include "hotkey.h"
-#include "utils.h"
 
 HotKeyBinder::HotKeyBinder(QObject *parent) : QObject(parent)
 {
@@ -25,19 +23,12 @@ HotKeyBinder::~HotKeyBinder()
 
 void HotKeyBinder::setHotKey(const QString& keySequence)
 {
-	//! \todo Convert QString to (uint modifiers, uint key)
-	Q_UNUSED(keySequence)
-	uint modifiers;
-	uint key;
-
 #ifdef Q_OS_WIN
-	m_pWinHotKeyBinder->setHotKey(modifiers, key);
+	m_pWinHotKeyBinder->setHotKey(keySequence);
 #endif
 
-	HotKey hotKey = Utils::stringToHotKey(keySequence);
-
 #ifdef Q_OS_LINUX
-	m_pGNULinuxHotBinder->setHotKey(modifiers, key);
+	m_pGNULinuxHotBinder->setHotKey(keySequence);
 #endif
 }
 
