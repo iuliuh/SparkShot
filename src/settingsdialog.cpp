@@ -16,8 +16,8 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
 	connect(ui->keySequenceEdit, SIGNAL(keySequenceChanged(QKeySequence)),
 	        this, SLOT(onKeySequenceChanged(QKeySequence)));
-	connect(ui->trayIconComboBox, SIGNAL(currentIndexChanged(QString)),
-	        this, SLOT(onTrayIconTypeChanged(QString)));
+	connect(ui->trayIconComboBox, SIGNAL(currentIndexChanged(int)),
+	        this, SLOT(onTrayIconTypeChanged(int)));
 	connect(ui->captureMouseCursorCheckBox, SIGNAL(clicked(bool)),
 	        this, SLOT(onCaptureMouseCursorChanged(bool)));
 	connect(ui->launchOnSystemStartupCheckBox, SIGNAL(clicked(bool)),
@@ -27,6 +27,10 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 	connect(ui->languageComboBox, SIGNAL(currentIndexChanged(QString)),
 	        this, SLOT(onLanguageChanged(const QString&)));
 
+	ui->trayIconComboBox->setCurrentIndex(Preferences::instance().trayIconType());
+	ui->captureMouseCursorCheckBox->setChecked(Preferences::instance().isMouseCursorCaptured());
+	ui->launchOnSystemStartupCheckBox->setChecked(Preferences::instance().isLaunchingOnSystemStartup());
+	ui->showTrayIconCheckBox->setChecked(Preferences::instance().isTrayIconShown());
 	ui->languageComboBox->setCurrentText(Preferences::instance().language());
 }
 
@@ -47,29 +51,39 @@ void SettingsDialog::onKeySequenceChanged(const QKeySequence &keySequence)
 	Q_EMIT keySequenceChanged(keySequenceString);
 }
 
-void SettingsDialog::onTrayIconTypeChanged(const QString &icon)
+void SettingsDialog::onTrayIconTypeChanged(int index)
 {
-	Q_UNUSED(icon)
+	Preferences::instance().setTrayIconType(index);
+
+	Q_EMIT trayIconTypeChanged(index);
 }
 
 void SettingsDialog::onCaptureMouseCursorChanged(bool state)
 {
-	Q_UNUSED(state)
+	Preferences::instance().setCaptureMouseCursor(state);
+
+	Q_EMIT captureMouseCursorChanged(state);
 }
 
 void SettingsDialog::onLaunchAtSystemStartupChanged(bool state)
 {
-	Q_UNUSED(state)
+	Preferences::instance().setLaunchOnSystemStartup(state);
+
+	Q_EMIT launchAtSystemStartupChanged(state);
 }
 
-void SettingsDialog::onShowTrayIcon(bool state)
+void SettingsDialog::onShowTrayIconChanged(bool state)
 {
-	Q_UNUSED(state)
+	Preferences::instance().setShowTrayIcon(state);
+
+	Q_EMIT showTrayIconChanged(state);
 }
 
 void SettingsDialog::onLanguageChanged(const QString& language)
 {
 	Preferences::instance().setLanguage(language);
+
+	Q_EMIT languageChanged(language);
 }
 
 
