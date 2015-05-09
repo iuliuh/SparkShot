@@ -6,8 +6,8 @@
 #include <QDesktopServices>
 #include <QUrl>
 
-UploadDialog::UploadDialog(QWidget *parent) :
-    QDialog(parent),
+UploadDialog::UploadDialog(QWidget *pParent) :
+    QDialog(pParent),
     ui(new Ui::UploadDialog)
 {
 	ui->setupUi(this);
@@ -23,9 +23,9 @@ UploadDialog::~UploadDialog()
 	delete ui;
 }
 
-void UploadDialog::setLink(const QString& text)
+void UploadDialog::setLink(const QString& link)
 {
-	ui->linkLineEdit->setText(text);
+	ui->linkLineEdit->setText(link);
 }
 
 void UploadDialog::onCopyButtonClicked()

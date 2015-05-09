@@ -7,9 +7,9 @@
 // Qt includes
 #include <qmath.h>
 
-//! brief Class representing a widget that allows the selection of a HSV color.
-//!       It has an outer wheel to select the Hue and an intenal square to
-//!       select Saturation and Lightness.
+//! \brief Class representing a widget that allows the selection of a HSV color.
+//!        It has an outer wheel to select the Hue and an intenal square to
+//!        select Saturation and Lightness.
 class ColorPicker : public ToolBarDialog
 {
 	Q_OBJECT

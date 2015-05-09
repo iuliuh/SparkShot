@@ -6,8 +6,8 @@
 #include <QDebug>
 #include <QApplication>
 
-SettingsDialog::SettingsDialog(QWidget *parent) :
-    QDialog(parent),
+SettingsDialog::SettingsDialog(QWidget *pParent) :
+    QDialog(pParent),
     ui(new Ui::SettingsDialog)
 {
 	ui->setupUi(this);

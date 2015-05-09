@@ -29,6 +29,14 @@ Makefile*
 
 *.autosave
 
-#QtCtreator Qml
+# QtCtreator Qml
 *.qmlproject.user
 *.qmlproject.user.*
+
+# Documentation
+docs/html
+docs/latex
+docs/man
+docs/rtf
+docs/xml
+

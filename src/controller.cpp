@@ -11,7 +11,7 @@
 #include <QTimer>
 #include <QMessageBox>
 
-Controller::Controller(QObject *parent) : QObject(parent)
+Controller::Controller(QObject *pParent) : QObject(pParent)
 {
 	loadTranslator();
 
