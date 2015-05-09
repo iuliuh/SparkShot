@@ -33,7 +33,7 @@ GNULinuxHotKeyBinder::~GNULinuxHotKeyBinder()
 {
 }
 
-void GNULinuxHotKeyBinder::setHotKey(const QString& hotKey)
+void GNULinuxHotKeyBinder::setHotKey(const HotKey& hotKey)
 {
 	m_pHotKeyWorker->setHotKey(ControlMask | ShiftMask, XK_Y);
 }

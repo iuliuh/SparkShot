@@ -8,6 +8,7 @@
 
 // Local includes
 #include "gnulinuxhotkeyworker.h"
+#include "hotkey.h"
 
 // Forward declarations
 class GNULinuxHotKeyWorker;
@@ -34,7 +35,7 @@ public Q_SLOTS:
 	//! \param hotKey Hot key to listen to. Supports formats such as Ctrl+P,
 	//!               Ctrl+T, Shift+Alt+B, etc.
 	//! \see GNULinuxHotKeyBinder::hotKeyTriggered.
-	void setHotKey(const QString& hotKey);
+	void setHotKey(const HotKey &hotKey);
 
 Q_SIGNALS:
 	//! \brief Signal emitted when the hot key set with

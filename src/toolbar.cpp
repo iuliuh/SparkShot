@@ -12,8 +12,8 @@
 #include <QButtonGroup>
 #include <QScreen>
 
-ToolBar::ToolBar(Type type, QWidget *parent) :
-    QWidget(parent),
+ToolBar::ToolBar(Type type, QWidget *pParent) :
+    QWidget(pParent),
     m_type(type),
     m_colorPickerDialog(this),
     m_settingsDialog(this)

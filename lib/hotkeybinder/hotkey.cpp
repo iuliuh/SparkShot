@@ -19,6 +19,7 @@ bool HotKey::isValid() const
 	return m_valid;
 }
 
+#ifdef Q_OS_WINDOWS
 QVector<DWORD> HotKey::keys() const
 {
 	return m_keys;
@@ -33,6 +34,7 @@ int HotKey::count() const
 
 	return m_keys.count();
 }
+#endif
 
 HotKey HotKey::fromString(const QString& hotKeyString)
 {
@@ -42,6 +44,7 @@ HotKey HotKey::fromString(const QString& hotKeyString)
 
 	Q_FOREACH(QString key, keyList)
 	{
+#ifdef Q_OS_WINDOWS
 		if(hotKey.m_keyMap.contains(key))
 		{
 			hotKey.m_keys.push_back(hotKey.m_keyMap[key]);
@@ -50,6 +53,7 @@ HotKey HotKey::fromString(const QString& hotKeyString)
 		{
 			hotKey.setValid(false);
 		}
+#endif
 	}
 
 	return hotKey;
