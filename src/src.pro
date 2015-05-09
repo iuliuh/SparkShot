@@ -25,7 +25,8 @@ SOURCES += \
 	toolbardialog.cpp \
 	keysequenceedit.cpp \
 	splashscreen.cpp \
-	splashscreenitem.cpp
+	splashscreenitem.cpp \
+    singleapplication.cpp
 
 HEADERS  += \
 	toolbar.h \
@@ -40,7 +41,8 @@ HEADERS  += \
 	toolbardialog.h \
 	keysequenceedit.h \
 	splashscreen.h \
-	splashscreenitem.h
+	splashscreenitem.h \
+    singleapplication.h
 
 FORMS += \
 	uploaddialog.ui \
