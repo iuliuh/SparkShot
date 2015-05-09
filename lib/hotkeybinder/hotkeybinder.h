@@ -21,12 +21,16 @@ public:
 	explicit HotKeyBinder(QObject *parent = 0);
 	~HotKeyBinder();
 
-	void setHotKey(const QString& keySequence);
+	bool setHotKey(const QString& keySequence);
+
+	QString toString();
 
 Q_SIGNALS:
 	void hotKeyTriggered();
 
 private:
+	QString m_keySequence;
+
 #ifdef Q_OS_WIN
 	WinHotKeyBinder* m_pWinHotKeyBinder;
 #endif

@@ -27,6 +27,8 @@ private Q_SLOTS:
 	void onPrintScreenActionClicked();
 	void onSettingsActionClicked();
 	void onAboutActionClicked();
+	void onHotKeyChanged(const QString& hotKey);
+	void onHotKeyActivated();
 
 private:
 	void loadTranslator();

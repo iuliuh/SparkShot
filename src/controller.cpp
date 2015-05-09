@@ -9,12 +9,14 @@
 #include <QMenu>
 #include <QAction>
 #include <QTimer>
+#include <QMessageBox>
 
 Controller::Controller(QObject *parent) : QObject(parent)
 {
 	loadTranslator();
 
 	m_pHotKeyBinder = new HotKeyBinder;
+	m_pHotKeyBinder->setHotKey(Preferences::instance().hotKey());
 
 	m_pSystemTray = new QSystemTrayIcon(QIcon(":/images/trayIconLight"), this);
 	m_systemTrayMenu = new QMenu;
@@ -38,6 +40,8 @@ Controller::Controller(QObject *parent) : QObject(parent)
 	        qApp, &QApplication::exit);
 	connect(m_aboutAction, &QAction::triggered,
 	        this, &Controller::onAboutActionClicked);
+	connect(m_pHotKeyBinder, &HotKeyBinder::hotKeyTriggered,
+	        this, &Controller::onHotKeyActivated);
 }
 
 Controller::~Controller()
@@ -53,6 +57,36 @@ void Controller ::onAboutActionClicked()
 {
 	m_pSplashScreen = new SplashScreen;
 	m_pSplashScreen->show();
+}
+
+void Controller::onHotKeyChanged(const QString& hotKey)
+{
+	if(!m_pHotKeyBinder->setHotKey(hotKey))
+	{
+		QMessageBox msgBox;
+
+		msgBox.setWindowTitle(tr("Invalid Hot Key"));
+		msgBox.setText(tr("Invalid Hot Key"));
+		msgBox.setIcon(QMessageBox::Warning);
+		msgBox.setInformativeText(tr("The Hot Key you are about to "
+		                             "use is currently not supported, "
+		                             "please try another one."));
+		msgBox.setStandardButtons(QMessageBox::Ok);
+		msgBox.setDefaultButton(QMessageBox::Ok);
+
+		msgBox.exec();
+
+		m_pSettingsDialog->setHotKey(Preferences::instance().hotKey());
+
+		return;
+	}
+
+	Preferences::instance().setHotKey(hotKey);
+}
+
+void Controller::onHotKeyActivated()
+{
+	printScreen();
 }
 
 void Controller::loadTranslator()
@@ -77,7 +111,7 @@ void Controller::onSettingsActionClicked()
 	m_pSettingsDialog = new SettingsDialog;
 
 	connect(m_pSettingsDialog, &SettingsDialog::keySequenceChanged,
-	        m_pHotKeyBinder, &HotKeyBinder::setHotKey);
+	        this, &Controller::onHotKeyChanged);
 
 	m_pSettingsDialog->show();
 }
@@ -94,5 +128,5 @@ void Controller::printScreen()
 {
 	m_pDrawingBoard = new DrawingBoard;
 
-	QTimer::singleShot(10, m_pDrawingBoard, &DrawingBoard::shoot);
+	QTimer::singleShot(50, m_pDrawingBoard, &DrawingBoard::shoot);
 }

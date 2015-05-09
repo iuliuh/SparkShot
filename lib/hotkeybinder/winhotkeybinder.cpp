@@ -1,6 +1,6 @@
 #include "winhotkeybinder.h"
 
-#include <QDebug>
+WinHotKeyBinder* WinHotKeyBinder::m_pInstance = 0;
 
 WinHotKeyBinder::WinHotKeyBinder(QObject *parent) :
     QObject(parent)
@@ -9,6 +9,8 @@ WinHotKeyBinder::WinHotKeyBinder(QObject *parent) :
 	                                  keyboardProcedure,
 	                                  GetModuleHandle(NULL),
 	                                  0);
+
+	atexit(&cleanUp);
 }
 
 WinHotKeyBinder::~WinHotKeyBinder()
@@ -21,31 +23,50 @@ WinHotKeyBinder::~WinHotKeyBinder()
 	}
 }
 
+void WinHotKeyBinder::cleanUp()
+{
+	delete m_pInstance;
+
+	m_pInstance = 0;
+}
+
 LRESULT CALLBACK WinHotKeyBinder::keyboardProcedure(int nCode, WPARAM wParam, LPARAM lParam)
 {
-	// Emit hotKeyTriggered here
-	if (nCode == HC_ACTION)
+	if(nCode == HC_ACTION)
 	{
-		if (wParam == WM_KEYDOWN)
+		if(wParam == WM_KEYDOWN)
 		{
 			KBDLLHOOKSTRUCT *pKeyboard = (KBDLLHOOKSTRUCT*)lParam;
 
-			qDebug() << "WM_KEYDOWN: " << pKeyboard->vkCode;
+			m_pInstance->m_activeKeys.insert(pKeyboard->vkCode);
 		}
-		else if (wParam == WM_KEYUP)
+		else if(wParam == WM_KEYUP)
 		{
 			KBDLLHOOKSTRUCT *pKeyboard = (KBDLLHOOKSTRUCT*)lParam;
 
-			qDebug() << "WM_KEYUP: " << pKeyboard->vkCode;
+			if(m_pInstance->m_activeKeys == m_pInstance->m_keys.toList().toSet())
+			{
+				Q_EMIT m_pInstance->hotKeyTriggered();
+			}
+
+			m_pInstance->m_activeKeys.remove(pKeyboard->vkCode);
 		}
 	}
 
 	return false;
 }
 
-void WinHotKeyBinder::setHotKey(const QString& hotKey)
+WinHotKeyBinder& WinHotKeyBinder::instance()
 {
-//	m_modifiers = hotKey;
-//	m_key = key;
-	qDebug() << hotKey;
+	if (m_pInstance == 0)
+	{
+		m_pInstance = new WinHotKeyBinder();
+	}
+
+	return *m_pInstance;
+}
+
+void WinHotKeyBinder::setHotKey(const HotKey& hotKey)
+{
+	m_keys = hotKey.keys();
 }

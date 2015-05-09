@@ -15,6 +15,8 @@ public:
 	explicit SettingsDialog(QWidget *parent = 0);
 	~SettingsDialog();
 
+	void setHotKey(const QString& hotKey);
+
 private Q_SLOTS:
 	void onKeySequenceChanged(const QKeySequence& keySequence);
 	void onTrayIconTypeChanged(int index);
@@ -22,6 +24,7 @@ private Q_SLOTS:
 	void onLaunchAtSystemStartupChanged(bool state);
 	void onShowTrayIconChanged(bool state);
 	void onLanguageChanged(const QString &language);
+	void onResetButtonClicked();
 
 Q_SIGNALS:
 	void keySequenceChanged(const QString& keySequence);
