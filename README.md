@@ -6,7 +6,8 @@ Lightweight and cross-platform screenshot application for GNU/Linux, Mac and Win
 
 # Requirements
 * Qt 5.5.0
-* libkeybinder
+* libx11 
+* doxygen
 
 # Getting started
 	git clone https://github.com/iuliuh/SparkShot.git
