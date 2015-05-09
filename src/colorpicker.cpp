@@ -5,8 +5,8 @@
 #include <QLineF>
 #include <QColor>
 
-ColorPicker::ColorPicker(QWidget *parent) :
-	ToolBarDialog(parent),
+ColorPicker::ColorPicker(QWidget *pParent) :
+	ToolBarDialog(pParent),
 	m_hue(0),
 	m_saturation(0),
 	m_value(0),
@@ -65,14 +65,15 @@ qreal ColorPicker::value() const
 	return m_value;
 }
 
-unsigned ColorPicker::wheelWidth() const
+uint ColorPicker::wheelWidth() const
 {
 	return m_wheelWidth;
 }
 
-void ColorPicker::setWheelWidth(unsigned w)
+void ColorPicker::setWheelWidth(uint width)
 {
-	m_wheelWidth = w;
+	m_wheelWidth = width;
+
 	renderRectangle();
 	update();
 }

@@ -1,16 +1,15 @@
 #ifndef COLORPICKER_H
 #define COLORPICKER_H
 
+// Local includes
 #include "toolbardialog.h"
 
+// Qt includes
 #include <qmath.h>
 
-/**
- * \brief Display an analog widget that allows the selection of a HSV color
- *
- * It has an outer wheel to select the Hue and an intenal square to select
- * Saturation and Lightness.
- */
+//! brief Class representing a widget that allows the selection of a HSV color.
+//!       It has an outer wheel to select the Hue and an intenal square to
+//!       select Saturation and Lightness.
 class ColorPicker : public ToolBarDialog
 {
 	Q_OBJECT
@@ -22,68 +21,105 @@ class ColorPicker : public ToolBarDialog
 	Q_PROPERTY(unsigned wheelWidth READ wheelWidth WRITE setWheelWidth DESIGNABLE true )
 
 public:
-	explicit ColorPicker(QWidget *parent = 0);
+	//! \brief Constructs a ColorPicker object.
+	//! \param pParent Parent object.
+	explicit ColorPicker(QWidget* pParent = 0);
 
-	// Get current color
+	//! \brief Provides current color.
+	//! \return Current color.
 	QColor color() const;
 
-	QSize sizeHint () const;
+	//! \brief Provides the size of the widget.
+	//! \return Current widget size.
+	QSize sizeHint() const;
 
-	// Get current hue in the range [0-1]
+	//! \brief Provides the current hue in the range [0-1].
+	//! \return Hue value.
 	qreal hue() const;
 
-	// Get current saturation in the range [0-1]
+	//! \brief Provides the current saturation in the range [0-1].
+	//! \return Saturation value.
 	qreal saturation() const;
 
-	// Get current value in the range [0-1]
+	//! \brief Provides the current value in the range [0-1].
+	//! \return The current value.
 	qreal value() const;
 
-	// Get the width in pixels of the outer wheel
-	unsigned wheelWidth() const;
+	//! \brief Get the width in pixels of the outer wheel.
+	//! \return Wheel width.
+	uint wheelWidth() const;
 
-	// Set the width in pixels of the outer wheel
-	void setWheelWidth(unsigned w);
+	//! \brief Set the width in pixels of the outer wheel.
+	//! \param width The width of the wheel.
+	void setWheelWidth(uint width);
 
 public Q_SLOTS:
-	// Set current color
+	//! \brief Set current color.
+	//! \param c The color to set.
 	void setColor(QColor c);
 
-	// Params
+	//! \brief Sets the hue value.
+	//! \param hue Hue value.
 	void setHue(qreal hue);
+
+	//! \brief Sets the saturation value.
+	//! \param saturation Saturation value.
 	void setSaturation(qreal saturation);
+
+	//! \brief Sets the value.
+	//! \param value Value.
 	void setValue(qreal value);
 
 Q_SIGNALS:
-	void colorChanged(QColor);
+	//! \brief Signal emitted when the color changes.
+	//! \param color The new color.
+	void colorChanged(QColor color);
+
+	//! \brief Signal emitted when a new color gets selected.
+	//! \param color The new selected color.
 	void colorSelected(QColor);
 
 protected:
+	//! \see QWidget::paintEvent
 	void paintEvent(QPaintEvent *e);
+
+	//! \see QWidget::mouseMoveEvent
 	void mouseMoveEvent(QMouseEvent *);
+
+	//! \see QWidget::mousePressEvent
 	void mousePressEvent(QMouseEvent *);
+
+	//! \see QWidget::mouseReleaseEvent
 	void mouseReleaseEvent(QMouseEvent *);
+
+	//! \see QWidget::resizeEvent
 	void resizeEvent(QResizeEvent *event);
 
 private:
-	// Calculate outer wheel radius from idget center
+	//! \brief Calculates outer wheel radius from widget center.
+	//! \return The outer radius.
 	qreal outerRadius() const;
 
-	// Calculate inner wheel radius from idget center
+	//! \brief Calculate inner wheel radius from idget center.
+	//! \return The inner radius.
 	qreal innerRadius() const;
 
-	// return line from center to given point
+	//! \brief Provides the line from center to given point.
+	//! \return The line from center to given point.
 	QLineF lineToPoint(QPoint p) const;
 
-	// Calculate the edge length of the inner square
+	//! \brief Calculate the edge length of the inner square.
+	//! \return The edge length of the inner square
 	qreal squareSize() const;
 
-	// Updates the inner square that displays the saturation-value selector
+	//! \brief Updates the inner square that displays the saturation-value selector
 	void renderRectangle();
 
-	// Updates the outer ring that displays the hue selector
+	//! \brief Updates the outer ring that displays the hue selector
 	void renderRing();
 
 private:
+	// Mouse states
 	enum MouseStatus
 	{
 		Nothing,
@@ -92,16 +128,22 @@ private:
 	};
 
 private:
+	// Color values
 	qreal m_hue;
 	qreal m_saturation;
 	qreal m_value;
-	unsigned int m_wheelWidth;
 
+	// Mouse states
 	MouseStatus m_mouseStatus;
 
+	// Wheel width
+	uint m_wheelWidth;
+
+	// Drawing assets
 	QPixmap m_hueRing;
 	QImage m_satValSquare;
 
+	// Widget padding
 	int m_padding;
 };
 

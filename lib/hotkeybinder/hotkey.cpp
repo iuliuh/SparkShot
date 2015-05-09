@@ -26,6 +26,11 @@ QVector<DWORD> HotKey::keys() const
 
 int HotKey::count() const
 {
+	if(!m_valid)
+	{
+		return 0;
+	}
+
 	return m_keys.count();
 }
 

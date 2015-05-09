@@ -17,7 +17,7 @@ DEFINES += HOTKEYBINDER_LIBRARY
 
 SOURCES += \
 	hotkeybinder.cpp \
-    hotkey.cpp
+	hotkey.cpp
 
 HEADERS += \
 	hotkeybinder.h \

@@ -2,9 +2,10 @@
 
 #include <QMutexLocker>
 
-GNULinuxHotKeyWorker::GNULinuxHotKeyWorker(QObject *parent) :
-    QObject(parent)
+GNULinuxHotKeyWorker::GNULinuxHotKeyWorker(QObject *pParent) :
+    QObject(pParent)
 {
+	// Initialize the resources
 	m_pDisplay = XOpenDisplay(0);
 	m_grabWindow = DefaultRootWindow(m_pDisplay);
 	m_modifiers = ControlMask | ShiftMask;

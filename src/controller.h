@@ -1,9 +1,11 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+// Qt includes
 #include <QObject>
 #include <QSystemTrayIcon>
 
+// Forward declarations
 class QTranslator;
 class QMenu;
 class QAction;
