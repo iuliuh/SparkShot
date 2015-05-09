@@ -23,8 +23,8 @@ class QuickSettingsDialog : public ToolBarDialog
 
 public:
 	//! \brief Constructs a QuickSettingsDialog object.
-	//! \brief pParent Parent object.
-	explicit QuickSettingsDialog(QWidget *parent = 0);
+	//! \param pParent Parent object.
+	explicit QuickSettingsDialog(QWidget *pParent = 0);
 
 	//! \brief Destroys a QuickSettingsDialog object.
 	~QuickSettingsDialog();
@@ -54,7 +54,7 @@ public:
 	int rubberBandWidth() const;
 
 	//! \brief Sets the pen width.
-	//! \param penWidt The width of the pen.
+	//! \param penWidth The width of the pen.
 	void setPenWidth(int penWidth);
 
 	//! \brief Provides the width of the pen.

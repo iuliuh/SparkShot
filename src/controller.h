@@ -21,7 +21,7 @@ class Controller : public QObject
 
 public:
 	//! \brief Constructs a Controller object.
-	//! \brief pParent Parent object.
+	//! \param pParent Parent object.
 	explicit Controller(QObject *pParent = 0);
 
 	//! \brief Destroys a Controller object.

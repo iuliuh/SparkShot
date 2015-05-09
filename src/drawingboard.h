@@ -23,7 +23,7 @@ class DrawingBoard : public QWidget
 
 public:
 	//! \brief Constructs a DrawingBoard object.
-	//! \brief pParent Parent object.
+	//! \param pParent Parent object.
 	explicit DrawingBoard(QWidget *pParent = 0);
 
 	//! \brief Destroys a DrawingBoard object.
@@ -58,19 +58,19 @@ public Q_SLOTS:
 	void onRubberBandColorChanged(QColor color);
 
 	//! \brief Slot called when the rubber band width settings have changed.
-	//! \param color New rubber band width value.
+	//! \param width New rubber band width value.
 	void onRubberBandWidthChanged(int width);
 
 	//! \brief Slot called when the pen width settings have changed.
-	//! \param color New pen width value.
+	//! \param width New pen width value.
 	void onPenWidthChanged(int width);
 
 	//! \brief Slot called when the dots radius settings have changed.
-	//! \param color New dots radius value.
+	//! \param radius New dots radius value.
 	void onDotsRadiusChanged(int radius);
 
 	//! \brief Slot called when the font size settings have changed.
-	//! \param color New font size value.
+	//! \param size New font size value.
 	void onFontSizeChanged(int size);
 
 private Q_SLOTS:

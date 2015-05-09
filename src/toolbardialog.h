@@ -20,8 +20,8 @@ public:
 	};
 
 	//! \brief Constructs a ToolBarDialog object.
-	//! \brief pParent Parent object.
-	explicit ToolBarDialog(QWidget *parent = 0);
+	//! \param pParent Parent object.
+	explicit ToolBarDialog(QWidget *pParent = 0);
 
 	//! \brief Destroys a ToolBarDialog object.
 	~ToolBarDialog();
@@ -38,7 +38,7 @@ public:
 
 protected:
 	//! \see QWidget::paintEvent
-	void paintEvent(QPaintEvent *e);
+	void paintEvent(QPaintEvent *pPaintEvent);
 
 private:
 	// Location of the arrow on the dialog

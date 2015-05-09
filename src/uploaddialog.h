@@ -17,7 +17,7 @@ class UploadDialog : public QDialog
 
 public:
 	//! \brief Constructs a UploadDialog object.
-	//! \brief pParent Parent object.
+	//! \param pParent Parent object.
 	explicit UploadDialog(QWidget *pParent = 0);
 
 	//! \brief Destroys a UploadDialog object.

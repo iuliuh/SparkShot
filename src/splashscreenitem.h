@@ -1,9 +1,11 @@
 #ifndef SPLASHSCREENITEM_H
 #define SPLASHSCREENITEM_H
 
+// Qt includes
 #include <QWidget>
 #include <QUrl>
 
+// Forward declaration
 class QPaintEvent;
 
 //! \brief Widget representing a side panel item on a SpalshScreen.
@@ -11,12 +13,13 @@ class SplashScreenItem : public QWidget
 {
 	Q_OBJECT
 
+	//! \brief Item alpha value in range 0.0 to 1.0.
 	Q_PROPERTY(qreal alpha READ alpha WRITE setAlpha)
 
 public:
 	//! \brief Constructs a SplashScreenItem object.
-	//! \brief pParent Parent object.
-	explicit SplashScreenItem(QWidget *parent = 0);
+	//! \param pParent Parent object.
+	explicit SplashScreenItem(QWidget *pParent = 0);
 
 	//! \brief Destroys a SplashScreenItem object.
 	~SplashScreenItem();

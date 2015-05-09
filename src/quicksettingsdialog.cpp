@@ -8,8 +8,8 @@
 #include <QSpinBox>
 #include <QKeyEvent>
 
-QuickSettingsDialog::QuickSettingsDialog(QWidget *parent) :
-    ToolBarDialog(parent),
+QuickSettingsDialog::QuickSettingsDialog(QWidget *pParent) :
+    ToolBarDialog(pParent),
     m_dotsRadius(Preferences::instance().rubberBandWidth() * 2) // Fix this uglyness...
 {
 	m_pLayout = new QGridLayout;

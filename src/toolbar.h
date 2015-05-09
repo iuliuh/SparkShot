@@ -38,7 +38,9 @@ public:
 	};
 
 	//! \brief Constructs a GNULinuxHotKeyBinder object.
-	//! \brief pParent Parent object.
+	//! \param type The toolbar type.
+	//! \param pParent Parent object.
+	//! \see ToolBar::Tool
 	explicit ToolBar(Type type = Vertical, QWidget *pParent = 0);
 
 	//! \brief Destroys a GNULinuxHotKeyBinder object.

@@ -2,8 +2,8 @@
 
 #include <QPainter>
 
-ToolBarDialog::ToolBarDialog(QWidget *parent) :
-    QDialog(parent)
+ToolBarDialog::ToolBarDialog(QWidget *pParent) :
+    QDialog(pParent)
 {
 	setWindowFlags(Qt::Tool |
 	               Qt::FramelessWindowHint |
@@ -31,9 +31,9 @@ ToolBarDialog::ArrowLocation ToolBarDialog::arrowLocation() const
 	return m_arrowLocation;
 }
 
-void ToolBarDialog::paintEvent(QPaintEvent* e)
+void ToolBarDialog::paintEvent(QPaintEvent* pPaintEvent)
 {
-	Q_UNUSED(e)
+	Q_UNUSED(pPaintEvent)
 
 	QPainter painter(this);
 	painter.setRenderHint(QPainter::Antialiasing);
@@ -104,5 +104,5 @@ void ToolBarDialog::paintEvent(QPaintEvent* e)
 
 	painter.drawPolygon(points, 3);
 
-	QWidget::paintEvent(e);
+	QWidget::paintEvent(pPaintEvent);
 }

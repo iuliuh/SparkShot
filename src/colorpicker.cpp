@@ -6,12 +6,12 @@
 #include <QColor>
 
 ColorPicker::ColorPicker(QWidget *pParent) :
-	ToolBarDialog(pParent),
-	m_hue(0),
-	m_saturation(0),
-	m_value(0),
-	m_wheelWidth(10),
-	m_mouseStatus(Nothing),
+    ToolBarDialog(pParent),
+    m_hue(0),
+    m_saturation(0),
+    m_value(0),
+    m_mouseStatus(Nothing),
+    m_wheelWidth(10),
     m_padding(30)
 {
 	setFixedSize(100, 100);
@@ -78,9 +78,9 @@ void ColorPicker::setWheelWidth(uint width)
 	update();
 }
 
-void ColorPicker::paintEvent(QPaintEvent * e)
+void ColorPicker::paintEvent(QPaintEvent * pPaintEvent)
 {
-	ToolBarDialog::paintEvent(e);
+	ToolBarDialog::paintEvent(pPaintEvent);
 
 	double selectorW = 4;
 
@@ -128,11 +128,11 @@ void ColorPicker::paintEvent(QPaintEvent * e)
 	                    selectorW);
 }
 
-void ColorPicker::mouseMoveEvent(QMouseEvent *ev)
+void ColorPicker::mouseMoveEvent(QMouseEvent *pMouseEvent)
 {
 	if (m_mouseStatus == DragCircle)
 	{
-		m_hue = lineToPoint(ev->pos()).angle() / 360.0;
+		m_hue = lineToPoint(pMouseEvent->pos()).angle() / 360.0;
 		renderRectangle();
 
 		Q_EMIT colorSelected(color());
@@ -141,7 +141,7 @@ void ColorPicker::mouseMoveEvent(QMouseEvent *ev)
 	}
 	else if (m_mouseStatus == DragSquare)
 	{
-		QLineF glob_mouse_ln = lineToPoint(ev->pos());
+		QLineF glob_mouse_ln = lineToPoint(pMouseEvent->pos());
 		QLineF center_mouse_ln(QPointF(0, 0),
 		                       glob_mouse_ln.p2() - glob_mouse_ln.p1());
 		center_mouse_ln.setAngle(center_mouse_ln.angle() - m_hue * 360 - 45);
@@ -174,11 +174,11 @@ void ColorPicker::mouseMoveEvent(QMouseEvent *ev)
 	}
 }
 
-void ColorPicker::mousePressEvent(QMouseEvent *ev)
+void ColorPicker::mousePressEvent(QMouseEvent *pMouseEvent)
 {
-	if (ev->buttons() & Qt::LeftButton)
+	if (pMouseEvent->buttons() & Qt::LeftButton)
 	{
-		QLineF ray = lineToPoint(ev->pos());
+		QLineF ray = lineToPoint(pMouseEvent->pos());
 		if (ray.length() <= innerRadius())
 		{
 			m_mouseStatus = DragSquare;
@@ -190,17 +190,19 @@ void ColorPicker::mousePressEvent(QMouseEvent *ev)
 	}
 }
 
-void ColorPicker::mouseReleaseEvent(QMouseEvent *ev)
+void ColorPicker::mouseReleaseEvent(QMouseEvent* pMouseEvent)
 {
-	mouseMoveEvent(ev);
+	mouseMoveEvent(pMouseEvent);
+
 	m_mouseStatus = Nothing;
 }
 
-void ColorPicker::resizeEvent(QResizeEvent *event)
+void ColorPicker::resizeEvent(QResizeEvent* pResizeEvent)
 {
 	renderRing();
 	renderRectangle();
-	QWidget::resizeEvent(event);
+
+	QWidget::resizeEvent(pResizeEvent);
 }
 
 void ColorPicker::renderRectangle()

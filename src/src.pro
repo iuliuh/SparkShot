@@ -52,6 +52,11 @@ RESOURCES += \
 TRANSLATIONS += \
 	../resources/translations/romanian.ts
 
+docs.commands = doxygen $$PWD/../docs/Doxyfile
+
+QMAKE_EXTRA_TARGETS += docs
+POST_TARGETDEPS += docs
+
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib/hotkeybinder/release/ -lhotkeybinder
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib/hotkeybinder/debug/ -lhotkeybinder
 else:unix: LIBS += -L$$OUT_PWD/../lib/hotkeybinder/ -lhotkeybinder

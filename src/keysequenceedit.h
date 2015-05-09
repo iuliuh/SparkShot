@@ -16,7 +16,7 @@ class KeySequenceEdit : public QKeySequenceEdit
 
 public:
 	//! \brief Constructs a GNULinuxHotKeyBinder object.
-	//! \brief pParent Parent object.
+	//! \param pParent Parent object.
 	explicit KeySequenceEdit(QWidget *pParent = 0);
 
 	//! \brief Destroys a GNULinuxHotKeyBinder object.

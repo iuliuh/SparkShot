@@ -21,7 +21,7 @@ class SplashScreen : public QWidget
 
 public:
 	//! \brief Constructs a SplashScreen object.
-	//! \brief pParent Parent object.
+	//! \param pParent Parent object.
 	SplashScreen(QWidget *pParent = 0);
 
 	//! \brief Destroys a SplashScreen object.

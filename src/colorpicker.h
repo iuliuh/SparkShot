@@ -14,11 +14,20 @@ class ColorPicker : public ToolBarDialog
 {
 	Q_OBJECT
 
-	Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged DESIGNABLE true STORED false )
-	Q_PROPERTY(qreal hue READ hue WRITE setHue DESIGNABLE false )
-	Q_PROPERTY(qreal saturation READ saturation WRITE setSaturation DESIGNABLE false )
-	Q_PROPERTY(qreal value READ value WRITE setValue DESIGNABLE false )
-	Q_PROPERTY(unsigned wheelWidth READ wheelWidth WRITE setWheelWidth DESIGNABLE true )
+	//! \brief The color picker color.
+	Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
+
+	//! \brief The color picker hue value.
+	Q_PROPERTY(qreal hue READ hue WRITE setHue)
+
+	//! \brief The color picker saturation value.
+	Q_PROPERTY(qreal saturation READ saturation WRITE setSaturation)
+
+	//! \brief The color picker value.
+	Q_PROPERTY(qreal value READ value WRITE setValue)
+
+	//! \brief The color picker wheel width.
+	Q_PROPERTY(uint wheelWidth READ wheelWidth WRITE setWheelWidth)
 
 public:
 	//! \brief Constructs a ColorPicker object.
@@ -77,23 +86,23 @@ Q_SIGNALS:
 
 	//! \brief Signal emitted when a new color gets selected.
 	//! \param color The new selected color.
-	void colorSelected(QColor);
+	void colorSelected(QColor color);
 
 protected:
 	//! \see QWidget::paintEvent
-	void paintEvent(QPaintEvent *e);
+	void paintEvent(QPaintEvent* pPaintEvent);
 
 	//! \see QWidget::mouseMoveEvent
-	void mouseMoveEvent(QMouseEvent *);
+	void mouseMoveEvent(QMouseEvent* pMouseEvent);
 
 	//! \see QWidget::mousePressEvent
-	void mousePressEvent(QMouseEvent *);
+	void mousePressEvent(QMouseEvent* pMouseEvent);
 
 	//! \see QWidget::mouseReleaseEvent
-	void mouseReleaseEvent(QMouseEvent *);
+	void mouseReleaseEvent(QMouseEvent* pMouseEvent);
 
 	//! \see QWidget::resizeEvent
-	void resizeEvent(QResizeEvent *event);
+	void resizeEvent(QResizeEvent* pResizeEvent);
 
 private:
 	//! \brief Calculates outer wheel radius from widget center.
@@ -119,12 +128,12 @@ private:
 	void renderRing();
 
 private:
-	// Mouse states
+	//! \brief Mouse states
 	enum MouseStatus
 	{
-		Nothing,
-		DragCircle,
-		DragSquare
+		Nothing,    //!< Mouse is released.
+		DragCircle, //!< Mouse is dragging the circle.
+		DragSquare  //!< Mouse is dragging the square.
 	};
 
 private:

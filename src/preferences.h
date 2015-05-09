@@ -100,7 +100,7 @@ public:
 	bool isLaunchingOnSystemStartup() const;
 
 	//! \brief Defines the system tray icon should be shown or not.
-	//! \param launch true if the tray icon should be shown, false otherwise.
+	//! \param show true if the tray icon should be shown, false otherwise.
 	void setShowTrayIcon(bool show);
 
 	//! \brief Checks wether the system tray icon should be shown or not.
@@ -120,7 +120,7 @@ public:
 
 private:
 	//! \brief Constructs a Preferences object.
-	//! \brief pParent Parent object.
+	//! \param pParent Parent object.
 	Preferences(QObject* pParent = 0);
 
 	//! \brief Destroys a Preferences object.

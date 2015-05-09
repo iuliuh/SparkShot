@@ -5,7 +5,7 @@
 #include <QPainter>
 #include <QDebug>
 
-SplashScreenItem::SplashScreenItem(QWidget *parent) : QWidget(parent)
+SplashScreenItem::SplashScreenItem(QWidget *pParent) : QWidget(pParent)
 {
 	m_alpha = 0.0;
 

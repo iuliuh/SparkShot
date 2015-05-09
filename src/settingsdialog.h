@@ -17,7 +17,7 @@ class SettingsDialog : public QDialog
 
 public:
 	//! \brief Constructs a SettingsDialog object.
-	//! \brief pParent Parent object.
+	//! \param pParent Parent object.
 	explicit SettingsDialog(QWidget *pParent = 0);
 
 	//! \brief Destroys a SettingsDialog object.
