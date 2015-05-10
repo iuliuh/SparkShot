@@ -191,40 +191,40 @@ void ToolBar::show()
 	QWidget::show();
 }
 
-void ToolBar::mousePressEvent(QMouseEvent* pEvent)
+void ToolBar::mousePressEvent(QMouseEvent* pMouseEvent)
 {
-	if(pEvent->button() == Qt::LeftButton)
+	if(pMouseEvent->button() == Qt::LeftButton)
 	{
-		m_mousePosOnBar = pEvent->pos();
+		m_mousePosOnBar = pMouseEvent->pos();
 		m_leftButtonPressed = true;
 	}
 
-	pEvent->accept();
+	pMouseEvent->accept();
 }
 
-void ToolBar::mouseReleaseEvent(QMouseEvent* pEvent)
+void ToolBar::mouseReleaseEvent(QMouseEvent* pMouseEvent)
 {
-	if(pEvent->button() == Qt::LeftButton)
+	if(pMouseEvent->button() == Qt::LeftButton)
 	{
 		m_leftButtonPressed = false;
 	}
 
-	pEvent->accept();
+	pMouseEvent->accept();
 }
 
-void ToolBar::mouseMoveEvent(QMouseEvent* pEvent)
+void ToolBar::mouseMoveEvent(QMouseEvent* pMouseEvent)
 {
 	if(m_leftButtonPressed)
 	{
-		move(pEvent->pos().x() - m_mousePosOnBar.x() + geometry().x(),
-		     pEvent->pos().y() - m_mousePosOnBar.y() + geometry().y());
+		move(pMouseEvent->pos().x() - m_mousePosOnBar.x() + geometry().x(),
+		     pMouseEvent->pos().y() - m_mousePosOnBar.y() + geometry().y());
 
 		autoPositionColorPicker();
 		autoPositionSettingsDialog();
 	}
 
 
-	pEvent->accept();
+	pMouseEvent->accept();
 }
 
 void ToolBar::paintEvent(QPaintEvent *pPaintEvent)

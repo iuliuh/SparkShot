@@ -88,47 +88,53 @@ private Q_SLOTS:
 	void replyFinished();
 
 	//! \brief Slot called on HTTP server request error.
+	//! \param error Network error.
 	void onError(QNetworkReply::NetworkError error);
 
 	//! \brief Slot called on SSL errors.
+	//! \param errorList List of errors.
 	void onSslErrors(QList<QSslError> errorList);
 
 private:
 	//! \brief Draws the rubber band.
-	//! \brief pPainter Painter to draw with.
+	//! \param pPainter Painter to draw with.
 	void drawRubberBand(QPainter* pPainter);
 
 	//! \brief Draws the cropped area i.e. the area to be saved or uploaded.
-	//! \brief pPainter Painter to draw with.
+	//! \param pPainter Painter to draw with.
 	void drawCroppedArea(QPainter* pPainter);
 
 	//! \brief Draws the dark overlay.
-	//! \brief pPainter Painter to draw with.
+	//! \param pPainter Painter to draw with.
 	void drawDarkOverlay(QPainter* pPainter);
 
 	//! \brief Draws an arrow.
-	//! \brief pPainter Painter to draw with.
+	//! \param pPainter Painter to draw with.
 	void drawArrow(QPainter* pPainter);
 
 	//! \brief Draws a line.
-	//! \brief pPainter Painter to draw with.
+	//! \param pPainter Painter to draw with.
 	void drawLine(QPainter* pPainter);
 
 	//! \brief Draws a sqare.
-	//! \brief pPainter Painter to draw with.
+	//! \param pPainter Painter to draw with.
 	void drawSquare(QPainter* pPainter);
 
 	//! \brief Draws a brush trace.
-	//! \brief pPainter Painter to draw with.
+	//! \param pPainter Painter to draw with.
 	void drawBrush(QPainter* pPainter);
 
 	//! \brief Draws an ellipse.
-	//! \brief pPainter Painter to draw with.
+	//! \param pPainter Painter to draw with.
 	void drawEllipse(QPainter *pPainter);
 
 	//! \brief Draws text.
-	//! \brief pPainter Painter to draw with.
+	//! \param pPainter Painter to draw with.
 	void drawText(QPainter* pPainter);
+
+	//! \brief Draws hint tutorial.
+	//! \param pPainter Painter to draw with.
+	void drawHint(QPainter* pPainter);
 
 	//! \brief After the temporary drawing finishes i.e. when the user
 	//!        releases the left click, everything gets painted to the
@@ -136,80 +142,83 @@ private:
 	void commitSketches();
 
 private:
-	// The tool bar.
+	// The tool bar
 	ToolBar *m_pToolBar;
 
-	// Original screenshot pixmap.
+	// Original screenshot pixmap
 	QPixmap m_originalCapture;
 
 	// Pixmap on top of which the cropped area, rubber band and dark
-	// overlay gets painted.
+	// overlay gets painted
 	QPixmap m_screenshotBoard;
 
-	// Pixmap on top of which the sketches get painted.
+	// Pixmap on top of which the sketches get painted
 	QPixmap m_currentSketchesBoard;
 
 	// Pixmap on top of which temporary sketches get painted e.g. from
 	// the moment in which the left click is pressed to the moment in
-	// which the left click is released and a sqare gets painted.
+	// which the left click is released and a sqare gets painted
 	QPixmap m_temporarySketchesBoard;
 
-	// Text tool current text.
+	// Text tool current text
 	QString m_currentText;
 
-	// The point in which the text gets painted.
+	// The point in which the text gets painted
 	QPoint m_textPoint;
 
-	// Initial mouse position i.e. left mouse press position.
+	// Initial mouse position i.e. left mouse press position
 	QPoint m_initialMousePosition;
 
 	// Final mouse position i.e. current mouse position while
-	// left mouse button is still pressed.
+	// left mouse button is still pressed
 	QPoint m_finalMousePosition;
 
 	// Brush initial position i.e. mouse press position with
-	// the brush tool selected.
+	// the brush tool selected
 	QPoint m_brushInitialPosition;
 
 	// Brush final position i.e. current mouse position while left
-	// mouse button is still pressed and the brush tool selected.
+	// mouse button is still pressed and the brush tool selected
 	QPoint m_brushFinalPosition;
 
-	// The position of the cropped area before it gets moved.
+	// The position of the cropped area before it gets moved
 	QPoint m_initialCropRectMovePoint;
 
-	// The current mouse position.
+	// The current mouse position
 	QPoint m_currentMousePosition;
 
-	// The cropped rect i.e. the rubber band rect.
+	// The cropped rect i.e. the rubber band rect
 	QRect m_cropRect;
 
-	// The crop rect before it gets moved.
+	// The crop rect before it gets moved
 	QRect m_cropRectBeforeMove;
 
 	// Left button state - true if the left button is pressed,
-	// false otherwise.
+	// false otherwise
 	bool m_leftButtonPressed;
 
 	// Cropped area i.e. rubber band area state - true if the
 	// cropped area is in a moving state i.e. the user started
-	// moving it, false otherwise.
+	// moving it, false otherwise
 	bool m_moveCroppedArea;
 
-	// Imgur client id.
+	// Imgur client id
 	QString m_clientId;
 
-	// Imgur network access manager.
+	// Imgur network access manager
 	QNetworkAccessManager m_networkAccessManager;
 
-	// Imgur network reply.
+	// Imgur network reply
 	QNetworkReply *m_pNetworkReply;
 
-	// Upload image to Imgur dialog.
+	// Upload image to Imgur dialog
 	UploadDialog *m_pUploadDialog;
 
+	// true if drawing has started, false otherwise
+	bool m_drawingStarted;
+
 private:
-	// Drawing settings.
+	// Drawing settings
 	QColor m_darkOverlayColor;
 	QColor m_rubberBandColor;
 	int m_rubberBandWidth;

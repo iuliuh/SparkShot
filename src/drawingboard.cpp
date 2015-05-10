@@ -16,7 +16,9 @@
 
 #include "defines.h"
 
-DrawingBoard::DrawingBoard(QWidget *parent) : QWidget(parent)
+DrawingBoard::DrawingBoard(QWidget *parent) :
+    QWidget(parent),
+    m_drawingStarted(false)
 {
 	setWindowFlags(Qt::WindowStaysOnTopHint |
 	               Qt::BypassWindowManagerHint |
@@ -541,6 +543,22 @@ void DrawingBoard::drawText(QPainter* pPainter)
 	pPainter->setBrush(backupBrush);
 }
 
+void DrawingBoard::drawHint(QPainter *pPainter)
+{
+	QPixmap hintPixmap(":/images/hintImage");
+
+	QRect rectangle = m_originalCapture.rect();
+
+	const int x = rectangle.width() / 2 - hintPixmap.rect().width() / 2;
+	const int y = rectangle.height() / 2 - hintPixmap.rect().height() / 2;
+
+	pPainter->drawPixmap(x,
+	                     y,
+	                     hintPixmap.rect().width(),
+	                     hintPixmap.rect().height(),
+	                     hintPixmap);
+}
+
 void DrawingBoard::commitSketches()
 {
 	m_temporarySketchesBoard = m_currentSketchesBoard;
@@ -551,6 +569,7 @@ void DrawingBoard::mousePressEvent(QMouseEvent *e)
 	if(e->button() == Qt::LeftButton)
 	{
 		m_leftButtonPressed = true;
+		m_drawingStarted = true;
 
 		m_initialMousePosition = e->pos();
 		m_finalMousePosition = e->pos();
@@ -656,7 +675,15 @@ void DrawingBoard::paintEvent(QPaintEvent *pEvent)
 
 	drawDarkOverlay(&paintBoardPainter);
 	drawCroppedArea(&paintBoardPainter);
-	drawRubberBand(&paintBoardPainter);
+
+	if(m_drawingStarted)
+	{
+		drawRubberBand(&paintBoardPainter);
+	}
+	else
+	{
+		drawHint(&paintBoardPainter);
+	}
 
 	m_currentSketchesBoard = m_temporarySketchesBoard;
 	QPainter sketchesBoardPainter(&m_currentSketchesBoard);

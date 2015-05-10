@@ -28,6 +28,7 @@
         <file alias="splashScreenSidePanelLicense">images/splash-screen-side-panel-license.png</file>
         <file alias="splashScreenSidePanelAuthor">images/splash-screen-side-panel-author.png</file>
         <file alias="applicationLogo">images/logo.png</file>
+        <file alias="hintImage">images/hint.png</file>
     </qresource>
     <qresource prefix="/theme">
         <file alias="lightTheme">style/stylesheet.qss</file>
