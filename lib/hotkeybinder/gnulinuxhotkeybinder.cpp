@@ -35,5 +35,5 @@ GNULinuxHotKeyBinder::~GNULinuxHotKeyBinder()
 
 void GNULinuxHotKeyBinder::setHotKey(const HotKey& hotKey)
 {
-	m_pHotKeyWorker->setHotKey(ControlMask | ShiftMask, XK_Y);
+	m_pHotKeyWorker->setHotKey(hotKey.modifiers(), hotKey.key());
 }

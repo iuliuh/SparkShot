@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QMutex>
 #include <QDebug>
+#include <QAtomicInt>
 
 // X11 includes
 #include <X11/Xlib.h>
@@ -63,7 +64,13 @@ private:
 	int m_keyCode;
 
 	// Breaks the infinite loop when the hot key changes
-	bool m_handleNextEvent;
+	// 1 - next event should be handeld, 0 - otherwise
+	QAtomicInt m_handleNextEvent;
+
+	// Blocks signal emition. Usefull when the dummy event
+	// is sent in order to exit the infinite loop and change
+	// the hotkey. 1 - supress, 0 - don't supress
+	QAtomicInt m_supressSignalEmition;
 };
 
 #endif // HOTKEYWORKER_H

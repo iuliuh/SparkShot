@@ -6,10 +6,11 @@
 #include <QDebug>
 #include <QTranslator>
 #include <QIcon>
+#include <QUuid>
 
 int main(int argc, char *argv[])
 {
-	SingleApplication app(argc, argv,"myUniqueKey");
+	SingleApplication app(argc, argv, QUuid::createUuid().toString());
 
 	SingleApplication::setWindowIcon(QIcon(":/images/applicationLogo"));
 

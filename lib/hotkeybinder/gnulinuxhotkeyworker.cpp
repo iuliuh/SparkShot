@@ -3,7 +3,8 @@
 #include <QMutexLocker>
 
 GNULinuxHotKeyWorker::GNULinuxHotKeyWorker(QObject *pParent) :
-    QObject(pParent)
+    QObject(pParent),
+    m_supressSignalEmition(0)
 {
 	// Initialize the resources
 	m_pDisplay = XOpenDisplay(0);
@@ -21,19 +22,20 @@ GNULinuxHotKeyWorker::GNULinuxHotKeyWorker(QObject *pParent) :
 
 	XSelectInput(m_pDisplay, m_grabWindow, KeyPressMask);
 
-	m_handleNextEvent = true;
+	m_handleNextEvent = 1;
 }
 
 GNULinuxHotKeyWorker::~GNULinuxHotKeyWorker()
 {
 	XCloseDisplay(m_pDisplay);
 
-	delete m_pDisplay;
+	free(m_pDisplay);
 }
 
 void GNULinuxHotKeyWorker::setHotKey(uint modifiers, int keyCode)
 {
-	m_handleNextEvent = false;
+	m_supressSignalEmition = 1;
+	m_handleNextEvent = 0;
 
 	XEvent unlockEvent;
 	memset(&unlockEvent, 0, sizeof(XClientMessageEvent));
@@ -58,7 +60,7 @@ void GNULinuxHotKeyWorker::setHotKey(uint modifiers, int keyCode)
 
 	XSelectInput(m_pDisplay, m_grabWindow, KeyPressMask);
 
-	m_handleNextEvent = true;
+	m_handleNextEvent = 1;
 
 	m_mutex.unlock();
 }
@@ -78,9 +80,13 @@ void GNULinuxHotKeyWorker::listen()
 
 		XNextEvent(m_pDisplay, &ev);
 
-		if(ev.type == KeyPress)
+		if(ev.type == KeyPress && !m_supressSignalEmition)
 		{
-			qDebug() << "KeyPressed";
+			Q_EMIT hotKeyTriggered();
+		}
+		else
+		{
+			m_supressSignalEmition = 0;
 		}
 	}
 }
