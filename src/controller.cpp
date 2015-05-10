@@ -3,6 +3,7 @@
 #include "settingsdialog.h"
 #include "splashscreen.h"
 #include "hotkeybinder.h"
+#include "defines.h"
 
 #include <QApplication>
 #include <QTranslator>
@@ -10,9 +11,12 @@
 #include <QAction>
 #include <QTimer>
 #include <QMessageBox>
+#include <QPointer>
 
 Controller::Controller(QObject *pParent) : QObject(pParent)
 {
+	m_settingsDialogIsDestroyed = true;
+
 	loadTranslator();
 
 	m_pHotKeyBinder = new HotKeyBinder;
@@ -35,7 +39,7 @@ Controller::Controller(QObject *pParent) : QObject(pParent)
 	connect(m_printScreenAction, &QAction::triggered,
 	        this, &Controller::onPrintScreenActionClicked);
 	connect(m_settingsAction, &QAction::triggered,
-	        this, &Controller::onSettingsActionClicked);
+	        this, &Controller::onShowSettingsDialogActionClicked);
 	connect(m_closeAction, &QAction::triggered,
 	        qApp, &QApplication::exit);
 	connect(m_aboutAction, &QAction::triggered,
@@ -51,6 +55,27 @@ Controller::~Controller()
 void Controller::start()
 {
 	m_pSystemTray->show();
+}
+
+void Controller::onMessageAvailable(const QStringList &messages)
+{
+	Q_FOREACH(QString message, messages)
+	{
+		if(message == MESSAGE_SHOW_SETTINGS)
+		{
+			if(Preferences::instance().isTrayIconShown())
+			{
+				return;
+			}
+
+			if(m_settingsDialogIsDestroyed)
+			{
+				createSettingsDialog();
+			}
+
+			m_pSettingsDialog->show();
+		}
+	}
 }
 
 void Controller ::onAboutActionClicked()
@@ -89,6 +114,16 @@ void Controller::onHotKeyActivated()
 	printScreen();
 }
 
+void Controller::onSettingsDialogDestroyed()
+{
+	m_settingsDialogIsDestroyed = true;
+}
+
+void Controller::onTrayIconShowStateChanged(bool state)
+{
+	m_pSystemTray->setVisible(state);
+}
+
 void Controller::loadTranslator()
 {
 	m_pTranslator = new QTranslator(this);
@@ -106,12 +141,12 @@ void Controller::onPrintScreenActionClicked()
 	printScreen();
 }
 
-void Controller::onSettingsActionClicked()
+void Controller::onShowSettingsDialogActionClicked()
 {
-	m_pSettingsDialog = new SettingsDialog;
-
-	connect(m_pSettingsDialog, &SettingsDialog::keySequenceChanged,
-	        this, &Controller::onHotKeyChanged);
+	if(m_settingsDialogIsDestroyed)
+	{
+		createSettingsDialog();
+	}
 
 	m_pSettingsDialog->show();
 }
@@ -129,4 +164,20 @@ void Controller::printScreen()
 	m_pDrawingBoard = new DrawingBoard;
 
 	QTimer::singleShot(50, m_pDrawingBoard, &DrawingBoard::shoot);
+}
+
+void Controller::createSettingsDialog()
+{
+	m_pSettingsDialog = new SettingsDialog;
+
+	connect(m_pSettingsDialog, &SettingsDialog::keySequenceChanged,
+	        this, &Controller::onHotKeyChanged);
+
+	connect(m_pSettingsDialog, &SettingsDialog::destroyed,
+	        this, &Controller::onSettingsDialogDestroyed);
+
+	connect(m_pSettingsDialog, &SettingsDialog::showTrayIconChanged,
+	        this, &Controller::onTrayIconShowStateChanged);
+
+	m_settingsDialogIsDestroyed = false;
 }

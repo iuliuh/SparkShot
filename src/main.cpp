@@ -1,36 +1,21 @@
 #include "singleapplication.h"
 #include "controller.h"
+#include "defines.h"
 
 #include <QObject>
 #include <QMessageBox>
-#include <QDebug>
 #include <QTranslator>
 #include <QIcon>
-#include <QUuid>
 
 int main(int argc, char *argv[])
 {
-	SingleApplication app(argc, argv, QUuid::createUuid().toString());
+	SingleApplication app(argc, argv, APPLICATION_KEY);
 
 	SingleApplication::setWindowIcon(QIcon(":/images/applicationLogo"));
 
 	if(app.alreadyExists())
 	{
-		qDebug() << "SparkShot is already running.";
-
-		QMessageBox alreadyRunningMessageBox;
-
-		alreadyRunningMessageBox.setWindowTitle(QObject::tr("SparkShot already running"));
-		alreadyRunningMessageBox.setText(QObject::tr("SparkShot already running"));
-		alreadyRunningMessageBox.setIcon(QMessageBox::Information);
-		alreadyRunningMessageBox.setInformativeText(QObject::tr("One instance of the application "
-		                                                        "is already running. Only one "
-		                                                        "instance of SparkShot can run at "
-		                                                        "a time."));
-		alreadyRunningMessageBox.setStandardButtons(QMessageBox::Ok);
-		alreadyRunningMessageBox.setDefaultButton(QMessageBox::Ok);
-
-		alreadyRunningMessageBox.exec();
+		Q_EMIT app.sendMessage(MESSAGE_SHOW_SETTINGS);
 
 		return 0;
 	}
@@ -41,6 +26,10 @@ int main(int argc, char *argv[])
 	app.setApplicationName("SparkShot");
 
 	Controller controller;
+
+	QObject::connect(&app, &SingleApplication::messageAvailable,
+	                 &controller, &Controller::onMessageAvailable);
+
 	controller.start();
 
 	return app.exec();

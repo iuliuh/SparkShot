@@ -1,16 +1,13 @@
 #include "keysequenceedit.h"
 
-#include <QDebug>
 #include <QKeyEvent>
 
 KeySequenceEdit::KeySequenceEdit(QWidget *parent) : QKeySequenceEdit(parent)
 {
-
 }
 
 KeySequenceEdit::~KeySequenceEdit()
 {
-
 }
 
 void KeySequenceEdit::keyPressEvent(QKeyEvent *pEvent)

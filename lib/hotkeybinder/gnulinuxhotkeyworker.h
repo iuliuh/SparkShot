@@ -4,7 +4,6 @@
 // Qt includes
 #include <QObject>
 #include <QMutex>
-#include <QDebug>
 #include <QAtomicInt>
 
 // X11 includes

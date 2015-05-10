@@ -3,7 +3,6 @@
 #include <QMouseEvent>
 #include <QPaintEvent>
 #include <QPainter>
-#include <QDebug>
 
 SplashScreenItem::SplashScreenItem(QWidget *pParent) : QWidget(pParent)
 {
@@ -63,7 +62,6 @@ void SplashScreenItem::setUrl(const QUrl &url)
 {
 	m_url = url;
 }
-
 
 qreal SplashScreenItem::alpha() const
 {

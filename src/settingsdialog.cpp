@@ -3,7 +3,6 @@
 #include "preferences.h"
 
 #include <QKeyEvent>
-#include <QDebug>
 #include <QApplication>
 
 SettingsDialog::SettingsDialog(QWidget *pParent) :
@@ -102,7 +101,6 @@ void SettingsDialog::onLanguageChanged(const QString& language)
 
 void SettingsDialog::onResetButtonClicked()
 {
-	qDebug() << "Reset";
 	Preferences::instance().reset();
 
 	const QString keySequenceString = Preferences::instance().hotKey();

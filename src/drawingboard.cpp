@@ -1,7 +1,6 @@
 #include "drawingboard.h"
 
 #include <QDesktopWidget>
-#include <QDebug>
 #include <QApplication>
 #include <QKeyEvent>
 #include <QPainter>

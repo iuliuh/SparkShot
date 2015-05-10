@@ -30,6 +30,11 @@ public:
 	//! \brief Starts application execution.
 	void start();
 
+public Q_SLOTS:
+	//! \brief Slot called when a message has been sent to the controller.
+	//! \param messages List of available messages.
+	void onMessageAvailable(const QStringList& messages);
+
 private Q_SLOTS:
 	//! \brief Slot called when the system tray icon action gets activated.
 	//! \param reason Activation reason.
@@ -40,7 +45,7 @@ private Q_SLOTS:
 	void onPrintScreenActionClicked();
 
 	//! \brief Slot called when the settings tray action was clicked.
-	void onSettingsActionClicked();
+	void onShowSettingsDialogActionClicked();
 
 	//! \brief Slot called when the about tray action was clicked.
 	void onAboutActionClicked();
@@ -51,12 +56,22 @@ private Q_SLOTS:
 	//! \brief Slot called when the hot key was triggered.
 	void onHotKeyActivated();
 
+	//! \brief Slot called when the settings dialog gets destroyed.
+	void onSettingsDialogDestroyed();
+
+	//! \brief Slot called when the show tray icon state changes to hide or show.
+	//! \param state true if the icon setting is set to show, false otherwise.
+	void onTrayIconShowStateChanged(bool state);
+
 private:
 	//! \brief Loads the application translator.
 	void loadTranslator();
 
 	//! \brief Triggers a print screen.
 	void printScreen();
+
+	//! \brief Creates the settings dialog
+	void createSettingsDialog();
 
 private:
 	// Drawing board. This is where everything gets painted
@@ -85,6 +100,9 @@ private:
 
 	// Tray icon menu
 	QMenu *m_systemTrayMenu;
+
+	// True if settings dialog is creted, false otherwise
+	bool m_settingsDialogIsDestroyed;
 };
 
 #endif // CONTROLLER_H
