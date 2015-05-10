@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QLabel>
+#include <QCursor>
 
 // Local includes
 #include "colorpicker.h"
@@ -111,6 +112,12 @@ protected:
 	//! \see QWidget::paintEvent
 	void paintEvent(QPaintEvent *pEvent);
 
+	//! \see QWidget::enterEvent
+	void enterEvent(QEvent *pEvent);
+
+	//! \see QWidget::leaveEvent
+	void leaveEvent(QEvent *pEvent);
+
 private Q_SLOTS:
 	//! \brief Slot called when the color button was clicked.
 	void onColorButtonClicked();
@@ -198,6 +205,9 @@ private:
 
 	// Screen rectangle
 	QRect m_screenRect;
+
+	// Cursor type before entering the toolbar area
+	QCursor m_backupCursor;
 };
 
 #endif // TOOLBAR_H

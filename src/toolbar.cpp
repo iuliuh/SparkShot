@@ -231,11 +231,27 @@ void ToolBar::paintEvent(QPaintEvent *pEvent)
 {
 	Q_UNUSED(pEvent)
 
-	QPainter p(this);
+	QPainter painter(this);
 
 	QStyleOption opt;
 	opt.init(this);
-	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+	style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
+}
+
+void ToolBar::enterEvent(QEvent *pEvent)
+{
+	m_backupCursor = cursor();
+
+	setCursor(Qt::ArrowCursor);
+
+	QWidget::enterEvent(pEvent);
+}
+
+void ToolBar::leaveEvent(QEvent *pEvent)
+{
+	setCursor(m_backupCursor);
+
+	QWidget::leaveEvent(pEvent);
 }
 
 void ToolBar::autoPositionColorPicker()
