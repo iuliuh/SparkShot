@@ -54,7 +54,10 @@ Controller::~Controller()
 
 void Controller::start()
 {
-	m_pSystemTray->show();
+	if(Preferences::instance().isTrayIconShown())
+	{
+		m_pSystemTray->show();
+	}
 }
 
 void Controller::onMessageAvailable(const QStringList &messages)
