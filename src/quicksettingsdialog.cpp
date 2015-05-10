@@ -190,10 +190,10 @@ void QuickSettingsDialog::setFontSize(int fontSize)
 
 void QuickSettingsDialog::moveEvent(QMoveEvent *pEvent)
 {
-	Q_UNUSED(pEvent)
-
 	m_pRubberBandColorPicker->hide();
 	m_pOverlayColorPicker->hide();
+
+	ToolBarDialog::moveEvent(pEvent);
 }
 
 void QuickSettingsDialog::keyPressEvent(QKeyEvent *pEvent)

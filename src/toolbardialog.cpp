@@ -33,8 +33,6 @@ ToolBarDialog::ArrowLocation ToolBarDialog::arrowLocation() const
 
 void ToolBarDialog::paintEvent(QPaintEvent* pPaintEvent)
 {
-	Q_UNUSED(pPaintEvent)
-
 	QPainter painter(this);
 	painter.setRenderHint(QPainter::Antialiasing);
 

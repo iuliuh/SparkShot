@@ -650,6 +650,7 @@ void DrawingBoard::mouseReleaseEvent(QMouseEvent *e)
 void DrawingBoard::paintEvent(QPaintEvent *pEvent)
 {
 	m_screenshotBoard = m_originalCapture;
+
 	QPainter paintBoardPainter(&m_screenshotBoard);
 	paintBoardPainter.setRenderHint(QPainter::Antialiasing);
 

@@ -101,16 +101,16 @@ Q_SIGNALS:
 
 protected:
 	//! \see QWidget::mousePressEvent
-	void mousePressEvent(QMouseEvent *pEvent);
+	void mousePressEvent(QMouseEvent *pMouseEvent);
 
 	//! \see QWidget::mouseReleaseEvent
-	void mouseReleaseEvent(QMouseEvent *pEvent);
+	void mouseReleaseEvent(QMouseEvent *pMouseEvent);
 
 	//! \see QWidget::mouseMoveEvent
-	void mouseMoveEvent(QMouseEvent *pEvent);
+	void mouseMoveEvent(QMouseEvent *pMouseEvent);
 
 	//! \see QWidget::paintEvent
-	void paintEvent(QPaintEvent *pEvent);
+	void paintEvent(QPaintEvent *pPaintEvent);
 
 	//! \see QWidget::enterEvent
 	void enterEvent(QEvent *pEvent);

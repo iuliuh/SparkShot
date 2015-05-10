@@ -227,15 +227,15 @@ void ToolBar::mouseMoveEvent(QMouseEvent* pEvent)
 	pEvent->accept();
 }
 
-void ToolBar::paintEvent(QPaintEvent *pEvent)
+void ToolBar::paintEvent(QPaintEvent *pPaintEvent)
 {
-	Q_UNUSED(pEvent)
-
 	QPainter painter(this);
 
 	QStyleOption opt;
 	opt.init(this);
 	style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
+
+	QWidget::paintEvent(pPaintEvent);
 }
 
 void ToolBar::enterEvent(QEvent *pEvent)
