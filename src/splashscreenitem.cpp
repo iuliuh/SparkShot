@@ -29,28 +29,28 @@ void SplashScreenItem::setPixmap(const QPixmap &pixmap)
 
 void SplashScreenItem::paintEvent(QPaintEvent *pPaintEvent)
 {
-	Q_UNUSED(pPaintEvent)
-
 	QPainter painter(this);
 	painter.setOpacity(m_alpha);
 	painter.drawPixmap(m_pixmap.rect(), m_pixmap, m_pixmap.rect());
+
+	QWidget::paintEvent(pPaintEvent);
 }
 
 void SplashScreenItem::enterEvent(QEvent *pEvent)
 {
-	Q_UNUSED(pEvent)
-
 	if(m_url.isValid())
 	{
 		setCursor(Qt::PointingHandCursor);
 	}
+
+	QWidget::enterEvent(pEvent);
 }
 
 void SplashScreenItem::leaveEvent(QEvent *pEvent)
 {
-	Q_UNUSED(pEvent)
-
 	setCursor(Qt::ArrowCursor);
+
+	SplashScreenItem::leaveEvent(pEvent);
 }
 
 QUrl SplashScreenItem::url() const

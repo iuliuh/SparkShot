@@ -217,8 +217,6 @@ void SplashScreen::onSidePanelWidthAnimationFinished()
 
 void SplashScreen::mousePressEvent(QMouseEvent *pMouseEvent)
 {
-	Q_UNUSED(pMouseEvent)
-
 	if(pMouseEvent->button() == Qt::LeftButton &&
 	   m_itemRect.contains(pMouseEvent->pos()))
 	{
@@ -243,12 +241,12 @@ void SplashScreen::mousePressEvent(QMouseEvent *pMouseEvent)
 	}
 
 	closeWithAnimation();
+
+	QWidget::mousePressEvent(pMouseEvent);
 }
 
 void SplashScreen::paintEvent(QPaintEvent *pPaintEvent)
 {
-	Q_UNUSED(pPaintEvent)
-
 	QPainter painter(this);
 	painter.drawPixmap(m_splashScreenPixmap.rect(), m_splashScreenPixmap, m_splashScreenPixmap.rect());
 
@@ -260,5 +258,7 @@ void SplashScreen::paintEvent(QPaintEvent *pPaintEvent)
 	sidePanelRect.setTopRight(m_splashScreenPixmap.rect().topRight());
 	sidePanelRect.setBottomLeft(m_splashScreenPixmap.rect().bottomRight() - QPoint(m_sidePanelWidth, 65));
 	painter.drawRect(sidePanelRect);
+
+	QWidget::paintEvent(pPaintEvent);
 }
 

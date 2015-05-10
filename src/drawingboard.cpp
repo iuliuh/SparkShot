@@ -649,8 +649,6 @@ void DrawingBoard::mouseReleaseEvent(QMouseEvent *e)
 
 void DrawingBoard::paintEvent(QPaintEvent *pEvent)
 {
-	Q_UNUSED(pEvent)
-
 	m_screenshotBoard = m_originalCapture;
 	QPainter paintBoardPainter(&m_screenshotBoard);
 	paintBoardPainter.setRenderHint(QPainter::Antialiasing);
@@ -692,4 +690,6 @@ void DrawingBoard::paintEvent(QPaintEvent *pEvent)
 	QPainter formPainter(this);
 	formPainter.drawPixmap(m_screenshotBoard.rect(), m_screenshotBoard, m_screenshotBoard.rect());
 	formPainter.drawPixmap(m_currentSketchesBoard.rect(), m_currentSketchesBoard, m_currentSketchesBoard.rect());
+
+	QWidget::paintEvent(pEvent);
 }
