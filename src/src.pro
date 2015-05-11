@@ -26,7 +26,7 @@ SOURCES += \
 	keysequenceedit.cpp \
 	splashscreen.cpp \
 	splashscreenitem.cpp \
-    singleapplication.cpp
+	singleapplication.cpp
 
 HEADERS  += \
 	toolbar.h \
@@ -42,7 +42,7 @@ HEADERS  += \
 	keysequenceedit.h \
 	splashscreen.h \
 	splashscreenitem.h \
-    singleapplication.h
+	singleapplication.h
 
 FORMS += \
 	uploaddialog.ui \
@@ -54,10 +54,24 @@ RESOURCES += \
 TRANSLATIONS += \
 	../resources/translations/romanian.ts
 
-docs.commands = doxygen $$PWD/../docs/Doxyfile
+DOXYGEN_BIN = ""
 
-QMAKE_EXTRA_TARGETS += docs
-POST_TARGETDEPS += docs
+win32 {
+	DOXYGEN_BIN = $$system(where doxygen)
+}
+
+unix {
+	DOXYGEN_BIN = $$system(which doxygen)
+}
+
+isEmpty(DOXYGEN_BIN) {
+	message("Doxygen was not found in your system. Please install doxygen to generate the docs.")
+} else {
+	docs.commands = doxygen $$PWD/../docs/Doxyfile
+
+	QMAKE_EXTRA_TARGETS += docs
+	POST_TARGETDEPS += docs
+}
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib/hotkeybinder/release/ -lhotkeybinder
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib/hotkeybinder/debug/ -lhotkeybinder

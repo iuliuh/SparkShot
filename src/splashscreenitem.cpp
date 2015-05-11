@@ -50,7 +50,7 @@ void SplashScreenItem::leaveEvent(QEvent *pEvent)
 {
 	setCursor(Qt::ArrowCursor);
 
-	SplashScreenItem::leaveEvent(pEvent);
+	QWidget::leaveEvent(pEvent);
 }
 
 QUrl SplashScreenItem::url() const
