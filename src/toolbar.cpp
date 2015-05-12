@@ -257,6 +257,11 @@ void ToolBar::leaveEvent(QEvent *pEvent)
 void ToolBar::autoPositionColorPicker()
 {
 	const int padding = 5;
+	int xCorrection = 0;
+
+#ifdef Q_OS_WIN
+	xCorrection = 15;
+#endif
 
 	int colorPickerXPosition = -m_pColorButton->mapFromGlobal(QPoint(0, 0)).x();
 	int colorPickerYPosition = -m_pColorButton->mapFromGlobal(QPoint(0, 0)).y();
@@ -274,7 +279,7 @@ void ToolBar::autoPositionColorPicker()
 		colorPickerYPosition -= -m_pColorButton->height() - padding;
 	}
 
-	m_colorPickerDialog.setGeometry(colorPickerXPosition,
+	m_colorPickerDialog.setGeometry(colorPickerXPosition - xCorrection,
 	                                colorPickerYPosition,
 	                                m_colorPickerDialog.width(),
 	                                m_colorPickerDialog.height());
@@ -283,7 +288,13 @@ void ToolBar::autoPositionColorPicker()
 void ToolBar::autoPositionSettingsDialog()
 {
 	const int threshold = 5;
-	const int xCorrection = 80;
+	int xCorrection = 0;
+
+#ifdef Q_OS_WIN
+	xCorrection = 67;
+#elif defined Q_OS_LINUX
+	xCorrection = 80;
+#endif
 
 	int settingsXPosition = -m_pSettingsButton->mapFromGlobal(QPoint(0, 0)).x();
 	int settingsYPosition = -m_pSettingsButton->mapFromGlobal(QPoint(0, 0)).y();

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <Name>com.devtelsoftware.sparkshot</Name>
+    <DisplayName>SparkShot</DisplayName>
+    <Description>Lightweight cross-platform screenshot application.</Description>
+    <ReleaseDate>2015-05-11</ReleaseDate>
+    <Version>1.0</Version>
+    <Script>installscript.qs</Script>
+</Package>

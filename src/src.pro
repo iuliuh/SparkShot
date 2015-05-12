@@ -73,6 +73,13 @@ isEmpty(DOXYGEN_BIN) {
 	POST_TARGETDEPS += docs
 }
 
+# Deploy
+win32 {
+	CONFIG(release, debug|release) {
+		QMAKE_POST_LINK = cp $$OUT_PWD/"release/"$$TARGET".exe" $$PWD/../deploy/win/packages/com.devtelsoftware.sparkshot/data
+	}
+}
+
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib/hotkeybinder/release/ -lhotkeybinder
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib/hotkeybinder/debug/ -lhotkeybinder
 else:unix: LIBS += -L$$OUT_PWD/../lib/hotkeybinder/ -lhotkeybinder

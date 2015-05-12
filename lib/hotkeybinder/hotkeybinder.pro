@@ -25,6 +25,11 @@ HEADERS += \
 	defines.h \
 	hotkey.h
 
+win32 {
+	target.path = $$PWD/../../deploy/win/packages/com.devtelsoftware.sparkshot/data
+	INSTALLS += target
+}
+
 unix {
 	target.path = /usr/lib
 	INSTALLS += target
@@ -49,4 +54,11 @@ unix:!macx {
 
 	CONFIG += link_pkgconfig
 	PKGCONFIG += x11
+}
+
+# Deploy
+win32 {
+	CONFIG(release, debug|release) {
+		QMAKE_POST_LINK = cp $$OUT_PWD/"release/"$$TARGET".dll" $$PWD/../../deploy/win/packages/com.devtelsoftware.sparkshot/data
+	}
 }

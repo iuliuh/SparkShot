@@ -9,6 +9,7 @@
 *.so
 *.dll
 *.dylib
+*.exe
 
 # Qt-es
 
@@ -39,4 +40,7 @@ docs/latex
 docs/man
 docs/rtf
 docs/xml
+
+# Deploy
+deploy/win/packages/com.devtelsoftware.sparkshot/data
 
