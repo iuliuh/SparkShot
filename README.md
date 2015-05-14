@@ -2,7 +2,7 @@
 
 Lightweight and cross-platform screenshot application for GNU/Linux, Mac and Windows.
 
-![](http://i.imgur.com/Xi18SAm.png)
+![](http://i.imgur.com/2tcT3Cc.png)
 
 # Requirements
 * Qt 5.5.0
