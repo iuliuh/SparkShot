@@ -29,9 +29,6 @@ const QString Preferences::HOTKEY_DEFAULT_VALUE = "Print";
 const QString Preferences::TRAY_ICON_TYPE_KEY = "TrayIconType";
 const int Preferences::TRAY_ICON_TYPE_DEFAULT_VALUE = 0;
 
-const QString Preferences::CAPTURE_MOUSE_CURSLOR_KEY = "CaptureCursor";
-const bool Preferences::CAPTURE_MOUSE_CURSLOR_DEFAULT_VALUE = false;
-
 const QString Preferences::LAUNCH_ON_SYSTEM_STARTUP_KEY = "LaunchOnStartup";
 const bool Preferences::LAUNCH_ON_SYSTEM_STARTUP_DEFAULT_VALUE = true;
 
@@ -118,16 +115,6 @@ int Preferences::trayIconType() const
 	return m_pSettings->value(TRAY_ICON_TYPE_KEY, TRAY_ICON_TYPE_DEFAULT_VALUE).toInt();
 }
 
-void Preferences::setCaptureMouseCursor(bool capture)
-{
-	m_pSettings->setValue(CAPTURE_MOUSE_CURSLOR_KEY, capture);
-}
-
-bool Preferences::isMouseCursorCaptured() const
-{
-	return m_pSettings->value(CAPTURE_MOUSE_CURSLOR_KEY, CAPTURE_MOUSE_CURSLOR_DEFAULT_VALUE).toBool();
-}
-
 void Preferences::setLaunchOnSystemStartup(bool launch)
 {
 	m_pSettings->setValue(LAUNCH_ON_SYSTEM_STARTUP_KEY, launch);
@@ -167,7 +154,6 @@ void Preferences::reset()
 	setFontSize(FONT_SIZE_DEFAULT_VALUE);
 	setHotKey(HOTKEY_DEFAULT_VALUE);
 	setTrayIconType(TRAY_ICON_TYPE_DEFAULT_VALUE);
-	setCaptureMouseCursor(CAPTURE_MOUSE_CURSLOR_DEFAULT_VALUE);
 	setLaunchOnSystemStartup(LAUNCH_ON_SYSTEM_STARTUP_DEFAULT_VALUE);
 	setShowTrayIcon(SHOW_TRAY_ICON_DEFAULT_VALUE);
 	setLanguage(LANGUAGE_DEFAULT_VALUE);

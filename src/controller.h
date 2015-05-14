@@ -63,6 +63,10 @@ private Q_SLOTS:
 	//! \param state true if the icon setting is set to show, false otherwise.
 	void onTrayIconShowStateChanged(bool state);
 
+	void onLaunchAtStartupStateChanged(bool state);
+
+	void createShortcut(const QString& filePath, const QString& shortcutPath);
+
 private:
 	//! \brief Loads the application translator.
 	void loadTranslator();

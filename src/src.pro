@@ -80,7 +80,7 @@ win32 {
 	}
 }
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib/hotkeybinder/release/ -lhotkeybinder
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib/hotkeybinder/release/ -lhotkeybinder -lole32 -loleaut32 -luuid
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib/hotkeybinder/debug/ -lhotkeybinder
 else:unix: LIBS += -L$$OUT_PWD/../lib/hotkeybinder/ -lhotkeybinder
 

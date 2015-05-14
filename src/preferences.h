@@ -75,18 +75,6 @@ public:
 	//! \return The tray icon type.
 	int trayIconType() const;
 
-	//! \brief Defines wether or not the mouse cursor
-	//!        is captured on screenshot or not.
-	//! \param capture true if the mouse cursor should
-	//!                be captured, false otherwise.
-	void setCaptureMouseCursor(bool capture);
-
-	//! \brief Checks wether the mouse cursor is captured
-	//!        on screenshot or not.
-	//! \return true if the mouse cursor should be captured,
-	//!              false otherwise.
-	bool isMouseCursorCaptured() const;
-
 	//! \brief Defines the application should be launched
 	//!        on system startup or not.
 	//! \param launch true if the application should be launched
@@ -166,10 +154,6 @@ private:
 	// Tray icon type key and default value
 	static const QString TRAY_ICON_TYPE_KEY;
 	static const int TRAY_ICON_TYPE_DEFAULT_VALUE;
-
-	// Capture mouse cursor state key and default value
-	static const QString CAPTURE_MOUSE_CURSLOR_KEY;
-	static const bool CAPTURE_MOUSE_CURSLOR_DEFAULT_VALUE;
 
 	// Launch on system startup state key and default value
 	static const QString LAUNCH_ON_SYSTEM_STARTUP_KEY;

@@ -17,8 +17,6 @@ SettingsDialog::SettingsDialog(QWidget *pParent) :
 	        this, SLOT(onKeySequenceChanged(QKeySequence)));
 	connect(ui->trayIconComboBox, SIGNAL(currentIndexChanged(int)),
 	        this, SLOT(onTrayIconTypeChanged(int)));
-	connect(ui->captureMouseCursorCheckBox, SIGNAL(clicked(bool)),
-	        this, SLOT(onCaptureMouseCursorChanged(bool)));
 	connect(ui->launchOnSystemStartupCheckBox, SIGNAL(clicked(bool)),
 	        this, SLOT(onLaunchAtSystemStartupChanged(bool)));
 	connect(ui->showTrayIconCheckBox, SIGNAL(clicked(bool)),
@@ -32,7 +30,6 @@ SettingsDialog::SettingsDialog(QWidget *pParent) :
 
 	ui->keySequenceEdit->setKeySequence(Preferences::instance().hotKey());
 	ui->trayIconComboBox->setCurrentIndex(Preferences::instance().trayIconType());
-	ui->captureMouseCursorCheckBox->setChecked(Preferences::instance().isMouseCursorCaptured());
 	ui->launchOnSystemStartupCheckBox->setChecked(Preferences::instance().isLaunchingOnSystemStartup());
 	ui->showTrayIconCheckBox->setChecked(Preferences::instance().isTrayIconShown());
 	ui->languageComboBox->setCurrentText(Preferences::instance().language());
@@ -71,13 +68,6 @@ void SettingsDialog::onTrayIconTypeChanged(int index)
 	Q_EMIT trayIconTypeChanged(index);
 }
 
-void SettingsDialog::onCaptureMouseCursorChanged(bool state)
-{
-	Preferences::instance().setCaptureMouseCursor(state);
-
-	Q_EMIT captureMouseCursorChanged(state);
-}
-
 void SettingsDialog::onLaunchAtSystemStartupChanged(bool state)
 {
 	Preferences::instance().setLaunchOnSystemStartup(state);
@@ -110,10 +100,6 @@ void SettingsDialog::onResetButtonClicked()
 	const int trayIconIndex = Preferences::instance().trayIconType();
 	ui->trayIconComboBox->setCurrentIndex(trayIconIndex);
 	Q_EMIT trayIconTypeChanged(trayIconIndex);
-
-	const bool mouseCursorCaptureState = Preferences::instance().isMouseCursorCaptured();
-	ui->captureMouseCursorCheckBox->setChecked(mouseCursorCaptureState);
-	Q_EMIT captureMouseCursorChanged(mouseCursorCaptureState);
 
 	const bool launchAtStartupState = Preferences::instance().isLaunchingOnSystemStartup();
 	ui->launchOnSystemStartupCheckBox->setChecked(launchAtStartupState);

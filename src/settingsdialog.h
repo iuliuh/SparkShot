@@ -36,11 +36,6 @@ private Q_SLOTS:
 	//! \param index The index of the new tray icon type.
 	void onTrayIconTypeChanged(int index);
 
-	//! \brief Slot called when the mouse cursor capture state changes.
-	//! \param state State of the capture mouse cursor setting. true if
-	//!              the mouse should be captured, false otherwise.
-	void onCaptureMouseCursorChanged(bool state);
-
 	//! \brief Slot called when the application startup state changes.
 	//! \param state State of the application startup setting. true if
 	//!              the application should start on system startup, false

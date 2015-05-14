@@ -11,7 +11,14 @@
 #include <QAction>
 #include <QTimer>
 #include <QMessageBox>
-#include <QPointer>
+#include <QStandardPaths>
+#include <QDir>
+#include <QString>
+
+#ifdef Q_OS_WIN
+#include <Windows.h>
+#include <shlobj.h>
+#endif
 
 Controller::Controller(QObject *pParent) : QObject(pParent)
 {
@@ -46,6 +53,22 @@ Controller::Controller(QObject *pParent) : QObject(pParent)
 	        this, &Controller::onAboutActionClicked);
 	connect(m_pHotKeyBinder, &HotKeyBinder::hotKeyTriggered,
 	        this, &Controller::onHotKeyActivated);
+
+	if(Preferences::instance().isLaunchingOnSystemStartup())
+	{
+		const QString appDataPath = QStandardPaths::standardLocations(QStandardPaths::DataLocation).at(0);
+		QDir appDataDir(appDataPath);
+
+		appDataDir.cd("../../../Roaming/Microsoft/Windows/Start Menu/Programs/Startup");
+
+		if(appDataDir.exists())
+		{
+			const QString appDataDirShortcutPath = QDir::toNativeSeparators(appDataDir.absolutePath().append("/SparkShot.lnk"));
+			const QString appExecutablePath = QApplication::arguments().at(0);
+
+			createShortcut(appExecutablePath, appDataDirShortcutPath);
+		}
+	}
 }
 
 Controller::~Controller()
@@ -127,6 +150,71 @@ void Controller::onTrayIconShowStateChanged(bool state)
 	m_pSystemTray->setVisible(state);
 }
 
+void Controller::onLaunchAtStartupStateChanged(bool state)
+{
+	const QString appDataPath = QStandardPaths::standardLocations(QStandardPaths::DataLocation).at(0);
+	QDir appDataDir(appDataPath);
+
+	appDataDir.cd("../../../Roaming/Microsoft/Windows/Start Menu/Programs/Startup");
+
+	const QString appDataDirShortcutPath = QDir::toNativeSeparators(appDataDir.absolutePath().append("/SparkShot.lnk"));
+	const QString appExecutablePath = QApplication::arguments().at(0);
+
+	if(appDataDir.exists())
+	{
+		if(state)
+		{
+			createShortcut(appExecutablePath, appDataDirShortcutPath);
+		}
+		else
+		{
+			QFile startupLink(appDataDirShortcutPath);
+			startupLink.remove();
+		}
+	}
+}
+
+void Controller::createShortcut(const QString& filePath, const QString& shortcutPath)
+{
+#ifdef Q_OS_WIN
+	CoInitialize(NULL);
+	IShellLink* pShellLink = NULL;
+	HRESULT hres = CoCreateInstance(CLSID_ShellLink,
+									NULL,
+									CLSCTX_ALL,
+									IID_IShellLink,
+									(void**)&pShellLink);
+
+	if (SUCCEEDED(hres))
+	{
+		pShellLink->SetPath(filePath.toStdWString().c_str());
+		pShellLink->SetDescription(L"SparkShot");
+		pShellLink->SetIconLocation(filePath.toStdWString().c_str(), 0);
+
+		IPersistFile *pPersistFile;
+		hres = pShellLink->QueryInterface(IID_IPersistFile, (void**)&pPersistFile);
+
+		if (SUCCEEDED(hres))
+		{
+			hres = pPersistFile->Save(shortcutPath.toStdWString().c_str(), TRUE);
+
+			pPersistFile->Release();
+		}
+		else
+		{
+			//cout << "Error 2" << endl;
+			return;
+		}
+		pShellLink->Release();
+	}
+	else
+	{
+		//cout << "Error 1" << endl;
+		return;
+	}
+#endif
+}
+
 void Controller::loadTranslator()
 {
 	m_pTranslator = new QTranslator(this);
@@ -181,6 +269,9 @@ void Controller::createSettingsDialog()
 
 	connect(m_pSettingsDialog, &SettingsDialog::showTrayIconChanged,
 	        this, &Controller::onTrayIconShowStateChanged);
+
+	connect(m_pSettingsDialog, &SettingsDialog::launchAtSystemStartupChanged,
+	        this, &Controller::onLaunchAtStartupStateChanged);
 
 	m_settingsDialogIsDestroyed = false;
 }
