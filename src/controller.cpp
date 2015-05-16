@@ -1,9 +1,4 @@
 #include "controller.h"
-#include "drawingboard.h"
-#include "settingsdialog.h"
-#include "splashscreen.h"
-#include "hotkeybinder.h"
-#include "defines.h"
 
 #include <QApplication>
 #include <QTranslator>
@@ -19,6 +14,12 @@
 #include <Windows.h>
 #include <shlobj.h>
 #endif
+
+#include "drawingboard.h"
+#include "settingsdialog.h"
+#include "splashscreen.h"
+#include "hotkeybinder.h"
+#include "defines.h"
 
 Controller::Controller(QObject *pParent) : QObject(pParent)
 {
