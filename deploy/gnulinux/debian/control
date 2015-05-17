@@ -1,0 +1,14 @@
+Source: sparkshot
+Section: utils
+Priority: extra
+Maintainer: Iuliu Horga <iuliu.horga@devtelsoftware.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.3
+
+Package: sparkshot
+Section: utils
+Priority: extra
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Screenshot application
+ Lightweight, cross-platform, free and open source screenshot application.

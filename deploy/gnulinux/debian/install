@@ -1,0 +1,6 @@
+src/SparkShot usr/bin
+lib/hotkeybinder/libhotkeybinder.so usr/lib
+lib/hotkeybinder/libhotkeybinder.so.1 usr/lib
+lib/hotkeybinder/libhotkeybinder.so.1.0 usr/lib
+lib/hotkeybinder/libhotkeybinder.so.1.0.0 usr/lib
+# Qt binaries to /usr/lib
