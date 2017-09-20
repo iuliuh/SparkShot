@@ -46,3 +46,5 @@ docs/xml
 # Deploy
 deploy/win/packages/com.devtelsoftware.sparkshot/data
 
+# Mac OS X
+.DS_Store

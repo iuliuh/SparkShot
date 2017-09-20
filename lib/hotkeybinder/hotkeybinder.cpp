@@ -1,51 +1,33 @@
 #include "hotkeybinder.h"
-#include "hotkey.h"
 
-HotKeyBinder::HotKeyBinder(QObject *parent) : QObject(parent)
+#include "qxtglobalshortcut.h"
+
+#include <QDebug>
+
+HotKeyBinder::HotKeyBinder(QObject *parent) :
+    QObject(parent),
+    m_pShortcut(new QxtGlobalShortcut())
 {
-#ifdef Q_OS_WIN
-	m_pWinHotKeyBinder = &WinHotKeyBinder::instance();
+    m_pShortcut->setShortcut(QKeySequence("Shift+1")); // Default
 
-	connect(m_pWinHotKeyBinder, &WinHotKeyBinder::hotKeyTriggered,
-	        this, &HotKeyBinder::hotKeyTriggered);
-#endif
-
-#ifdef Q_OS_LINUX
-	m_pGNULinuxHotBinder = new GNULinuxHotKeyBinder(this);
-
-	connect(m_pGNULinuxHotBinder, &GNULinuxHotKeyBinder::hotKeyTriggered,
-	        this, &HotKeyBinder::hotKeyTriggered);
-#endif
+    connect(m_pShortcut, &QxtGlobalShortcut::activated, [this]() {
+        qDebug() << Q_FUNC_INFO << "SHORTCUT ACTIVATED!!!";
+        Q_EMIT hotKeyTriggered();
+    });
 }
 
 HotKeyBinder::~HotKeyBinder()
 {
 }
 
-bool HotKeyBinder::setHotKey(const QString& keySequence)
+void HotKeyBinder::setKeySequence(const QKeySequence& keySequence)
 {
-	HotKey hotKey = HotKey::fromString(keySequence);
-
-	if(!hotKey.isValid())
-	{
-		return false;
-	}
-
-	m_keySequence = keySequence;
-
-#ifdef Q_OS_WIN
-	m_pWinHotKeyBinder->setHotKey(hotKey);
-#endif
-
-#ifdef Q_OS_LINUX
-	m_pGNULinuxHotBinder->setHotKey(hotKey);
-#endif
-
-	return true;
+	qDebug() << Q_FUNC_INFO << "Setting shortcut" << keySequence.toString();
+	m_pShortcut->setShortcut(keySequence);
 }
 
-QString HotKeyBinder::toString()
+QKeySequence HotKeyBinder::keySequence()
 {
-	return m_keySequence;
+	return m_pShortcut->shortcut();
 }
 

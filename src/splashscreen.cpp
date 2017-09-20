@@ -130,34 +130,7 @@ SplashScreen::SplashScreen(QWidget *pParent) :
 	m_pSidePanelLicenseItemAnimationGroup->addAnimation(m_pSidePanelLicenseItemYAnimation);
 	m_pSidePanelLicenseItemAnimationGroup->addAnimation(m_pSidePanelLicenseItemOpacityAnimation);
 
-	// Author Item
-	m_pSplashScreenAuthorItem = new SplashScreenItem(this);
-	m_pSplashScreenAuthorItem->setUrl(QUrl("http://www.iuliu.ro/"));
-	m_pSplashScreenAuthorItem->move(450, 45);
-	m_pSplashScreenAuthorItem->setPixmap(QPixmap(":/images/splashScreenSidePanelAuthor"));
-
-	m_pSidePanelAuthorItemYAnimation = new QPropertyAnimation(m_pSplashScreenAuthorItem, "pos", this);
-	m_pSidePanelAuthorItemYAnimation->setEasingCurve(QEasingCurve::InOutQuad);
-	m_pSidePanelAuthorItemYAnimation->setDuration(4000);
-	m_pSidePanelAuthorItemYAnimation->setStartValue(QPoint(450, 25));
-	m_pSidePanelAuthorItemYAnimation->setKeyValueAt(0.25, QPoint(450, 45));
-	m_pSidePanelAuthorItemYAnimation->setKeyValueAt(0.75, QPoint(450, 45));
-	m_pSidePanelAuthorItemYAnimation->setEndValue(QPoint(450, 65));
-
-	m_pSidePanelAuthorItemOpacityAnimation = new QPropertyAnimation(m_pSplashScreenAuthorItem, "alpha", this);
-	m_pSidePanelAuthorItemOpacityAnimation->setEasingCurve(QEasingCurve::InOutQuad);
-	m_pSidePanelAuthorItemOpacityAnimation->setDuration(4000);
-	m_pSidePanelAuthorItemOpacityAnimation->setStartValue(0);
-	m_pSidePanelAuthorItemOpacityAnimation->setKeyValueAt(0.25, 1.0);
-	m_pSidePanelAuthorItemOpacityAnimation->setKeyValueAt(0.75, 1.0);
-	m_pSidePanelAuthorItemOpacityAnimation->setEndValue(0);
-
-	m_pSidePanelAuthorItemAnimationGroup = new QParallelAnimationGroup(this);
-	m_pSidePanelAuthorItemAnimationGroup->addAnimation(m_pSidePanelAuthorItemYAnimation);
-	m_pSidePanelAuthorItemAnimationGroup->addAnimation(m_pSidePanelAuthorItemOpacityAnimation);
-
 	m_pSidePanelAnimationGroup = new QSequentialAnimationGroup(this);
-	m_pSidePanelAnimationGroup->addAnimation(m_pSidePanelAuthorItemAnimationGroup);
 	m_pSidePanelAnimationGroup->addAnimation(m_pSidePanelToolItemAnimationGroup);
 	m_pSidePanelAnimationGroup->addAnimation(m_pSidePanelSupportItemAnimationGroup);
 	m_pSidePanelAnimationGroup->addAnimation(m_pSidePanelLicenseItemAnimationGroup);

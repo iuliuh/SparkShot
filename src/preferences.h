@@ -69,11 +69,11 @@ public:
 
 	//! \brief Sets the current tray icon type.
 	//! \param iconType The new icon type.
-	void setTrayIconType(int iconType);
+	void setTrayIconType(QString iconType);
 
 	//! \brief Provides the current tray icon type.
 	//! \return The tray icon type.
-	int trayIconType() const;
+	QString trayIconType() const;
 
 	//! \brief Defines the application should be launched
 	//!        on system startup or not.
@@ -153,7 +153,7 @@ private:
 
 	// Tray icon type key and default value
 	static const QString TRAY_ICON_TYPE_KEY;
-	static const int TRAY_ICON_TYPE_DEFAULT_VALUE;
+	static const QString TRAY_ICON_TYPE_DEFAULT_VALUE;
 
 	// Launch on system startup state key and default value
 	static const QString LAUNCH_ON_SYSTEM_STARTUP_KEY;

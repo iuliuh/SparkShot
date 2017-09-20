@@ -20,6 +20,7 @@
 #include "splashscreen.h"
 #include "hotkeybinder.h"
 #include "defines.h"
+#include <QAction>
 
 Controller::Controller(QObject *pParent) : QObject(pParent)
 {
@@ -27,10 +28,10 @@ Controller::Controller(QObject *pParent) : QObject(pParent)
 
 	loadTranslator();
 
-	m_pHotKeyBinder = new HotKeyBinder;
-	m_pHotKeyBinder->setHotKey(Preferences::instance().hotKey());
+	m_pHotKeyBinder = new HotKeyBinder(this);
+	m_pHotKeyBinder->setKeySequence(QKeySequence::fromString(Preferences::instance().hotKey(), QKeySequence::NativeText));
 
-	m_pSystemTray = new QSystemTrayIcon(QIcon(":/images/trayIconLight"), this);
+	m_pSystemTray = new QSystemTrayIcon(QIcon(Preferences::instance().trayIconType()), this);
 	m_systemTrayMenu = new QMenu;
 
 	m_printScreenAction = m_systemTrayMenu->addAction(tr("Print screen"));
@@ -45,7 +46,7 @@ Controller::Controller(QObject *pParent) : QObject(pParent)
 	connect(m_pSystemTray, &QSystemTrayIcon::activated,
 	        this, &Controller::onSystemTrayIconActivated);
 	connect(m_printScreenAction, &QAction::triggered,
-	        this, &Controller::onPrintScreenActionClicked);
+	        this, &Controller::onPrintScreenActionToggeled);
 	connect(m_settingsAction, &QAction::triggered,
 	        this, &Controller::onShowSettingsDialogActionClicked);
 	connect(m_closeAction, &QAction::triggered,
@@ -86,7 +87,7 @@ void Controller::start()
 
 void Controller::onMessageAvailable(const QStringList &messages)
 {
-	Q_FOREACH(QString message, messages)
+	for(const QString &message : messages)
 	{
 		if(message == MESSAGE_SHOW_SETTINGS)
 		{
@@ -111,29 +112,11 @@ void Controller ::onAboutActionClicked()
 	m_pSplashScreen->show();
 }
 
-void Controller::onHotKeyChanged(const QString& hotKey)
+void Controller::onHotKeyChanged(const QKeySequence& hotKey)
 {
-	if(!m_pHotKeyBinder->setHotKey(hotKey))
-	{
-		QMessageBox msgBox;
+	m_pHotKeyBinder->setKeySequence(hotKey);
 
-		msgBox.setWindowTitle(tr("Invalid Hot Key"));
-		msgBox.setText(tr("Invalid Hot Key"));
-		msgBox.setIcon(QMessageBox::Warning);
-		msgBox.setInformativeText(tr("The Hot Key you are about to "
-		                             "use is currently not supported, "
-		                             "please try another one."));
-		msgBox.setStandardButtons(QMessageBox::Ok);
-		msgBox.setDefaultButton(QMessageBox::Ok);
-
-		msgBox.exec();
-
-		m_pSettingsDialog->setHotKey(Preferences::instance().hotKey());
-
-		return;
-	}
-
-	Preferences::instance().setHotKey(hotKey);
+	Preferences::instance().setHotKey(hotKey.toString(QKeySequence::NativeText));
 }
 
 void Controller::onHotKeyActivated()
@@ -228,11 +211,6 @@ void Controller::loadTranslator()
 	qApp->installTranslator(m_pTranslator);
 }
 
-void Controller::onPrintScreenActionClicked()
-{
-	printScreen();
-}
-
 void Controller::onShowSettingsDialogActionClicked()
 {
 	if(m_settingsDialogIsDestroyed)
@@ -245,10 +223,15 @@ void Controller::onShowSettingsDialogActionClicked()
 
 void Controller::onSystemTrayIconActivated(QSystemTrayIcon::ActivationReason reason)
 {
-	if(reason == QSystemTrayIcon::Trigger)
+	if(reason == QSystemTrayIcon::MiddleClick)
 	{
 		printScreen();
 	}
+}
+
+void Controller::onPrintScreenActionToggeled()
+{
+	printScreen();
 }
 
 void Controller::printScreen()
@@ -274,5 +257,14 @@ void Controller::createSettingsDialog()
 	connect(m_pSettingsDialog, &SettingsDialog::launchAtSystemStartupChanged,
 	        this, &Controller::onLaunchAtStartupStateChanged);
 
+	connect(m_pSettingsDialog, &SettingsDialog::trayIconTypeChanged,
+	        this, &Controller::onTrayIconTypeChanged);
+
 	m_settingsDialogIsDestroyed = false;
+}
+
+void Controller::onTrayIconTypeChanged(const QString &text)
+{
+	qDebug() << Q_FUNC_INFO << "Setting new icon:" << text;
+	m_pSystemTray->setIcon(QIcon(text));
 }

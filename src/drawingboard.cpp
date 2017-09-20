@@ -20,10 +20,14 @@ DrawingBoard::DrawingBoard(QWidget *parent) :
     QWidget(parent),
     m_drawingStarted(false)
 {
-	setWindowFlags(Qt::WindowStaysOnTopHint |
-	               Qt::BypassWindowManagerHint |
-	               Qt::FramelessWindowHint |
-	               Qt::NoDropShadowWindowHint);
+    Qt::WindowFlags windowFlags =
+            Qt::WindowStaysOnTopHint | Qt::BypassWindowManagerHint |
+            Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint |
+#ifdef Q_OS_MACOS
+            Qt::ToolTip;
+#endif
+
+	setWindowFlags(windowFlags);
 
 	setAttribute(Qt::WA_DeleteOnClose);
 

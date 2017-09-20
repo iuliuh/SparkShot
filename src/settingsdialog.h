@@ -3,6 +3,7 @@
 
 // Qt includes
 #include <QDialog>
+#include <QMap>
 
 namespace Ui {
 	// Forward declaration
@@ -28,13 +29,12 @@ public:
 	void setHotKey(const QString& hotKey);
 
 private Q_SLOTS:
-	//! \brief Slot called when the key sequence changes.
-	//! \param keySequence The new key sequence/hot key.
-	void onKeySequenceChanged(const QKeySequence& keySequence);
+	//! \brief Slot called when the key sequence editing finishes.
+	void onKeySequenceEditingFinished();
 
 	//! \brief Slot called when the tray icon type changes.
-	//! \param index The index of the new tray icon type.
-	void onTrayIconTypeChanged(int index);
+	//! \param text The text of the new tray icon type.
+	void onTrayIconTypeChanged(const QString &text);
 
 	//! \brief Slot called when the application startup state changes.
 	//! \param state State of the application startup setting. true if
@@ -57,11 +57,11 @@ private Q_SLOTS:
 
 Q_SIGNALS:
 	//! \brief Signal emitted when the key sequence changes.
-	void keySequenceChanged(const QString& keySequence);
+	void keySequenceChanged(const QKeySequence& keySequence);
 
 	//! \brief Signal emitted when the tray icon type changes.
-	//! \param index The new tray icon type index.
-	void trayIconTypeChanged(int index);
+	//! \param text The new tray icon type text.
+	void trayIconTypeChanged(const QString &text);
 
 	//! \brief Signal emitted when the capture mouse cursor state
 	//!        setting changes.
@@ -86,8 +86,13 @@ Q_SIGNALS:
 	void languageChanged(const QString &language);
 
 private:
+	void setupTrayIconComboBox();
+
+private:
 	// UI
 	Ui::SettingsDialog *ui;
+
+	QMap<QString, QString> m_trayIcons;
 };
 
 #endif // SETTINGSDIALOG_H

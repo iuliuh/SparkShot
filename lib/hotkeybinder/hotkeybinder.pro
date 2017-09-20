@@ -4,6 +4,8 @@
 #
 #-------------------------------------------------
 
+include(qxtglobalshortcut5/qxt.pri)
+
 QT += gui core
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -16,14 +18,11 @@ TEMPLATE = lib
 DEFINES += HOTKEYBINDER_LIBRARY
 
 SOURCES += \
-	hotkeybinder.cpp \
-	hotkey.cpp
+    hotkeybinder.cpp \
 
 HEADERS += \
-	hotkeybinder.h \
-	hotkeybinder_global.h \
-	defines.h \
-	hotkey.h
+    hotkeybinder_global.h \
+    hotkeybinder.h
 
 win32 {
 	target.path = $$PWD/../../deploy/win/packages/com.devtelsoftware.sparkshot/data
@@ -33,27 +32,6 @@ win32 {
 unix {
 	target.path = /usr/lib
 	INSTALLS += target
-}
-
-win32 {
-	SOURCES += \
-		winhotkeybinder.cpp
-
-	HEADERS += \
-		winhotkeybinder.h
-}
-
-unix:!macx {
-	SOURCES += \
-		gnulinuxhotkeybinder.cpp \
-		gnulinuxhotkeyworker.cpp
-
-	HEADERS += \
-		gnulinuxhotkeyworker.h \
-		gnulinuxhotkeybinder.h
-
-	CONFIG += link_pkgconfig
-	PKGCONFIG += x11
 }
 
 # Deploy

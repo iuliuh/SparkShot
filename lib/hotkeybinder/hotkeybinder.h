@@ -7,18 +7,8 @@
 // Local includes
 #include "hotkeybinder_global.h"
 
-#ifdef Q_OS_LINUX
-#include "gnulinuxhotkeybinder.h"
-#endif
+class QxtGlobalShortcut;
 
-#ifdef Q_OS_WIN
-#include "winhotkeybinder.h"
-#endif
-
-//! \brief Class handles a hot key bind. A hot key is set with
-//!        HotKeyBinder::setHotKey and when the user hits the
-//!        defined key sequence HotKeyBinder::hotKeyTriggered
-//!        signal is emitted.
 class HOTKEYBINDERSHARED_EXPORT HotKeyBinder : public QObject
 {
 	Q_OBJECT
@@ -33,29 +23,18 @@ public:
 	//! \brief Sets a hot key.
 	//! \param keySequence The hot key to be set. Supports formats
 	//!        such as Ctrl+P, Ctrl+Alt+L, Meta+M, etc.
-	bool setHotKey(const QString& keySequence);
+	void setKeySequence(const QKeySequence &keySequence);
 
 	//! \brief Returns hot key as a string.
 	//! \return Hot Key as a string.
-	QString toString();
+	QKeySequence keySequence();
 
 Q_SIGNALS:
 	//! \brief Signal emitted when the hot key was triggered.
 	void hotKeyTriggered();
 
 private:
-	// Hot key
-	QString m_keySequence;
-
-#ifdef Q_OS_WIN
-	// Windows key binder
-	WinHotKeyBinder* m_pWinHotKeyBinder;
-#endif
-
-#ifdef Q_OS_LINUX
-	// GNU/Linux key binder
-	GNULinuxHotKeyBinder* m_pGNULinuxHotBinder;
-#endif
+	QxtGlobalShortcut *m_pShortcut;
 };
 
 #endif // HOTKEYBINDER_H

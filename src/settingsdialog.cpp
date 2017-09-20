@@ -4,6 +4,9 @@
 
 #include <QKeyEvent>
 #include <QApplication>
+#include <QKeySequence>
+#include <QDebug>
+#include <QtGlobal>
 
 SettingsDialog::SettingsDialog(QWidget *pParent) :
     QDialog(pParent),
@@ -11,25 +14,27 @@ SettingsDialog::SettingsDialog(QWidget *pParent) :
 {
 	ui->setupUi(this);
 
+	setupTrayIconComboBox();
+
 	setAttribute(Qt::WA_DeleteOnClose);
 
-	connect(ui->keySequenceEdit, SIGNAL(keySequenceChanged(QKeySequence)),
-	        this, SLOT(onKeySequenceChanged(QKeySequence)));
-	connect(ui->trayIconComboBox, SIGNAL(currentIndexChanged(int)),
-	        this, SLOT(onTrayIconTypeChanged(int)));
-	connect(ui->launchOnSystemStartupCheckBox, SIGNAL(clicked(bool)),
-	        this, SLOT(onLaunchAtSystemStartupChanged(bool)));
-	connect(ui->showTrayIconCheckBox, SIGNAL(clicked(bool)),
-	        this, SLOT(onShowTrayIconChanged(bool)));
-	connect(ui->languageComboBox, SIGNAL(currentIndexChanged(QString)),
-	        this, SLOT(onLanguageChanged(const QString&)));
-	connect(ui->okButton, SIGNAL(clicked()),
-	        this, SLOT(accept()));
-	connect(ui->resetToDefaultsButton, SIGNAL(clicked()),
-	        this, SLOT(onResetButtonClicked()));
+	connect(ui->keySequenceEdit, &QKeySequenceEdit::editingFinished,
+	        this, &SettingsDialog::onKeySequenceEditingFinished);
+	connect(ui->trayIconComboBox, QOverload<const QString &>::of(&QComboBox::currentIndexChanged),
+	        this, QOverload<const QString &>::of(&SettingsDialog::onTrayIconTypeChanged));
+	connect(ui->launchOnSystemStartupCheckBox, &QCheckBox::clicked,
+	        this, &SettingsDialog::onLaunchAtSystemStartupChanged);
+	connect(ui->showTrayIconCheckBox, &QCheckBox::clicked,
+	        this, &SettingsDialog::onShowTrayIconChanged);
+	connect(ui->languageComboBox, QOverload<const QString &>::of(&QComboBox::currentIndexChanged),
+	        this, QOverload<const QString &>::of(&SettingsDialog::onLanguageChanged));
+	connect(ui->okButton, &QPushButton::clicked,
+	        this, &SettingsDialog::accept);
+	connect(ui->resetToDefaultsButton, &QPushButton::clicked,
+	        this, &SettingsDialog::onResetButtonClicked);
 
-	ui->keySequenceEdit->setKeySequence(Preferences::instance().hotKey());
-	ui->trayIconComboBox->setCurrentIndex(Preferences::instance().trayIconType());
+	ui->keySequenceEdit->setKeySequence(QKeySequence::fromString(Preferences::instance().hotKey(), QKeySequence::NativeText));
+	ui->trayIconComboBox->setCurrentText(m_trayIcons.key(Preferences::instance().trayIconType()));
 	ui->launchOnSystemStartupCheckBox->setChecked(Preferences::instance().isLaunchingOnSystemStartup());
 	ui->showTrayIconCheckBox->setChecked(Preferences::instance().isTrayIconShown());
 	ui->languageComboBox->setCurrentText(Preferences::instance().language());
@@ -45,27 +50,16 @@ void SettingsDialog::setHotKey(const QString& hotKey)
 	ui->keySequenceEdit->setKeySequence(QKeySequence::fromString(hotKey));
 }
 
-void SettingsDialog::onKeySequenceChanged(const QKeySequence &keySequence)
+void SettingsDialog::onKeySequenceEditingFinished()
 {
-	const QString keySequenceString = keySequence.toString();
-
-	if(keySequenceString.isEmpty())
-	{
-		return;
-	}
-
-	//! \note Do NOT write the HotKey preferences here. The HotKey must be
-	//!       validated by the HotKeyBinder and the preferences are set by
-	//!       the HotKeyBinder
-
-	Q_EMIT keySequenceChanged(keySequenceString);
+	Q_EMIT keySequenceChanged(ui->keySequenceEdit->keySequence());
 }
 
-void SettingsDialog::onTrayIconTypeChanged(int index)
+void SettingsDialog::onTrayIconTypeChanged(const QString &text)
 {
-	Preferences::instance().setTrayIconType(index);
+	Preferences::instance().setTrayIconType(m_trayIcons.value(text));
 
-	Q_EMIT trayIconTypeChanged(index);
+	Q_EMIT trayIconTypeChanged(m_trayIcons.value(text));
 }
 
 void SettingsDialog::onLaunchAtSystemStartupChanged(bool state)
@@ -94,12 +88,12 @@ void SettingsDialog::onResetButtonClicked()
 	Preferences::instance().reset();
 
 	const QString keySequenceString = Preferences::instance().hotKey();
-	ui->keySequenceEdit->setKeySequence(QKeySequence::fromString(keySequenceString));
+	ui->keySequenceEdit->setKeySequence(QKeySequence::fromString(keySequenceString, QKeySequence::NativeText));
 	Q_EMIT keySequenceChanged(keySequenceString);
 
-	const int trayIconIndex = Preferences::instance().trayIconType();
-	ui->trayIconComboBox->setCurrentIndex(trayIconIndex);
-	Q_EMIT trayIconTypeChanged(trayIconIndex);
+	const QString trayIcon = Preferences::instance().trayIconType();
+	ui->trayIconComboBox->setCurrentText(m_trayIcons.key(trayIcon));
+	Q_EMIT trayIconTypeChanged(trayIcon);
 
 	const bool launchAtStartupState = Preferences::instance().isLaunchingOnSystemStartup();
 	ui->launchOnSystemStartupCheckBox->setChecked(launchAtStartupState);
@@ -112,6 +106,22 @@ void SettingsDialog::onResetButtonClicked()
 	const QString languageString = Preferences::instance().language();
 	ui->languageComboBox->setCurrentText(languageString);
 	Q_EMIT languageChanged(languageString);
+}
+
+void SettingsDialog::setupTrayIconComboBox()
+{
+	m_trayIcons.insert(QStringLiteral("Normal"), QStringLiteral(":/images/trayIconNormal"));
+	m_trayIcons.insert(QStringLiteral("Light"), QStringLiteral(":/images/trayIconLight"));
+	m_trayIcons.insert(QStringLiteral("Dark"), QStringLiteral(":/images/trayIconDark"));
+
+    QMapIterator<QString, QString> it(m_trayIcons);
+    while (it.hasNext()) {
+        it.next();
+        const QString name = it.key();
+        const QString icon = it.value();
+
+        ui->trayIconComboBox->addItem(QIcon(icon), name);
+    }
 }
 
 

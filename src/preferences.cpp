@@ -27,7 +27,7 @@ const QString Preferences::HOTKEY_KEY = "HotKey";
 const QString Preferences::HOTKEY_DEFAULT_VALUE = "Print";
 
 const QString Preferences::TRAY_ICON_TYPE_KEY = "TrayIconType";
-const int Preferences::TRAY_ICON_TYPE_DEFAULT_VALUE = 0;
+const QString Preferences::TRAY_ICON_TYPE_DEFAULT_VALUE = ":/images/trayIconNormal";
 
 const QString Preferences::LAUNCH_ON_SYSTEM_STARTUP_KEY = "LaunchOnStartup";
 const bool Preferences::LAUNCH_ON_SYSTEM_STARTUP_DEFAULT_VALUE = true;
@@ -105,14 +105,14 @@ QString Preferences::hotKey() const
 	return m_pSettings->value(HOTKEY_KEY, HOTKEY_DEFAULT_VALUE).toString();
 }
 
-void Preferences::setTrayIconType(int iconType)
+void Preferences::setTrayIconType(QString iconType)
 {
 	m_pSettings->setValue(TRAY_ICON_TYPE_KEY, iconType);
 }
 
-int Preferences::trayIconType() const
+QString Preferences::trayIconType() const
 {
-	return m_pSettings->value(TRAY_ICON_TYPE_KEY, TRAY_ICON_TYPE_DEFAULT_VALUE).toInt();
+	return m_pSettings->value(TRAY_ICON_TYPE_KEY, TRAY_ICON_TYPE_DEFAULT_VALUE).toString();
 }
 
 void Preferences::setLaunchOnSystemStartup(bool launch)

@@ -36,13 +36,12 @@ public Q_SLOTS:
 	void onMessageAvailable(const QStringList& messages);
 
 private Q_SLOTS:
+	void onPrintScreenActionToggeled();
+
 	//! \brief Slot called when the system tray icon action gets activated.
 	//! \param reason Activation reason.
 	//! \see QSystemTrayIcon::ActivationReason
 	void onSystemTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
-
-	//! \brief Slot called when the print screen system tray action was clicked.
-	void onPrintScreenActionClicked();
 
 	//! \brief Slot called when the settings tray action was clicked.
 	void onShowSettingsDialogActionClicked();
@@ -51,7 +50,7 @@ private Q_SLOTS:
 	void onAboutActionClicked();
 
 	//! \brief Slot called when the hot key gets changed.
-	void onHotKeyChanged(const QString& hotKey);
+	void onHotKeyChanged(const QKeySequence& hotKey);
 
 	//! \brief Slot called when the hot key was triggered.
 	void onHotKeyActivated();
@@ -62,6 +61,10 @@ private Q_SLOTS:
 	//! \brief Slot called when the show tray icon state changes to hide or show.
 	//! \param state true if the icon setting is set to show, false otherwise.
 	void onTrayIconShowStateChanged(bool state);
+
+	//! \brief Slot called when the show tray icon changes.
+	//! \param text path to new tray icon.
+	void onTrayIconTypeChanged(const QString &text);
 
 	void onLaunchAtStartupStateChanged(bool state);
 
