@@ -11,7 +11,6 @@ HotKeyBinder::HotKeyBinder(QObject *parent) :
     m_pShortcut->setShortcut(QKeySequence("Shift+1")); // Default
 
     connect(m_pShortcut, &QxtGlobalShortcut::activated, [this]() {
-        qDebug() << Q_FUNC_INFO << "SHORTCUT ACTIVATED!!!";
         Q_EMIT hotKeyTriggered();
     });
 }
